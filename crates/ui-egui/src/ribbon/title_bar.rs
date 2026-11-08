@@ -2,6 +2,12 @@ use super::{Align2, Icon, Rect, Sense, SlideApp, Tokens, Ui, icon_toggle, json, 
 
 pub const TITLE_H: f32 = 38.0;
 
+/// Up to two initials of the author's name for the avatar; `?` when no name is set.
+fn initials(author: &str) -> String {
+    let letters: String = author.split_whitespace().filter_map(|w| w.chars().next()).take(2).flat_map(char::to_uppercase).collect();
+    if letters.is_empty() { "?".into() } else { letters }
+}
+
 /// macOS draws the window into the title bar (`with_fullsize_content_view`) and AppKit paints the
 /// traffic lights itself, 16 pt from the top of the window on macOS 27. Moving them would take
 /// AppKit calls (`unsafe`, forbidden here), so on macOS the title bar is the band they are centred
@@ -57,13 +63,35 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
         let title =
             app.session.active().map(|d| format!("{}{}", d.title(), if dirty { " — Edited" } else { "" })).unwrap_or_else(|| "DeckCraft".into());
         ui.painter().text(rect.center(), Align2::CENTER_CENTER, title, theme::font(13.0), t.text);
-        // Right side.
+        // Right side. The optional avatar and Discord button sit at its far end.
+        let extras = if app.ui.show_account_picture { control_h + 6.0 } else { 0.0 } + if app.ui.show_discord { 90.0 } else { 0.0 };
         let mut right = ui.new_child(
             egui::UiBuilder::new()
-                .max_rect(Rect::from_min_max(pos2(rect.max.x - 320.0, rect.min.y), pos2(rect.max.x - 10.0, rect.max.y)))
+                .max_rect(Rect::from_min_max(pos2(rect.max.x - 320.0 - extras, rect.min.y), pos2(rect.max.x - 10.0, rect.max.y)))
                 .layout(egui::Layout::right_to_left(egui::Align::Center)),
         );
         right.spacing_mut().item_spacing.x = 6.0;
+        if app.ui.show_account_picture {
+            let (r, resp) = right.allocate_exact_size(vec2(control_h, control_h), Sense::click());
+            right.painter().circle_filled(r.center(), control_h / 2.0 - 1.0, t.accent);
+            resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Profile avatar"));
+            right.painter().text(r.center(), Align2::CENTER_CENTER, initials(&app.session.prefs.author), theme::bold(10.5), t.accent_text);
+            if resp.on_hover_text("Account: set your name in Preferences").clicked() {
+                let _ = app.run("app.preferences", json!({}));
+            }
+        }
+        if app.ui.show_discord {
+            let (r, resp) = right.allocate_exact_size(vec2(84.0, control_h - 4.0), Sense::click());
+            let fill = if resp.hovered() { t.accent_text } else { t.accent };
+            let ink = if resp.hovered() { t.accent } else { t.accent_text };
+            right.painter().rect_filled(r, r.height() / 2.0, fill);
+            right.painter().rect_stroke(r, r.height() / 2.0, egui::Stroke::new(1.0, t.accent), egui::StrokeKind::Inside);
+            right.painter().text(r.center(), Align2::CENTER_CENTER, "Discord", theme::bold(12.0), ink);
+            resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Discord"));
+            if resp.on_hover_text("Join the ArtCraft community on Discord").clicked() {
+                right.ctx().open_url(egui::OpenUrl::new_tab(deckcraft_engine::links::DISCORD));
+            }
+        }
         if icon_toggle(&mut right, Icon::Search, "Search commands (⇧⌘P)", true, false).clicked() {
             app.palette = Some((String::new(), 0));
         }

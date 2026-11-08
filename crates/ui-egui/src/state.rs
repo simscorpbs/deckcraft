@@ -51,6 +51,13 @@ pub enum ViewMode {
 #[serde(default, rename_all = "camelCase")]
 pub struct UiState {
     pub brightness: theme::Brightness,
+    /// Preferences > Accent color; a damaged saved value reads as the default orange.
+    pub accent_color: theme::AccentColor,
+    /// Preferences > Show Discord button in the title bar. Off by default.
+    pub show_discord: bool,
+    /// Preferences > Show account avatar in the title bar. On by default except on macOS, whose
+    /// integrated title bar is already crowded.
+    pub show_account_picture: bool,
     pub tab: String,
     pub ribbon_collapsed: bool,
     pub view: ViewMode,
@@ -100,6 +107,9 @@ impl Default for UiState {
     fn default() -> Self {
         UiState {
             brightness: theme::Brightness::Light,
+            accent_color: theme::AccentColor::DEFAULT,
+            show_discord: false,
+            show_account_picture: !cfg!(target_os = "macos"),
             tab: "Home".into(),
             ribbon_collapsed: false,
             view: ViewMode::Normal,

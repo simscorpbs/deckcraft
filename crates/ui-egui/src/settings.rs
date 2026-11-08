@@ -168,4 +168,38 @@ mod tests {
             assert!(h.state().canvas_scale <= *crate::ZOOM_RANGE.end() + 1e-3, "{}", h.state().canvas_scale);
         }
     }
+
+    #[test]
+    fn appearance_options_default_round_trip_and_survive_hostile_values() {
+        let d = dir("appearance");
+        let fresh = UiState::default();
+        assert_eq!(fresh.accent_color, crate::theme::AccentColor::DEFAULT);
+        assert!(!fresh.show_discord, "the Discord button is off by default");
+        assert_eq!(fresh.show_account_picture, !cfg!(target_os = "macos"));
+        // An older ui.json without the fields gets the defaults.
+        std::fs::write(d.join(UI_FILE), r#"{"tab": "Insert"}"#).unwrap();
+        let old = load(&d).0.unwrap();
+        assert_eq!((old.accent_color, old.show_discord, old.show_account_picture), (fresh.accent_color, false, fresh.show_account_picture));
+        // Saved choices come back.
+        let ui = UiState {
+            accent_color: crate::theme::AccentColor::parse("#1F5FBF").unwrap(),
+            show_discord: true,
+            show_account_picture: !fresh.show_account_picture,
+            ..Default::default()
+        };
+        save(&d, &ui, &Prefs::default());
+        let text = std::fs::read_to_string(d.join(UI_FILE)).unwrap();
+        assert!(text.contains(r#""accentColor": "1F5FBF""#), "{text}");
+        let back = load(&d).0.unwrap();
+        assert_eq!((back.accent_color, back.show_discord, back.show_account_picture), (ui.accent_color, true, ui.show_account_picture));
+        // Hostile values: a bad colour reads as the default and keeps the rest of the file.
+        for bad in ["\"javascript:alert(1)\"", "12345", "null", "\"#GGGGGG\"", "{\"r\": 255}", "\"\\u0000\""] {
+            std::fs::write(d.join(UI_FILE), format!(r#"{{"accentColor": {bad}, "tab": "Insert"}}"#)).unwrap();
+            let ui = load(&d).0.unwrap_or_else(|| panic!("{bad} should not discard ui.json"));
+            assert_eq!((ui.accent_color, ui.tab.as_str()), (crate::theme::AccentColor::DEFAULT, "Insert"), "{bad}");
+        }
+        // Wrong types for the toggles are a damaged file, which gives the defaults as always.
+        std::fs::write(d.join(UI_FILE), r#"{"showDiscord": "yes"}"#).unwrap();
+        assert!(load(&d).0.is_none());
+    }
 }

@@ -1,7 +1,89 @@
 //! Design tokens (light, PowerPoint-like; and dark) and fonts for the UI.
 
 use egui::{Color32, CornerRadius, FontData, FontDefinitions, FontFamily, Stroke, Visuals};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+/// The user-selectable interface accent (Preferences). The default is PowerPoint's orange, which
+/// the light and dark palettes keep exactly; any other colour derives both variants from it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct AccentColor(pub [u8; 3]);
+
+impl AccentColor {
+    /// DeckCraft's orange (the light palette's accent).
+    pub const DEFAULT: Self = Self([0xD9, 0x5A, 0x1A]);
+    /// Named choices offered in Preferences, besides a custom colour.
+    pub const PRESETS: [(&'static str, Self); 4] = [
+        ("Orange", Self::DEFAULT),
+        ("Blue", Self([0x1F, 0x5F, 0xBF])),
+        ("Green", Self([0x1E, 0x7B, 0x4A])),
+        ("Purple", Self([0x6B, 0x3F, 0xB5])),
+    ];
+
+    /// `RRGGBB` or `#RRGGBB`; anything else is not a colour.
+    pub fn parse(value: &str) -> Option<Self> {
+        let hex = value.trim().trim_start_matches('#');
+        if hex.len() != 6 || !hex.is_ascii() {
+            return None;
+        }
+        let byte = |i: usize| u8::from_str_radix(&hex[i..i + 2], 16).ok();
+        Some(Self([byte(0)?, byte(2)?, byte(4)?]))
+    }
+
+    pub fn hex(self) -> String {
+        format!("{:02X}{:02X}{:02X}", self.0[0], self.0[1], self.0[2])
+    }
+
+    pub fn color32(self) -> Color32 {
+        Color32::from_rgb(self.0[0], self.0[1], self.0[2])
+    }
+}
+
+impl Default for AccentColor {
+    fn default() -> Self {
+        Self::DEFAULT
+    }
+}
+
+impl Serialize for AccentColor {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.hex())
+    }
+}
+
+/// Saved settings are not trusted: anything that is not a six-digit hexadecimal colour reads as
+/// the default instead of failing the whole file.
+impl<'de> Deserialize<'de> for AccentColor {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let value = serde_json::Value::deserialize(deserializer)?;
+        Ok(value.as_str().and_then(Self::parse).unwrap_or_default())
+    }
+}
+
+fn luminance(c: Color32) -> f32 {
+    let channel = |v: u8| {
+        let v = f32::from(v) / 255.0;
+        if v <= 0.040_45 { v / 12.92 } else { ((v + 0.055) / 1.055).powf(2.4) }
+    };
+    0.2126 * channel(c.r()) + 0.7152 * channel(c.g()) + 0.0722 * channel(c.b())
+}
+
+/// WCAG contrast ratio between two opaque colours.
+fn contrast(a: Color32, b: Color32) -> f32 {
+    let (x, y) = (luminance(a), luminance(b));
+    (x.max(y) + 0.05) / (x.min(y) + 0.05)
+}
+
+fn mix(a: Color32, b: Color32, t: f32) -> Color32 {
+    let m = |x: u8, y: u8| (f32::from(x) + (f32::from(y) - f32::from(x)) * t).round() as u8;
+    Color32::from_rgb(m(a.r(), b.r()), m(a.g(), b.g()), m(a.b(), b.b()))
+}
+
+/// Text colour for something filled with `background`: white unless dark ink reads better.
+fn on_accent(background: Color32) -> Color32 {
+    let ink = Color32::from_rgb(0x1F, 0x1F, 0x1F);
+    let (white, dark) = (contrast(Color32::WHITE, background), contrast(ink, background));
+    if white >= 4.5 || white >= dark { Color32::WHITE } else { ink }
+}
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -123,9 +205,51 @@ impl Tokens {
             Brightness::Dark => Self::dark(),
         }
     }
-    pub fn get(ctx: &egui::Context) -> Self {
-        if ctx.global_style().visuals.dark_mode { Self::dark() } else { Self::light() }
+    /// These tokens with the accent family (accent, its text, contextual tabs, guides) taken from
+    /// `accent`. The default keeps the hand-tuned palette values; another colour is used as is in
+    /// the light palette and lightened until it reads on the dark chrome.
+    pub fn with_accent(mut self, accent: AccentColor) -> Self {
+        if accent == AccentColor::DEFAULT {
+            return self;
+        }
+        let base = accent.color32();
+        if self.dark {
+            let mut lit = base;
+            let mut step = 0.0;
+            while contrast(lit, self.chrome) < 4.5 && step < 1.0 {
+                step += 0.1;
+                lit = mix(base, Color32::WHITE, step);
+            }
+            self.accent = lit;
+            self.contextual = mix(lit, Color32::WHITE, 0.2);
+            self.guide = mix(lit, Color32::WHITE, 0.15);
+        } else {
+            self.accent = base;
+            self.contextual = mix(base, Color32::BLACK, 0.12);
+            self.guide = mix(base, Color32::WHITE, 0.1);
+        }
+        self.accent_text = on_accent(self.accent);
+        self
     }
+    /// The tokens for the current visuals, with the accent last chosen through [`set_accent`].
+    pub fn get(ctx: &egui::Context) -> Self {
+        let tokens = if ctx.global_style().visuals.dark_mode { Self::dark() } else { Self::light() };
+        tokens.with_accent(accent(ctx))
+    }
+}
+
+fn accent_data_id() -> egui::Id {
+    static ID: std::sync::OnceLock<egui::Id> = std::sync::OnceLock::new();
+    *ID.get_or_init(|| egui::Id::unique("deckcraft.accent_color"))
+}
+
+/// Remember the chosen accent for [`Tokens::get`].
+pub fn set_accent(ctx: &egui::Context, accent: AccentColor) {
+    ctx.data_mut(|d| d.insert_temp(accent_data_id(), accent));
+}
+
+fn accent(ctx: &egui::Context) -> AccentColor {
+    ctx.data_mut(|d| d.get_temp::<AccentColor>(accent_data_id())).unwrap_or_default()
 }
 
 /// Apply tokens to egui's style.
@@ -481,5 +605,59 @@ mod tests {
         for (c, size, ink) in drawn("\u{2013}\u{2014}-_\u{2026}\u{2022}\u{00b7}\u{2018}\u{2019}\u{201c}\u{201d}=~") {
             assert!(ink, "{c:?} ({:04X}) draws nothing at {size} px", c as u32);
         }
+    }
+}
+
+#[cfg(test)]
+mod accent_tests {
+    use super::*;
+
+    #[test]
+    fn default_accent_keeps_the_orange_palettes() {
+        assert_eq!(AccentColor::default(), AccentColor::DEFAULT);
+        assert_eq!(Tokens::light().with_accent(AccentColor::DEFAULT).accent, Color32::from_rgb(0xD9, 0x5A, 0x1A));
+        assert_eq!(Tokens::dark().with_accent(AccentColor::DEFAULT).accent, Color32::from_rgb(0xF2, 0x6B, 0x1D));
+    }
+
+    #[test]
+    fn parse_accepts_six_digit_hex_only() {
+        assert_eq!(AccentColor::parse("#1f5fbf").map(AccentColor::hex), Some("1F5FBF".into()));
+        assert_eq!(AccentColor::parse("1F5FBF"), AccentColor::parse(" #1F5FBF "));
+        for bad in ["", "#", "red", "#12345", "#1234567", "GGGGGG", "#12 456", "\u{e9}\u{e9}\u{e9}", "1F5FB\u{e9}"] {
+            assert_eq!(AccentColor::parse(bad), None, "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn custom_accent_derives_both_palettes() {
+        for accent in [AccentColor::PRESETS[1].1, AccentColor([0, 0, 0]), AccentColor([255, 255, 255]), AccentColor([255, 230, 0])] {
+            let light = Tokens::light().with_accent(accent);
+            let dark = Tokens::dark().with_accent(accent);
+            assert_eq!(light.accent, accent.color32());
+            assert!(contrast(dark.accent, dark.chrome) >= 4.5 || dark.accent == Color32::WHITE, "{accent:?}");
+            for t in [light, dark] {
+                assert!(contrast(t.accent_text, t.accent) >= 4.5 || t.accent_text == Color32::WHITE || accent.0 == [0x80; 3], "{accent:?}");
+            }
+        }
+    }
+
+    #[test]
+    fn tokens_get_follows_the_remembered_accent() {
+        let ctx = egui::Context::default();
+        apply(&ctx, &Tokens::light());
+        ctx.set_theme(egui::Theme::Light);
+        assert_eq!(Tokens::get(&ctx).accent, Tokens::light().accent);
+        set_accent(&ctx, AccentColor::PRESETS[1].1);
+        assert_eq!(Tokens::get(&ctx).accent, AccentColor::PRESETS[1].1.color32());
+    }
+
+    #[test]
+    fn hostile_accent_values_read_as_the_default() {
+        for raw in ["\"zzz\"", "42", "null", "[1,2,3]", "{\"r\":1}", "\"#12\"", "true"] {
+            let got: AccentColor = serde_json::from_str(raw).expect(raw);
+            assert_eq!(got, AccentColor::DEFAULT, "{raw}");
+        }
+        let round: AccentColor = serde_json::from_str(&serde_json::to_string(&AccentColor::PRESETS[2].1).unwrap()).unwrap();
+        assert_eq!(round, AccentColor::PRESETS[2].1);
     }
 }

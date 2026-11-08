@@ -159,6 +159,21 @@ impl SlideApp {
                 self.ui.brightness = if on { theme::Brightness::Dark } else { theme::Brightness::Light };
                 self.restyle = true;
             }
+            "ui.accentColor" => {
+                if let Some(v) = p.get("value").or_else(|| p.get("color")).and_then(Value::as_str) {
+                    self.ui.accent_color = theme::AccentColor::parse(v).ok_or("unknown accent colour; use a six-digit hexadecimal colour")?;
+                    self.restyle = true;
+                }
+                return Ok(json!({"accentColor": self.ui.accent_color.hex()}));
+            }
+            "ui.showDiscord" => {
+                self.ui.show_discord = p.get("value").and_then(Value::as_bool).unwrap_or(!self.ui.show_discord);
+                return Ok(json!({"showDiscord": self.ui.show_discord}));
+            }
+            "ui.showAccountPicture" => {
+                self.ui.show_account_picture = p.get("value").and_then(Value::as_bool).unwrap_or(!self.ui.show_account_picture);
+                return Ok(json!({"showAccountPicture": self.ui.show_account_picture}));
+            }
             "view.grayscale" => self.ui.grayscale = self.flag(p, self.ui.grayscale),
             "view.newWindow" => return doc_window::command(self, p),
             "show.start" => {

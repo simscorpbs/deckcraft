@@ -18,7 +18,8 @@ impl SlideApp {
             return false;
         }
         if self.restyle {
-            theme::apply(ctx, &theme::Tokens::for_brightness(self.ui.brightness));
+            theme::set_accent(ctx, self.ui.accent_color);
+            theme::apply(ctx, &theme::Tokens::for_brightness(self.ui.brightness).with_accent(self.ui.accent_color));
             self.restyle = false;
         }
         self.fonts_ready = true;
