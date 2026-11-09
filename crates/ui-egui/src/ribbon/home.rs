@@ -7,6 +7,28 @@ use super::{
 
 // ---------- Home ----------
 
+/// The small corner arrow at the bottom of a ribbon group that opens the group's pane or dialog.
+/// `name` is what it is called for assistive technology and in its tooltip.
+fn launcher(ui: &mut Ui, name: &str, on: bool) -> egui::Response {
+    let t = Tokens::get(ui.ctx());
+    let name = crate::tl!(name);
+    let (rect, resp) = ui.allocate_exact_size(vec2(14.0, 14.0), Sense::click());
+    resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, on, name));
+    if on || resp.hovered() || resp.has_focus() {
+        ui.painter().rect_filled(rect, CornerRadius::same(3), t.hover);
+    }
+    let c = if resp.hovered() { t.text } else { t.text_dim };
+    let s = Stroke::new(1.2, c);
+    let p = ui.painter();
+    // A corner bracket with an arrow pointing out of it.
+    p.line_segment([pos2(rect.min.x + 3.0, rect.min.y + 3.0), pos2(rect.min.x + 3.0, rect.max.y - 3.0)], s);
+    p.line_segment([pos2(rect.min.x + 3.0, rect.max.y - 3.0), pos2(rect.max.x - 3.0, rect.max.y - 3.0)], s);
+    p.line_segment([pos2(rect.min.x + 6.0, rect.min.y + 6.0), pos2(rect.max.x - 4.0, rect.max.y - 4.0)], s);
+    p.line_segment([pos2(rect.max.x - 4.0, rect.max.y - 7.5), pos2(rect.max.x - 4.0, rect.max.y - 4.0)], s);
+    p.line_segment([pos2(rect.max.x - 7.5, rect.max.y - 4.0), pos2(rect.max.x - 4.0, rect.max.y - 4.0)], s);
+    resp.on_hover_text(name)
+}
+
 fn clipboard_group(app: &mut SlideApp, ui: &mut Ui) {
     group(ui, |ui| {
         let (main, arrow) = big_button_ex(ui, Icon::Paste, "Paste", enabled(app, "edit.paste"), true, false);
@@ -43,6 +65,13 @@ fn clipboard_group(app: &mut SlideApp, ui: &mut Ui) {
                 } else {
                     run(app, "format.painter", json!({}));
                 }
+            }
+        });
+        // The group's launcher, at its bottom right corner: the Clipboard pane.
+        ui.vertical(|ui| {
+            ui.add_space(widgets::RIBBON_H - 2.0 - 15.0);
+            if launcher(ui, "Clipboard", app.ui.pane.as_deref() == Some("clipboard")).clicked() {
+                run(app, "view.pane", json!({"pane": "clipboard", "toggle": true}));
             }
         });
     });

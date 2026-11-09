@@ -23,6 +23,7 @@ use crate::xml::{A, W};
 pub(crate) const CT_PRES: &str = "application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml";
 pub(crate) const CT_TEMPLATE: &str = "application/vnd.openxmlformats-officedocument.presentationml.template.main+xml";
 pub(crate) const CT_SHOW: &str = "application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml";
+pub(crate) const CT_MACRO: &str = "application/vnd.ms-powerpoint.presentation.macroEnabled.main+xml";
 const CT_SLIDE: &str = "application/vnd.openxmlformats-officedocument.presentationml.slide+xml";
 const CT_LAYOUT: &str = "application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml";
 const CT_MASTER: &str = "application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml";

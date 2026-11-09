@@ -1599,3 +1599,15 @@ direction	From top right	Sup. dir.
 	Version history is kept by the desktop app.	O histórico de versões é mantido pelo aplicativo para computador.
 	Version history isn't available here.	O histórico de versões não está disponível aqui.
 	Yesterday	Ontem
+# --- area de transferencia ---
+clipboard	Clear All	Limpar Tudo
+	Click an item to paste it.	Clique em um item para colá-lo.
+	Clipboard	Área de Transferência
+	Delete {item}	Excluir {item}
+	Nothing collected yet. Items you copy or cut appear here.	Nada coletado ainda. Os itens que você copiar ou recortar aparecem aqui.
+	Paste All	Colar Tudo
+	Paste {item}	Colar {item}
+	Slide	Slide
+# --- pptm ---
+	Saved. Macros are not kept: the .pptm was saved without them.	Salvo. As macros não são mantidas: o .pptm foi salvo sem elas.
+	Saved {path}. Macros are not kept: the .pptm was saved without them.	Salvo em {path}. As macros não são mantidas: o .pptm foi salvo sem elas.

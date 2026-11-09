@@ -360,10 +360,10 @@ fn report_damage(s: &mut Session, damaged: &Damage) -> Result<()> {
     Ok(())
 }
 
-/// Encode the presentation in `format` (`deckcraft`, `pptx`, `potx`, `ppsx`, `outline`, `pdf`, `gif`).
+/// Encode the presentation in `format` (`deckcraft`, `pptx`, `pptm`, `potx`, `ppsx`, `outline`, `pdf`, `gif`).
 pub fn save_bytes(doc: &Presentation, format: &str) -> Result<Vec<u8>> {
     match format {
-        f @ ("pptx" | "potx" | "ppsx") => deckcraft_pptx::export_as(doc, f).map_err(|e| EngineError::Other(e.to_string())),
+        f @ ("pptx" | "potx" | "ppsx" | "pptm") => deckcraft_pptx::export_as(doc, f).map_err(|e| EngineError::Other(e.to_string())),
         "outline" | "txt" => Ok(deckcraft_format::slides_to_outline(doc).into_bytes()),
         "rtf" => Ok(deckcraft_format::rtf::slides_to_rtf(doc).into_bytes()),
         "pdf" => deckcraft_pdf::export(doc, &Default::default()).map_err(|e| EngineError::Other(e.to_string())),
@@ -453,7 +453,7 @@ pub fn pdf_bytes(doc: &Presentation, p: &Value) -> Result<Vec<u8>> {
 }
 
 /// The output extensions [`format_for_path`] maps to a writer of that format.
-pub const WRITABLE_EXTENSIONS: &[&str] = &["deckcraft", "pptx", "potx", "ppsx", "pdf", "png", "jpg", "jpeg", "gif", "txt", "md", "rtf"];
+pub const WRITABLE_EXTENSIONS: &[&str] = &["deckcraft", "pptx", "pptm", "potx", "ppsx", "pdf", "png", "jpg", "jpeg", "gif", "txt", "md", "rtf"];
 
 /// The format a file named `path` is written in, or `None` when its extension names no format
 /// DeckCraft writes (`.odp`, `.svg`, no extension …): [`format_for_path`] would save
@@ -472,6 +472,8 @@ pub fn format_for_path(path: &str) -> &'static str {
     let l = path.to_ascii_lowercase();
     if l.ends_with(".pptx") {
         "pptx"
+    } else if l.ends_with(".pptm") {
+        "pptm"
     } else if l.ends_with(".potx") {
         "potx"
     } else if l.ends_with(".ppsx") {
@@ -595,9 +597,22 @@ pub(crate) fn save(s: &mut Session, p: &Value) -> Result<Value> {
     // and the presentation it came from is in front again.
     if let Some(version) = s.previous_version(index).map(|v| v.info.id.clone()) {
         let back = s.close_previous_version(index);
-        return Ok(json!({"path": path, "bytes": len, "saved": true, "copyOf": version, "document": back}));
+        return Ok(with_macro_warning(json!({"path": path, "bytes": len, "saved": true, "copyOf": version, "document": back}), format));
     }
-    Ok(json!({"path": path, "bytes": len, "saved": true}))
+    Ok(with_macro_warning(json!({"path": path, "bytes": len, "saved": true}), format))
+}
+
+/// What a save to a macro-enabled `.pptm` tells: the file is a PowerPoint macro-enabled package,
+/// but DeckCraft does not keep `vbaProject.bin`, so it has no macros (a deck opened from a `.pptm`
+/// that had some loses them). Other formats get `result` back unchanged.
+pub const MACROS_DROPPED: &str = "Macros are not kept: the .pptm was saved without them.";
+
+fn with_macro_warning(mut result: Value, format: &str) -> Value {
+    if format == "pptm" {
+        result["macrosDropped"] = json!(true);
+        result["warning"] = json!(MACROS_DROPPED);
+    }
+    result
 }
 
 fn save_as(s: &mut Session, p: &Value) -> Result<Value> {
@@ -744,10 +759,10 @@ fn export(s: &mut Session, p: &Value) -> Result<Value> {
                 "secondsPerSlide": f64::from(out.delay_cs) / 100.0,
             }))
         }
-        "pptx" | "potx" | "ppsx" | "deckcraft" | "outline" | "txt" | "rtf" => {
+        "pptx" | "pptm" | "potx" | "ppsx" | "deckcraft" | "outline" | "txt" | "rtf" => {
             let bytes = save_bytes(&st.doc, &format)?;
             write_file(&path, &bytes)?;
-            Ok(json!({"path": path, "bytes": bytes.len()}))
+            Ok(with_macro_warning(json!({"path": path, "bytes": bytes.len()}), &format))
         }
         other => Err(bad("file.export", format!("unknown format `{other}`"))),
     }

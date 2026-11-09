@@ -27,8 +27,8 @@ pub(crate) fn id_format(format: &str) -> bool {
 
 /// Whether a file at `path` has a history: the formats that keep the whole presentation (see
 /// [`crate::autosave::keeps_everything`]). An export in another format (PDF, pictures, outline) is
-/// not a version of the presentation, and a macro-enabled `.pptm` is not written as such, so it
-/// has none either.
+/// not a version of the presentation, and a macro-enabled `.pptm` is written without its macros
+/// (see [`crate::autosave::keeps_everything`]), so it has none either.
 pub(crate) fn has_history(path: &Path) -> bool {
     crate::autosave::keeps_everything(&path.to_string_lossy())
 }
