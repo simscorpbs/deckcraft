@@ -80,12 +80,15 @@ pub fn export(p: &Presentation) -> Result<Vec<u8>, PptxError> {
     write::export(p, write::CT_PRES)
 }
 
-/// Write a package for `ext`: `potx` (template) and `ppsx` (slide show) differ from `pptx` only in
-/// the main part's content type.
+/// Write a package for `ext`: `potx` (template), `ppsx` (slide show) and `pptm` (macro-enabled)
+/// differ from `pptx` only in the main part's content type. A `pptm` written here has no
+/// `vbaProject.bin`: the reader does not keep binary parts, so macros do not survive (the engine
+/// says so in the save result).
 pub fn export_as(p: &Presentation, ext: &str) -> Result<Vec<u8>, PptxError> {
     let ct = match ext {
         "potx" => write::CT_TEMPLATE,
         "ppsx" => write::CT_SHOW,
+        "pptm" => write::CT_MACRO,
         _ => write::CT_PRES,
     };
     write::export(p, ct)

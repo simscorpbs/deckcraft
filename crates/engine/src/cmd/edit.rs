@@ -155,12 +155,15 @@ fn copy(s: &mut Session, p: &Value) -> Result<Value> {
     // A caret copies nothing; the previous clipboard must not leak into this answer.
     let caret = copying_caret(s);
     let t = copy_inner(s, p)?;
+    if !caret {
+        super::clipboard_pane::collect(s);
+    }
     let html = if caret { String::new() } else { copied_html(s) };
     Ok(json!({"text": t, "html": html}))
 }
 
 /// HTML for what was just copied, when it is text (a selection, or the text on the copied shapes).
-fn copied_html(s: &Session) -> String {
+pub(crate) fn copied_html(s: &Session) -> String {
     if let Some(body) = &s.clipboard.text {
         return richclip::body_to_html(body);
     }
@@ -183,6 +186,7 @@ fn cut(s: &mut Session, p: &Value) -> Result<Value> {
         // Nothing is selected, so there is nothing to cut; `delete` would remove the next character.
         return Ok(json!({"text": t, "html": ""}));
     }
+    super::clipboard_pane::collect(s);
     let html = copied_html(s);
     delete(s, p)?;
     Ok(json!({"text": t, "html": html}))

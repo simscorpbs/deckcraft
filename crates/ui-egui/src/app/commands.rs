@@ -41,6 +41,12 @@ impl SlideApp {
                     self.pending_copy = Some(t.to_string());
                 }
             }
+            // Pasting from the Clipboard pane makes that item the clipboard, here too.
+            Ok(v) if id == "edit.pasteClipboardItem" => {
+                let text = v.get("text").and_then(Value::as_str).unwrap_or("").to_string();
+                let html = v.get("html").and_then(Value::as_str).unwrap_or("").to_string();
+                self.put_on_system_clipboard(text, &html);
+            }
             Ok(_) => {}
             Err(e) => self.set_status(crate::versions_pane::status_text(e)),
         }

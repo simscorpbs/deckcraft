@@ -535,6 +535,8 @@ pub struct Session {
     pub prefs: Prefs,
     pub journal: Vec<(String, Value)>,
     pub clipboard: Clipboard,
+    /// Items collected by Copy and Cut this session, for the Clipboard pane.
+    pub clip_history: cmd::clipboard_pane::ClipHistory,
     pub ui_requests: Vec<UiRequest>,
     pub tool: tools::ToolState,
     pub(crate) untitled: u32,
@@ -593,6 +595,7 @@ impl Session {
             prefs: Prefs::default(),
             journal: vec![],
             clipboard: Clipboard::default(),
+            clip_history: Default::default(),
             ui_requests: vec![],
             tool: tools::ToolState::default(),
             untitled: 0,
@@ -985,4 +988,8 @@ mod tests;
 #[cfg(test)]
 mod tests_autosave;
 #[cfg(test)]
+mod tests_clipboard;
+#[cfg(test)]
 mod tests_keys;
+#[cfg(test)]
+mod tests_pptm;

@@ -12,6 +12,7 @@ use crate::{SlideApp, widgets};
 
 mod animation;
 mod background;
+mod clipboard;
 mod comments;
 mod designer;
 mod effect_presets;
@@ -21,6 +22,8 @@ mod thesaurus;
 
 use animation::animation;
 use background::background;
+pub use clipboard::Thumbs as ClipThumbs;
+use clipboard::clipboard;
 use comments::{comments, revisions};
 use designer::designer;
 use format_shape::format_shape;
@@ -51,6 +54,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
                 "thesaurus" => crate::tl!("Thesaurus"),
                 "revisions" => crate::tl!("Revisions"),
                 "versions" => crate::tl!("Version History"),
+                "clipboard" => crate::tl!("Clipboard"),
                 _ => crate::tl!("Pane"),
             };
             ui.horizontal(|ui| {
@@ -78,6 +82,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
                 "thesaurus" => thesaurus(app, ui),
                 "revisions" => revisions(app, ui),
                 "versions" => crate::versions_pane::pane(app, ui),
+                "clipboard" => clipboard(app, ui),
                 _ => {}
             });
         });

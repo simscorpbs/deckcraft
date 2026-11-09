@@ -77,6 +77,7 @@ fn is_presentation_name(lower: &str) -> bool {
     lower.ends_with(".deckcraft")
         || lower.ends_with(".slidecraft")
         || lower.ends_with(".pptx")
+        || lower.ends_with(".pptm")
         || lower.ends_with(".potx")
         || lower.ends_with(".ppsx")
 }
@@ -461,8 +462,15 @@ impl SlideApp {
         if let Some(pick) = self.services.pick_save.as_mut() {
             if let Some(path) = pick(&suggested) {
                 match self.session.execute("file.saveAs", &json!({"path": path})) {
-                    Ok(_) => {
-                        self.set_status(crate::i18n::fmt(crate::tl!("Saved {path}"), &[("path", path.as_str())]));
+                    Ok(v) => {
+                        if v.get("macrosDropped").and_then(Value::as_bool) == Some(true) {
+                            self.set_status(crate::i18n::fmt(
+                                crate::tl!("Saved {path}. Macros are not kept: the .pptm was saved without them."),
+                                &[("path", path.as_str())],
+                            ));
+                        } else {
+                            self.set_status(crate::i18n::fmt(crate::tl!("Saved {path}"), &[("path", path.as_str())]));
+                        }
                         self.ui.recent.retain(|p| *p != path);
                         self.ui.recent.insert(0, path);
                     }
@@ -502,6 +510,9 @@ impl SlideApp {
         }
         if self.session.active().and_then(|d| d.path.clone()).is_some() {
             match self.session.execute("file.save", &json!({})) {
+                Ok(v) if v.get("macrosDropped").and_then(Value::as_bool) == Some(true) => {
+                    self.set_status(crate::tl!("Saved. Macros are not kept: the .pptm was saved without them."))
+                }
                 Ok(_) => self.set_status(crate::tl!("Saved")),
                 Err(e) => self.set_status(e.to_string()),
             }

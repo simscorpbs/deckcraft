@@ -29,7 +29,9 @@ const VERSION: u32 = 1;
 
 /// Whether saving to `name` keeps the whole presentation, so that AutoSave may write it: the
 /// formats DeckCraft reads and writes without losing anything. Anything else (PDF, pictures,
-/// outlines, a macro-enabled `.pptm` that DeckCraft cannot write as such) is not covered.
+/// outlines, and a macro-enabled `.pptm`: DeckCraft writes one without macros and says so on an
+/// explicit Save, but AutoSave would drop the macros of a deck opened from one without a word) is
+/// not covered.
 pub fn keeps_everything(name: &str) -> bool {
     let ext = Path::new(name).extension().map(|e| e.to_string_lossy().to_ascii_lowercase()).unwrap_or_default();
     matches!(ext.as_str(), "deckcraft" | "slidecraft" | "pptx" | "potx" | "ppsx")

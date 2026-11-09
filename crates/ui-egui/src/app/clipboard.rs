@@ -75,4 +75,13 @@ impl SlideApp {
         }
         ctx.copy_text(system_clipboard_text(&text));
     }
+
+    /// [`Self::publish_clipboard`] for a command that has already filled the session's clipboard
+    /// (an item pasted from the Clipboard pane): the text goes out on the next frame.
+    pub(super) fn put_on_system_clipboard(&mut self, text: String, html: &str) {
+        if self.session.clipboard.slides.is_empty() && !html.is_empty() && self.services.clipboard_set_html.as_mut().is_some_and(|f| f(html, &text)) {
+            return;
+        }
+        self.pending_copy = Some(system_clipboard_text(&text));
+    }
 }

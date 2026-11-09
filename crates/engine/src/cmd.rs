@@ -4,6 +4,7 @@ pub mod animation;
 pub mod arrange;
 pub mod artistic;
 pub mod background;
+pub mod clipboard_pane;
 pub mod cloud;
 pub mod compress;
 pub mod design;
@@ -170,6 +171,7 @@ pub fn command_specs() -> &'static [CommandSpec] {
         v.extend(versions::specs());
         v.extend(version_view::specs());
         v.extend(edit::specs());
+        v.extend(clipboard_pane::specs());
         v.extend(slide::specs());
         v.extend(reuse::specs());
         v.extend(insert::specs());
