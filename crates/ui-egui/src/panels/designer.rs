@@ -13,7 +13,7 @@ struct IdeaThumbs {
 /// `design.applyIdea` or `design.theme`.
 pub(super) fn designer(app: &mut SlideApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
-    ui.label(egui::RichText::new("Pick a design for this slide. Ideas are generated on your device.").color(t.text_dim));
+    ui.label(egui::RichText::new(crate::tl!("Pick a design for this slide. Ideas are generated on your device.")).color(t.text_dim));
     ui.add_space(6.0);
     let Some(st) = app.session.active() else { return };
     let doc = st.doc.clone();
@@ -76,18 +76,18 @@ pub(super) fn designer(app: &mut SlideApp, ui: &mut Ui) {
         clicked
     };
     if ideas.is_empty() {
-        ui.label(egui::RichText::new("Add a title with a picture or some text to get layout ideas.").color(t.text_dim));
+        ui.label(egui::RichText::new(crate::tl!("Add a title with a picture or some text to get layout ideas.")).color(t.text_dim));
     }
     for (id, label) in &ideas {
-        if thumb(ui, &format!("layout:{id}"), label) {
+        if thumb(ui, &format!("layout:{id}"), crate::tl!(label)) {
             run(app, "design.applyIdea", json!({"id": id}));
         }
     }
     ui.add_space(4.0);
-    ui.label(egui::RichText::new("Themes (whole presentation)").color(t.text_dim));
+    ui.label(egui::RichText::new(crate::tl!("Themes (whole presentation)")).color(t.text_dim));
     ui.add_space(4.0);
     for th in &themes {
-        if thumb(ui, &format!("theme:{}", th.name), &th.name) {
+        if thumb(ui, &format!("theme:{}", th.name), crate::tl!(&th.name)) {
             run(app, "design.theme", json!({"name": th.name}));
         }
     }

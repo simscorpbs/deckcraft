@@ -91,7 +91,7 @@ fn section_header(app: &mut SlideApp, ui: &mut Ui, h: &Header<'_>) -> Rect {
     painter.rect_filled(r, CornerRadius::same(4), bg);
     let chev = Rect::from_center_size(pos2(r.min.x + 20.0, r.center().y), vec2(24.0, 24.0));
     let cresp = ui.interact(chev, ui.scope_id().with(("sorter-fold", h.uid, h.index)), Sense::click());
-    let fold = format!("{} {}", if open { "Collapse" } else { "Expand" }, h.name);
+    let fold = format!("{} {}", if open { crate::tl!("Collapse") } else { crate::tl!("Expand") }, h.name);
     cresp.widget_info(|| WidgetInfo::labeled(Role::Button, true, &fold));
     icons::paint(&painter, chev.shrink(4.0), if open { Icon::ChevronDown } else { Icon::ChevronRight }, t.text_dim, h.first.is_none());
     let renaming = app.sorter.renaming.clone().filter(|(uid, index, _)| *uid == h.uid && *index == h.index).map(|(_, _, text)| text);
@@ -99,7 +99,7 @@ fn section_header(app: &mut SlideApp, ui: &mut Ui, h: &Header<'_>) -> Rect {
     if let Some(mut buf) = renaming {
         let edit_id = ui.scope_id().with(("sorter-rename", h.uid, h.index));
         let out =
-            ui.put(name_rect, egui::TextEdit::singleline(&mut buf).id(edit_id).hint_text("Name").font(theme::bold(13.0)).margin(vec2(4.0, 2.0)));
+            ui.put(name_rect, egui::TextEdit::singleline(&mut buf).id(edit_id).hint_text(crate::tl!("Name")).font(theme::bold(13.0)).margin(vec2(4.0, 2.0)));
         let already = app.sorter.rename_started;
         if !already {
             out.request_focus();
@@ -201,7 +201,7 @@ fn place_slides(app: &mut SlideApp, ui: &mut Ui, g: &Grid<'_>, budget: &mut u32,
             for c in 0..cols {
                 let Some(&i) = g.indices.get(row * cols + c) else { break };
                 let (cell, resp) = ui.allocate_exact_size(vec2(g.tw + 36.0, g.th + 36.0), Sense::click_and_drag());
-                let label = format!("Slide {}", i + 1);
+                let label = crate::i18n::fmt_plain(crate::tl!("Slide {n}"), &[("n", &(i + 1).to_string())]);
                 resp.widget_info(|| WidgetInfo::labeled(Role::Button, true, &label));
                 let img = crate::textures::device_pixel_rect(Rect::from_min_size(cell.min + vec2(18.0, 8.0), vec2(g.tw, g.th)), ppp);
                 rects.push((i, cell));
@@ -282,7 +282,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
         ui.add_space(12.0);
         ui.horizontal(|ui| {
             ui.add_space(24.0);
-            if ui.add(egui::Button::new("Add Section").stroke(Stroke::new(1.0, t.border))).clicked() {
+            if ui.add(egui::Button::new(crate::tl!("Add Section")).stroke(Stroke::new(1.0, t.border))).clicked() {
                 let _ = app.run("section.add", json!({"at": cur}));
             }
         });
@@ -417,7 +417,7 @@ pub fn notes_page(app: &mut SlideApp, ui: &mut Ui) {
     let look = crate::notes::Look { size: 14.0, color: Some(Color32::from_gray(30)) };
     let width = notes_rect.width();
     let r = crate::notes::editor(&mut child, &mut draft, &look, |e| {
-        e.id(edit_id).hint_text("Click to add text").desired_width(width).desired_rows(12).frame(egui::Frame::NONE)
+        e.id(edit_id).hint_text(crate::tl!("Click to add text")).desired_width(width).desired_rows(12).frame(egui::Frame::NONE)
     })
     .response
     .response;
@@ -496,7 +496,7 @@ fn outline_slide(app: &mut SlideApp, ui: &mut Ui, t: &Tokens, i: usize, s: &deck
         let cur_title = s.title();
         let mut v: String = ui.data_mut(|d| d.get_temp(id).unwrap_or_else(|| cur_title.clone()));
         let resp = ui.add(
-            egui::TextEdit::singleline(&mut v).hint_text("Slide title").font(theme::bold(14.0)).frame(egui::Frame::NONE).desired_width(f32::INFINITY),
+            egui::TextEdit::singleline(&mut v).hint_text(crate::tl!("Slide title")).font(theme::bold(14.0)).frame(egui::Frame::NONE).desired_width(f32::INFINITY),
         );
         if resp.gained_focus() {
             let _ = app.run("slide.go", json!({"index": i}));
@@ -525,7 +525,7 @@ fn outline_slide(app: &mut SlideApp, ui: &mut Ui, t: &Tokens, i: usize, s: &deck
         ui.horizontal(|ui| {
             ui.add_space(36.0);
             let resp = ui
-                .add(egui::TextEdit::multiline(&mut v).hint_text("Slide text").frame(egui::Frame::NONE).desired_width(f32::INFINITY).desired_rows(1));
+                .add(egui::TextEdit::multiline(&mut v).hint_text(crate::tl!("Slide text")).frame(egui::Frame::NONE).desired_width(f32::INFINITY).desired_rows(1));
             if resp.gained_focus() {
                 let _ = app.run("slide.go", json!({"index": i}));
             }
