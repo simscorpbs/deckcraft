@@ -96,9 +96,36 @@ impl Unit {
 }
 
 fn split_number(t: &str) -> Option<(f64, &str)> {
-    let end = t.char_indices().find(|(_, c)| !(c.is_ascii_digit() || *c == '.' || *c == '-' || *c == '+')).map(|(i, _)| i).unwrap_or(t.len());
-    let n: f64 = t.get(..end)?.parse().ok()?;
+    let end = t.char_indices().find(|(_, c)| !(c.is_ascii_digit() || matches!(*c, '.' | ',' | '-' | '+'))).map(|(i, _)| i).unwrap_or(t.len());
+    let n = parse_decimal(t.get(..end)?)?;
     Some((n, t.get(end..).unwrap_or("")))
+}
+
+/// Parses a typed number, accepting `,` as the decimal separator (`2,5` is 2.5) for regions
+/// that write it so. A lone `,` with no `.` is always the decimal mark (`1,250` is 1.25): these
+/// fields hold slide sizes, margins and tab stops, where a thousands group never comes up and a
+/// pt-BR `1,250` must not turn into 1250. With both marks the later one is the decimal mark
+/// (`1.234,5` and `1,234.5` are 1234.5).
+/// `None` for anything that is not a finite number.
+pub fn parse_decimal(text: &str) -> Option<f64> {
+    let t = text.trim();
+    let commas = t.matches(',').count();
+    let dots = t.matches('.').count();
+    let normalized = if commas == 0 {
+        t.to_string()
+    } else if dots == 0 && commas == 1 {
+        t.replacen(',', ".", 1)
+    } else if dots == 1 && commas >= 1 {
+        let (c, d) = (t.rfind(',')?, t.rfind('.')?);
+        if c > d {
+            t.replace('.', "").replacen(',', ".", 1)
+        } else {
+            t.replace(',', "")
+        }
+    } else {
+        return None;
+    };
+    normalized.parse::<f64>().ok().filter(|v| v.is_finite())
 }
 
 /// A shape's placement on its slide (or in its group's child space): offset, extent, rotation
@@ -224,6 +251,34 @@ pub fn preset_flatten(path: &BezPath, f: &mut dyn FnMut(PathEl)) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn decimal_comma_is_accepted() {
+        assert_eq!(parse_decimal("2,5"), Some(2.5));
+        assert_eq!(parse_decimal("2.5"), Some(2.5));
+        assert_eq!(parse_decimal("-0,25"), Some(-0.25));
+        assert_eq!(parse_decimal("0,500"), Some(0.5));
+        assert_eq!(parse_decimal("1,5"), Some(1.5));
+        assert_eq!(parse_decimal("1,50"), Some(1.5));
+        assert_eq!(parse_decimal("1,500"), Some(1.5));
+        assert_eq!(parse_decimal("1,250"), Some(1.25));
+        assert_eq!(parse_decimal("1.234,5"), Some(1234.5));
+        assert_eq!(parse_decimal("1,234.5"), Some(1234.5));
+        assert_eq!(parse_decimal("1,2,3"), None);
+        assert_eq!(parse_decimal("abc"), None);
+        assert_eq!(parse_decimal(""), None);
+        assert_eq!(parse_decimal(","), None);
+    }
+
+    #[test]
+    fn unit_parse_takes_a_decimal_comma() {
+        let cm = 72.0 / 2.54;
+        assert!((Unit::Inches.parse("2,5 cm").unwrap() - 2.5 * cm).abs() < 1e-9);
+        assert!((Unit::Centimeters.parse("2,5").unwrap() - 2.5 * cm).abs() < 1e-9);
+        assert!((Unit::Inches.parse("1,5\"").unwrap() - 108.0).abs() < 1e-9);
+        assert!((Unit::Points.parse("12,5pt").unwrap() - 12.5).abs() < 1e-9);
+        assert_eq!(Unit::Points.parse("2,5,3 cm"), None);
+    }
 
     #[test]
     fn format_has_no_negative_zero() {

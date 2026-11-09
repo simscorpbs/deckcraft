@@ -450,7 +450,7 @@ fn dlg_bullets(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         run(app, if tab == "numbered" { "format.numbering" } else { "format.bullets" }, json!({"on": false}));
     } else if ok {
         let mut p = json!({"on": true});
-        if let Some(size) = d.get("size", "100").trim().trim_end_matches('%').parse::<f64>().ok().filter(|v| v.is_finite()) {
+        if let Some(size) = deckcraft_geom::parse_decimal(d.get("size", "100").trim().trim_end_matches('%')) {
             p["size"] = json!(size.clamp(25.0, 400.0));
         }
         if !color.is_empty() {

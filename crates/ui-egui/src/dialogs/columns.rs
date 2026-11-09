@@ -12,13 +12,8 @@ fn columns_value(d: &Dialog, shown_count: &str, shown_spacing: &str) -> Result<O
     }
     let spacing = field_of(d, "spacing");
     if spacing != shown_spacing {
-        let inches = spacing
-            .trim()
-            .trim_end_matches("in")
-            .trim_end_matches('"')
-            .trim()
-            .parse::<f64>()
-            .ok()
+        let typed = spacing.trim().trim_end_matches("in").trim_end_matches('"').trim();
+        let inches = deckcraft_geom::parse_decimal(typed)
             .filter(|v| v.is_finite() && (0.0..=22.0).contains(v))
             .ok_or("Spacing must be from 0 to 22 inches")?;
         p.insert("spacing".into(), json!(inches * 72.0));

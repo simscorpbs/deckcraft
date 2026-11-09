@@ -163,7 +163,8 @@ fn check(ui: &mut Ui, d: &mut Dialog, label: &str, key: &str, default: bool) -> 
 }
 
 fn num(d: &mut Dialog, key: &str, default: f64) -> f64 {
-    d.get(key, "").trim().trim_end_matches(['"', '%', ' ']).parse::<f64>().ok().filter(|v| v.is_finite()).unwrap_or(default)
+    let text = d.get(key, "");
+    deckcraft_geom::parse_decimal(text.trim().trim_end_matches(['"', '%', ' '])).unwrap_or(default)
 }
 
 fn num_text(v: f64) -> String {

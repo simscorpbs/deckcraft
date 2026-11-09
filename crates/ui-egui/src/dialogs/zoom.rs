@@ -9,7 +9,7 @@ pub fn parse_zoom_percent(text: &str) -> Option<f32> {
     if t.is_empty() {
         return None;
     }
-    let v = t.parse::<f64>().ok().filter(|n| n.is_finite())?;
+    let v = deckcraft_geom::parse_decimal(t)?;
     Some(((v / 100.0) as f32).clamp(0.1, 4.0))
 }
 
