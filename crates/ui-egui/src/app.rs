@@ -254,6 +254,8 @@ impl SlideApp {
         }
         self.recovery_if_due(ctx);
         self.autosave_tick(monotonic_secs());
+        // Collect the version history's background writes (cheap; reports a failed one in the log).
+        self.session.versions_tick();
         self.autosave_wake(ctx);
         self.tick_media_clock(ctx);
         self.note_settled_composition(ctx);

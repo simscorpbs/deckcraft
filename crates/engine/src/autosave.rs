@@ -441,7 +441,7 @@ impl crate::Session {
             if now - since < SETTLE_SECS || waiting {
                 continue;
             }
-            if let Some(event) = self.autosave_write(i, now) {
+            if let Some(event) = self.autosave_write(i, now, None) {
                 events.push(event);
             }
         }
@@ -449,9 +449,14 @@ impl crate::Session {
     }
 
     /// Write presentation `index` with `file.save` and `ifUnchanged`, and update its schedule.
-    fn autosave_write(&mut self, index: usize, now: f64) -> Option<AutoSaveEvent> {
+    /// `trigger` is what made the write when it is not the schedule (`close`): the version
+    /// history records it.
+    fn autosave_write(&mut self, index: usize, now: f64, trigger: Option<&str>) -> Option<AutoSaveEvent> {
         let uid = self.docs.get(index)?.uid;
-        let params = serde_json::json!({"document": uid, "ifUnchanged": true});
+        let mut params = serde_json::json!({"document": uid, "ifUnchanged": true});
+        if let Some(trigger) = trigger {
+            params["trigger"] = serde_json::json!(trigger);
+        }
         let result = self.guarded("file.save", |s| crate::cmd::file::save(s, &params));
         let at = self.index_of_uid(uid)?;
         let d = self.docs.get_mut(at)?;
@@ -491,7 +496,7 @@ impl crate::Session {
         if !self.autosave_covers(index) {
             return Flush::NotCovered;
         }
-        match self.autosave_write(index, 0.0) {
+        match self.autosave_write(index, 0.0, Some("close")) {
             Some(AutoSaveEvent::Saved { .. }) => Flush::Saved,
             Some(AutoSaveEvent::Conflict { .. }) => Flush::Conflict,
             // A failed write is left to the Save Changes prompt; the schedule starts afresh.

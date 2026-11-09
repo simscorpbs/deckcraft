@@ -32,6 +32,13 @@ chrono = { workspace = true }
 deckcraft-anim = { workspace = true }
 zip = { workspace = true }
 
+# The local version history (desktop only): digests, random ids, zip packages kept as parts.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+sha2 = { workspace = true }
+getrandom = { workspace = true }
+zip = { workspace = true }
+miniz_oxide = { workspace = true }
+
 # The browser clock for comment timestamps (wasm has no std::time::SystemTime).
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = "0.3"

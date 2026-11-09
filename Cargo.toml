@@ -71,6 +71,10 @@ craft-i18n = { git = "https://github.com/storytold/craft-libs", rev = "c5a1cbfb5
 i_overlay = "9"
 quick-xml = "0.41"
 zip = { version = "3", default-features = false, features = ["deflate"] }
+# The version history: content digests, random ids, and compressed deltas (all pure Rust).
+sha2 = "0.10"
+getrandom = "0.3"
+miniz_oxide = "0.9"
 
 # ui
 egui = { version = "0.37", default-features = false }

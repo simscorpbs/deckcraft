@@ -186,8 +186,14 @@ fn resolve_conflict(s: &mut Session, p: &Value) -> Result<Value> {
         Some("both") => {
             let copy = deckcraft_cloud::conflict_copy_path(Path::new(&path), "conflict copy")
                 .ok_or_else(|| EngineError::Other(format!("Too many conflict copies of {path}")))?;
-            // The session now edits the copy; the other version is left as it is.
-            let r = save(s, &copy.to_string_lossy())?;
+            // The session now edits the copy; the other version is left as it is. Its first
+            // version in the history says it is a conflict copy.
+            s.set_next_version_kind(index, crate::versions::VersionKind::ConflictCopy);
+            let r = save(s, &copy.to_string_lossy());
+            if r.is_err() {
+                s.clear_next_version_kind(index);
+            }
+            let r = r?;
             if let Some(d) = s.docs.get_mut(index) {
                 d.conflict = None;
             }
@@ -230,6 +236,11 @@ fn reopen(s: &mut Session, index: usize, path: &str) -> Result<Value> {
     d.missing_fonts = missing;
     d.stamp = f.stamp;
     d.conflict = None;
+    // The file is read afresh: a new editing session, and what is on disk is not yet known to be
+    // in the history (it holds the other device's changes).
+    let epoch = d.versions.epoch.saturating_add(1);
+    d.versions = crate::versions::DocVersions::started();
+    d.versions.epoch = epoch;
     d.revision += 1;
     let uid = d.uid;
     if let Some(dir) = &s.recovery_dir {

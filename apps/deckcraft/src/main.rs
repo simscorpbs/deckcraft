@@ -94,13 +94,20 @@ fn load_prefs(app: &mut SlideApp) {
     }
 }
 
-/// AutoSave remembers its switch for each file in `autosave.json` beside the settings, and the
+/// AutoSave remembers its switch for each file in `autosave.json` beside the settings, saved
+/// presentations keep a version history in `versions/` there, and the
 /// iCloud Drive, Google Drive and OneDrive folders are looked for off the UI thread.
 fn start_autosave(app: &mut SlideApp, ctx: &egui::Context) {
     if std::env::var_os("DECKCRAFT_NO_PREFS").is_none()
         && let Some(dir) = config_dir()
     {
         app.session.enable_autosave_memory(dir.join("autosave.json"));
+        // The version history of saved presentations: `versions/` beside the settings, unless
+        // Preferences names other folders (read from `prefs.json` above).
+        let wake = ctx.clone();
+        if let Err(error) = app.session.enable_versions(dir.join("versions"), std::sync::Arc::new(move || wake.request_repaint())) {
+            log::warn!("version history is off: {error}");
+        }
     }
     let ctx = ctx.clone();
     app.discover_cloud(std::sync::Arc::new(move || ctx.request_repaint()));

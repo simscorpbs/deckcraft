@@ -30,6 +30,7 @@ pub mod table;
 pub mod text;
 pub mod three_d;
 pub mod transition;
+pub mod versions;
 pub mod zoom;
 
 use deckcraft_geom::Xfrm;
@@ -165,6 +166,7 @@ pub fn command_specs() -> &'static [CommandSpec] {
         let mut v = Vec::new();
         v.extend(file::specs());
         v.extend(cloud::specs());
+        v.extend(versions::specs());
         v.extend(edit::specs());
         v.extend(slide::specs());
         v.extend(reuse::specs());

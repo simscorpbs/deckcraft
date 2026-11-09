@@ -233,6 +233,7 @@ mod tabs;
 mod theme_colors;
 mod theme_fonts;
 mod trim;
+mod version_history;
 mod zoom;
 
 pub use about::{about, paint_logo, version_line};
@@ -337,3 +338,6 @@ mod paragraph_dialog_tests;
 
 #[cfg(test)]
 mod preferences_tests;
+
+#[cfg(test)]
+mod version_history_tests;
