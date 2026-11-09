@@ -501,3 +501,154 @@ animation	Emphasis	Ênfase
 animation	Entrance	Entrada
 animation	Exit	Saída
 tab	Home	Página Inicial
+# --- backstage, slide show, presenter, media and notices ---
+	Back (Esc)	Voltar (Esc)
+	Blank Presentation	Apresentação em Branco
+	Sample deck: Northern Lights	Apresentação de exemplo: Luzes do Norte
+	Presentations you open show up here. Use Open to browse for one.	As apresentações que você abrir aparecerão aqui. Use Abrir para procurar uma.
+	No recent presentations match “{query}”.	Nenhuma apresentação recente corresponde a “{query}”.
+	(missing)	(ausente)
+	{path} — this file can't be found	{path} — este arquivo não foi encontrado
+	Remove from Recent	Remover de Recentes
+	More themes	Mais temas
+	More templates	Mais modelos
+	More presentations	Mais apresentações
+	Search for a file	Pesquisar um arquivo
+	Search for themes and templates	Pesquisar temas e modelos
+	No themes or templates match “{query}”.	Nenhum tema ou modelo corresponde a “{query}”.
+	Open a presentation from a folder (Ctrl+O)	Abrir uma apresentação de uma pasta (Ctrl+O)
+	Recover Unsaved Presentations	Recuperar Apresentações Não Salvas
+	There are no unsaved presentations to recover	Não há apresentações não salvas para recuperar
+	Presentations	Apresentações
+	PowerPoint Presentation (*.pptx)	Apresentação do PowerPoint (*.pptx)
+	DeckCraft Presentation (*.deckcraft)	Apresentação do DeckCraft (*.deckcraft)
+	Outline (*.txt)	Estrutura de Tópicos (*.txt)
+	Outline/RTF (*.rtf)	Estrutura de Tópicos/RTF (*.rtf)
+	PNG Picture (*.png)	Imagem PNG (*.png)
+	JPEG Picture (*.jpg)	Imagem JPEG (*.jpg)
+	Opens in PowerPoint and other presentation apps	Abre no PowerPoint e em outros aplicativos de apresentação
+	DeckCraft's own format: everything is kept	Formato próprio do DeckCraft: tudo é preservado
+	A fixed copy that keeps its layout on any device	Uma cópia fixa que mantém o layout em qualquer dispositivo
+	The slide titles and bullet text as plain text	Os títulos dos slides e o texto dos marcadores como texto simples
+	The slide titles and bullet text for word processors	Os títulos dos slides e o texto dos marcadores para processadores de texto
+	The current slide as a picture	O slide atual como imagem
+	The current slide as a compressed picture	O slide atual como imagem compactada
+	Tags	Marcas
+	Categories	Categorias
+	Add a title	Adicionar um título
+	Specify the subject	Especificar o assunto
+	Add a tag	Adicionar uma marca
+	Add a category	Adicionar uma categoria
+	Specify the company	Especificar a empresa
+	Add comments	Adicionar comentários
+	Add an author	Adicionar um autor
+	No presentation is open.	Nenhuma apresentação está aberta.
+	Not saved yet	Ainda não salva
+	Copy path	Copiar caminho
+	Copied the path	Caminho copiado
+	Open file location	Abrir local do arquivo
+	Check for Issues	Verificar Problemas
+	Inspect Presentation	Inspecionar Apresentação
+	Before you share it, check the presentation for things people with disabilities might find hard to read.	Antes de compartilhar, verifique se a apresentação tem algo que pessoas com deficiência possam ter dificuldade para ler.
+	Manage Presentation	Gerenciar Apresentação
+	There are no unsaved changes.	Não há alterações não salvas.
+	This presentation has unsaved changes. Revert goes back to the saved file.	Esta apresentação tem alterações não salvas. Reverter volta ao arquivo salvo.
+	This presentation has never been saved.	Esta apresentação nunca foi salva.
+	Hidden slides	Slides ocultos
+	Save as type	Salvar como tipo
+	Download the file	Baixar o arquivo
+	Save to the page	Salvar na página
+	Choose where to save	Escolher onde salvar
+	Credits	Créditos
+	The people and models who built DeckCraft.	As pessoas e os modelos que construíram o DeckCraft.
+	Product Information	Informações do Produto
+	Open source under MIT OR Apache-2.0. Not affiliated with Microsoft.	Código aberto sob MIT OU Apache-2.0. Sem afiliação com a Microsoft.
+	Join our community on Discord	Participe da nossa comunidade no Discord
+	Source on GitHub	Código-fonte no GitHub
+	DeckCraft prints through a PDF: it opens in your PDF viewer, where you choose the printer.	O DeckCraft imprime por meio de um PDF: ele abre no seu leitor de PDF, onde você escolhe a impressora.
+	DeckCraft prints through a PDF: it downloads, ready to print from your browser or PDF viewer.	O DeckCraft imprime por meio de um PDF: ele é baixado, pronto para imprimir pelo navegador ou pelo leitor de PDF.
+	Print All Slides	Imprimir Todos os Slides
+	Print Current Slide	Imprimir Slide Atual
+	Custom Range	Intervalo Personalizado
+	Print range	Intervalo de impressão
+	e.g. 1-3, 5	ex.: 1-3, 5
+	Full Page Slides	Slides de Página Inteira
+	Notes Pages	Páginas de Anotações
+	Handouts (1 slide per page)	Folhetos (1 slide por página)
+	Handouts (2 slides per page)	Folhetos (2 slides por página)
+	Handouts (3 slides per page)	Folhetos (3 slides por página)
+	Handouts (4 slides per page)	Folhetos (4 slides por página)
+	Handouts (6 slides per page)	Folhetos (6 slides por página)
+	Handouts (9 slides per page)	Folhetos (9 slides por página)
+	Print layout	Layout de impressão
+	Paper size	Tamanho do papel
+	Letter (8.5 × 11 in)	Carta (8,5 × 11 pol.)
+	Legal (8.5 × 14 in)	Ofício (8,5 × 14 pol.)
+	Landscape Orientation	Orientação Paisagem
+	Portrait Orientation	Orientação Retrato
+	Print Hidden Slides	Imprimir Slides Ocultos
+	Frame Slides	Moldura nos Slides
+	Edit Header & Footer	Editar Cabeçalho e Rodapé
+	Nothing to print: every slide in the range is hidden.	Nada para imprimir: todos os slides do intervalo estão ocultos.
+	{n} of {total}	{n} de {total}
+	Create PDF Document	Criar Documento PDF
+	Create Handouts	Criar Folhetos
+	Change File Type	Alterar Tipo de Arquivo
+	Create a PDF Document	Criar um Documento PDF
+	Keeps the layout, fonts and pictures	Preserva o layout, as fontes e as imagens
+	Opens on any device with a PDF viewer	Abre em qualquer dispositivo com um leitor de PDF
+	The presentation keeps its own file	A apresentação mantém o próprio arquivo
+	Include hidden slides	Incluir slides ocultos
+	Create PDF	Criar PDF
+	Several slides on each page of a PDF	Vários slides em cada página de um PDF
+	Three a page leaves lines for notes	Três por página deixa linhas para anotações
+	Print them for your audience	Imprima-os para o público
+	{n} slides per page	{n} slides por página
+	Slides per page	Slides por página
+	Transparent background	Plano de fundo transparente
+	Leave the slide background out: only what is on the slide is drawn	Omite o plano de fundo do slide: só o que está no slide é desenhado
+	Still opening {name}	Ainda abrindo {name}
+	Stopped opening {name}	Abertura de {name} interrompida
+	Opening {name}…	Abrindo {name}…
+	Reading the file: {secs} s	Lendo o arquivo: {secs} s
+	DeckCraft can't export “{format}”	O DeckCraft não pode exportar “{format}”
+	Saving a copy needs a file picker, which this window doesn't have.	Salvar uma cópia exige um seletor de arquivos, que esta janela não tem.
+	Couldn't create a private print preview: {error}	Não foi possível criar uma visualização de impressão privada: {error}
+	Opened the presentation as a PDF to print	Apresentação aberta como PDF para impressão
+	Reuse Slides needs the desktop app	Reutilizar Slides exige o aplicativo para computador
+	Saved {path}	Salvo em {path}
+	Couldn't save AutoRecover information: {error}	Não foi possível salvar as informações de AutoRecuperação: {error}
+	This slide has no animations	Este slide não tem animações
+	Previewing animations	Visualizando animações
+	Browse for Themes needs the desktop app for now	Procurar Temas exige o aplicativo para computador por enquanto
+	Compare needs the desktop app for now	Comparar exige o aplicativo para computador por enquanto
+	{a} and {b}	{a} e {b}
+	{a}, {b} and {c}	{a}, {b} e {c}
+	{a}, {b}, {c} and {n} more	{a}, {b}, {c} e mais {n}
+	{names} isn't installed on this computer. Text that uses it is shown in a similar font.	{names} não está instalada neste computador. O texto que a usa é exibido em uma fonte semelhante.
+	{names} aren't installed on this computer. Text that uses them is shown in a similar font.	{names} não estão instaladas neste computador. O texto que as usa é exibido em uma fonte semelhante.
+	All slides	Todos os slides
+	First {n} slides	Primeiros {n} slides
+	End of slide show, click to exit.	Fim da apresentação de slides. Clique para sair.
+	Go to slide {n}	Ir para o slide {n}
+	Click the slide to zoom in. Esc cancels.	Clique no slide para ampliar. Esc cancela.
+	Zoom on	Zoom ativado
+	Slide timings recorded.	Intervalos de slides gravados.
+	End Show	Encerrar Apresentação
+	◀ Previous	◀ Anterior
+	Next ▶	Próximo ▶
+	Black on	Preto ativado
+	White on	Branco ativado
+	All slides on	Todos os slides ativado
+	Presenter View — DeckCraft	Modo de Exibição do Apresentador — DeckCraft
+	End of slide show	Fim da apresentação de slides
+	No notes.	Sem anotações.
+	Click the preview to zoom.	Clique na visualização para ampliar.
+	Choose a slide to show it, or press G to return.	Escolha um slide para exibi-lo ou pressione G para voltar.
+	Play or pause media	Reproduzir ou pausar mídia
+	Back 0.25 seconds	Voltar 0,25 segundo
+	Forward 0.25 seconds	Avançar 0,25 segundo
+	Media control	Controle de mídia
+	Media position	Posição da mídia
+	No sound: {error}	Sem som: {error}
+@plural	Inserted {n} slide|Inserted {n} slides	{n} slide inserido|{n} slides inseridos

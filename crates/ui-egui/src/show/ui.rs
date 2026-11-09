@@ -663,7 +663,7 @@ fn draw_slide(app: &mut SlideApp, ui: &mut Ui, show: &mut Show, f: &Fr, painter:
         painter.text(
             pos2(full.center().x, full.min.y + 40.0),
             Align2::CENTER_CENTER,
-            "End of slide show, click to exit.",
+            crate::tl!("End of slide show, click to exit."),
             theme::font(18.0),
             Color32::from_gray(200),
         );
@@ -689,7 +689,7 @@ fn draw_pen_and_hints(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Pain
         painter.rect_filled(full, CornerRadius::ZERO, c);
     }
     if !show.goto.is_empty() {
-        let label = format!("Go to slide {}", show.goto);
+        let label = crate::i18n::fmt(crate::tl!("Go to slide {n}"), &[("n", show.goto.as_str())]);
         let w = (28.0 + label.len() as f32 * 10.0).clamp(160.0, full.width() - 32.0);
         let r = Rect::from_min_size(pos2(full.min.x + 16.0, full.max.y - 96.0), vec2(w, 36.0));
         painter.rect_filled(r, CornerRadius::same(6), Color32::from_black_alpha(190));
@@ -699,7 +699,7 @@ fn draw_pen_and_hints(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Pain
     // Pen.
     let resp = ui.interact(full, ui.scope_id().with("show_pen"), if show.pen { Sense::drag() } else { Sense::hover() });
     if show.pen {
-        resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Pen"));
+        resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, crate::tl!("Pen")));
     }
     if show.pen {
         if resp.drag_started() {
@@ -744,7 +744,7 @@ fn draw_pen_and_hints(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Pain
         painter.text(
             pos2(full.center().x, full.min.y + 36.0),
             Align2::CENTER_CENTER,
-            "Click the slide to zoom in. Esc cancels.",
+            crate::tl!("Click the slide to zoom in. Esc cancels."),
             theme::font(16.0),
             Color32::WHITE,
         );
@@ -760,7 +760,7 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
         painter.text(
             pos2(bar.min.x + 14.0, bar.center().y),
             Align2::LEFT_CENTER,
-            format!("Slide {} of {}", show.state.slide + 1, doc.slides.len()),
+            crate::i18n::fmt(crate::tl!("Slide {n} of {total}"), &[("n", &(show.state.slide + 1).to_string()), ("total", &doc.slides.len().to_string())]),
             theme::font(12.0),
             Color32::from_gray(200),
         );
@@ -769,7 +769,7 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
                 .max_rect(Rect::from_min_max(pos2(bar.max.x - 260.0, bar.min.y), bar.max))
                 .layout(egui::Layout::right_to_left(egui::Align::Center)),
         );
-        if child.button("Close").clicked() {
+        if child.button(crate::tl!("Close")).clicked() {
             out.keep = false;
         }
         if child.button("▶").clicked() {
@@ -787,7 +787,7 @@ fn draw_bars(ui: &mut Ui, show: &mut Show, f: &Fr, painter: &egui::Painter, out:
         painter.rect_filled(bar, CornerRadius::same(17), Color32::from_black_alpha(140));
         let mut child =
             ui.new_child(egui::UiBuilder::new().max_rect(bar.shrink2(vec2(10.0, 4.0))).layout(egui::Layout::left_to_right(egui::Align::Center)));
-        let b = |ui: &mut Ui, s: &str| ui.add(egui::Button::new(egui::RichText::new(s).color(Color32::WHITE).size(15.0)).frame(false));
+        let b = |ui: &mut Ui, s: &str| ui.add(egui::Button::new(egui::RichText::new(crate::tl!(s)).color(Color32::WHITE).size(15.0)).frame(false));
         if b(&mut child, "◀").clicked() {
             let a = show.state.prev(doc);
             show.apply(a, doc, now);
@@ -836,7 +836,10 @@ fn draw_extras(show: &mut Show, f: &Fr, painter: &egui::Painter, out: &mut Out) 
         painter.text(
             r.center(),
             Align2::CENTER_CENTER,
-            format!("Slide {:02}:{:04.1}   Total {:02}:{:02}", (t / 60.0) as u32, t % 60.0, (total / 60.0) as u32, (total % 60.0) as u32),
+            crate::i18n::fmt(
+                crate::tl!("Slide {slide}   Total {total}"),
+                &[("slide", &format!("{:02}:{:04.1}", (t / 60.0) as u32, t % 60.0)), ("total", &format!("{:02}:{:02}", (total / 60.0) as u32, (total % 60.0) as u32))],
+            ),
             theme::font(13.0),
             Color32::WHITE,
         );
@@ -868,7 +871,7 @@ fn finish(app: &mut SlideApp, mut show: Show, f: &Fr, keep: bool) {
             for (i, secs) in show.timings.clone() {
                 let _ = app.run("transition.timing", json!({"index": i, "after": (secs * 1000.0).round() as u64}));
             }
-            app.set_status("Slide timings recorded.");
+            app.set_status(crate::tl!("Slide timings recorded."));
         }
         let last = show.state.slide;
         let _ = app.run("slide.go", json!({"index": last}));

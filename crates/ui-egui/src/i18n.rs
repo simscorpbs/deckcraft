@@ -281,3 +281,5 @@ pub(crate) fn catalogs_embedded() -> bool {
 
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_backstage;
