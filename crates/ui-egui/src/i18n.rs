@@ -284,3 +284,5 @@ mod tests;
 
 #[cfg(test)]
 mod tests_dialogos;
+#[cfg(test)]
+mod tests_backstage;

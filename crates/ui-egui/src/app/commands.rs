@@ -278,7 +278,7 @@ impl SlideApp {
                     self.pick_and_insert("theme", "design.browseTheme");
                 } else {
                     // The browser's asynchronous picker would open the file as a new document.
-                    self.set_status("Browse for Themes needs the desktop app for now".to_string());
+                    self.set_status(crate::tl!("Browse for Themes needs the desktop app for now"));
                 }
             }
             "app.qat" => return qat::command(self, p),
@@ -296,7 +296,7 @@ impl SlideApp {
                     self.pick_and_insert("open", "review.compare");
                 } else {
                     // The browser's asynchronous picker would open the file as a new document.
-                    self.set_status("Compare needs the desktop app for now".to_string());
+                    self.set_status(crate::tl!("Compare needs the desktop app for now"));
                 }
             }
             "app.dialog" => {
