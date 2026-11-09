@@ -59,6 +59,29 @@ impl DateTime {
 const MONTHS: [&str; 12] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const DAYS: [&str; 7] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+/// Portuguese (pt-BR and pt-PT) month and weekday names: lower case, as the language writes them.
+const MONTHS_PT: [&str; 12] = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+const DAYS_PT: [&str; 7] = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+
+/// The date types with names, as PowerPoint's pt-BR Date & Time list writes them: `domingo, 8 de
+/// novembro de 2026`, `8 de novembro de 2026`, `8-nov-26`. The time-of-day types are not here
+/// (Portuguese uses the 24-hour clock, which `datetime10` and `datetime11` already give).
+fn portuguese(kind: &str, now: DateTime) -> Option<String> {
+    let month = MONTHS_PT.get(now.month.checked_sub(1)? as usize)?;
+    let mon = month.get(..3)?;
+    let day = DAYS_PT.get(now.weekday())?;
+    let (d, y) = (now.day, now.year);
+    let yy = y.rem_euclid(100);
+    match kind {
+        "datetime2" => Some(format!("{day}, {d} de {month} de {y}")),
+        "datetime3" | "datetime4" => Some(format!("{d} de {month} de {y}")),
+        "datetime5" => Some(format!("{d}-{mon}-{yy:02}")),
+        "datetime6" => Some(format!("{month} de {yy:02}")),
+        "datetime7" => Some(format!("{mon}-{yy:02}")),
+        _ => None,
+    }
+}
+
 /// Is field `kind` a date/time field?
 pub fn is_date_field(kind: &str) -> bool {
     kind.starts_with("datetime")
@@ -110,6 +133,11 @@ pub fn field_text(kind: &str, lang: Option<&str>, now: DateTime) -> Option<Strin
     // English writes the weekday form day first too.
     let day_first = matches!(lang.as_str(), "en-gb" | "en-au" | "en-nz" | "en-ie" | "en-in");
     let named = |text: String| english.then_some(text);
+    if (lang == "pt" || lang.starts_with("pt-"))
+        && let Some(text) = portuguese(kind, now)
+    {
+        return Some(text);
+    }
     match kind {
         "datetime" | "datetimeFigureOut" | "datetime1" => Some(short),
         "datetime2" if lang == "en-ie" => named(format!("{day} {d} {month} {y}")),
@@ -180,6 +208,30 @@ mod tests {
         assert_eq!(field_text("datetime12", None, DateTime::new(2024, 2, 29, 0, 0, 0)).as_deref(), Some("12:00 AM"));
         assert_eq!(field_text("datetime12", None, DateTime::new(2024, 2, 29, 12, 30, 0)).as_deref(), Some("12:30 PM"));
         assert_eq!(field_text("datetime2", None, DateTime::new(2000, 1, 1, 0, 0, 0)).as_deref(), Some("Saturday, January 1, 2000"));
+    }
+
+    #[test]
+    fn portuguese_names_are_lower_case() {
+        let sun = DateTime::new(2026, 11, 8, 20, 5, 7);
+        for lang in ["pt-BR", "pt-PT", "pt", "PT-br"] {
+            let f = |k: &str| field_text(k, Some(lang), sun);
+            assert_eq!(f("datetime1").as_deref(), Some("08/11/2026"), "{lang}");
+            assert_eq!(f("datetime2").as_deref(), Some("domingo, 8 de novembro de 2026"), "{lang}");
+            assert_eq!(f("datetime3").as_deref(), Some("8 de novembro de 2026"), "{lang}");
+            assert_eq!(f("datetime4").as_deref(), Some("8 de novembro de 2026"), "{lang}");
+            assert_eq!(f("datetime5").as_deref(), Some("8-nov-26"), "{lang}");
+            assert_eq!(f("datetime6").as_deref(), Some("novembro de 26"), "{lang}");
+            assert_eq!(f("datetime7").as_deref(), Some("nov-26"), "{lang}");
+            assert_eq!(f("datetime10").as_deref(), Some("20:05"), "{lang}");
+        }
+        // Every month and weekday has its own name (March has the cedilla, weekdays take -feira).
+        assert_eq!(field_text("datetime3", Some("pt-BR"), DateTime::new(2026, 3, 2, 0, 0, 0)).as_deref(), Some("2 de março de 2026"));
+        assert_eq!(field_text("datetime2", Some("pt-BR"), DateTime::new(2026, 3, 2, 0, 0, 0)).as_deref(), Some("segunda-feira, 2 de março de 2026"));
+        assert_eq!(field_text("datetime2", Some("pt-BR"), DateTime::new(2026, 11, 14, 0, 0, 0)).as_deref(), Some("sábado, 14 de novembro de 2026"));
+        // Other languages and an invalid date are unchanged.
+        assert_eq!(field_text("datetime2", Some("de-DE"), sun), None);
+        assert_eq!(field_text("datetime2", Some("en-US"), sun).as_deref(), Some("Sunday, November 8, 2026"));
+        assert_eq!(field_text("datetime2", Some("pt-BR"), DateTime::new(2026, 2, 30, 0, 0, 0)), None);
     }
 
     #[test]
