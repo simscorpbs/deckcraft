@@ -213,18 +213,23 @@ impl crate::Session {
         let packaged = id_format(format);
         let cloud = self.cloud_roots.clone();
         let canonical = canonical_path(path);
-        let (own, has_path, in_doc, remembered, checked, verified, kind) = {
+        let (own, has_path, in_doc, remembered, checked, verified, kind, copy_of) = {
             let d = &self.docs[index];
             (
                 d.path.as_deref().is_some_and(|own| same_file_path(Path::new(own), path)),
-                d.path.is_some(),
+                // A previous version has no file, but what is saved from it is a new file made
+                // from a document, as Save As makes one.
+                d.path.is_some() || d.versions.copy_of.is_some(),
                 document_uuid(&d.doc),
                 d.versions.id.clone(),
                 d.versions.identity_checked.as_ref() == Some(&canonical),
                 d.versions.verified.as_ref() == Some(&canonical),
                 d.versions.next_kind,
+                d.versions.copy_of.clone(),
             )
         };
+        // What a copy of a previous version carries is the id of the document it was made from:
+        // the copy gets one of its own below.
         let current = in_doc.clone().or(remembered);
         let mut kind = kind;
         let mut trigger = trigger.map(str::to_owned).unwrap_or_else(|| if autosave { "autosave".into() } else { "save".into() });
@@ -234,7 +239,7 @@ impl crate::Session {
             let previous = current.as_deref().and_then(|cur| self.version_store.as_ref().and_then(|s| s.newest(path, cur, &cloud)));
             if !own && has_path {
                 // A new file from this presentation.
-                origin = Some(VersionOrigin { document_id: current.clone(), version_id: previous.map(|(v, _)| v) });
+                origin = copy_of.or(Some(VersionOrigin { document_id: current.clone(), version_id: previous.map(|(v, _)| v) }));
                 kind = kind.or(Some(VersionKind::SaveAs));
                 trigger = if kind == Some(VersionKind::ConflictCopy) { "conflictCopy".into() } else { "saveAs".into() };
             } else if let Some(cur) = current.clone() {

@@ -94,8 +94,27 @@ impl Session {
         None
     }
 
-    /// Feed a pointer event to the active tool. Returns what happened (for agents).
+    /// Feed a pointer event to the active tool. Returns what happened (for agents). A previous
+    /// version opened from Version History is read only: clicking selects, but a gesture that
+    /// would change it (moving, resizing, drawing) is taken back at once and refused.
     pub fn pointer(&mut self, ev: PointerEvent) -> Result<Value> {
+        let guarded = self.active().filter(|d| d.previous.is_some()).map(|d| (d.uid, d.doc.clone()));
+        let r = self.pointer_event(ev);
+        if let Some((uid, doc)) = guarded
+            && let Some(st) = self.active_mut()
+            && st.uid == uid
+            && !Arc::ptr_eq(&st.doc, &doc)
+        {
+            st.doc = doc;
+            st.interaction = None;
+            st.revision += 1;
+            self.tool.drag = None;
+            return Err(crate::EngineError::Other(crate::versions::READ_ONLY.into()));
+        }
+        r
+    }
+
+    fn pointer_event(&mut self, ev: PointerEvent) -> Result<Value> {
         let tol = if ev.tol > 0.0 { ev.tol } else { 4.0 };
         let p = Point::new(ev.x, ev.y);
         self.tool.pressure = ev.pressure.filter(|v| v.is_finite()).map(|v| v.clamp(0.0, 1.0));

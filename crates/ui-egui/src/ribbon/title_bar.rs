@@ -90,18 +90,29 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
         );
         child.spacing_mut().item_spacing.x = 2.0;
         let has_doc = app.session.active().is_some();
-        let dirty = app.session.active().is_some_and(|d| d.is_dirty());
-        if has_doc {
+        // A previous version has no file of its own: AutoSave has nothing to switch.
+        if has_doc && app.session.active_previous_version().is_none() {
             autosave_switch(app, &mut child, &t);
             child.add_space(8.0);
         }
         crate::qat::show(app, &mut child);
-        let title = app
-            .session
-            .active()
-            .map(|d| format!("{}{}", d.title(), if dirty { format!(" — {}", crate::tl!("Edited")) } else { String::new() }))
-            .unwrap_or_else(|| "DeckCraft".into());
-        ui.painter().text(rect.center(), Align2::CENTER_CENTER, title, theme::font(13.0), t.text);
+        let title = crate::versions_pane::title_text(app);
+        let galley = ui.painter().layout_no_wrap(title.clone(), theme::font(13.0), t.text);
+        let text_rect = Rect::from_center_size(rect.center(), galley.size());
+        if has_doc {
+            // Clicking the name, with either button, opens the file menu (name, folder, Version
+            // History), as PowerPoint's title does for a OneDrive file.
+            let hit = ui.interact(text_rect.expand2(vec2(10.0, 5.0)), ui.scope_id().with("title_name"), Sense::click());
+            hit.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, title.clone()));
+            if hit.hovered() {
+                ui.painter().rect_filled(hit.rect, 4.0, t.hover);
+            }
+            ui.painter().galley(text_rect.min, galley, t.text);
+            let hit = hit.on_hover_cursor(egui::CursorIcon::PointingHand);
+            crate::versions_pane::file_menu(app, &hit);
+        } else {
+            ui.painter().galley(text_rect.min, galley, t.text);
+        }
         // Right side. The optional avatar and Discord button sit at its far end.
         let extras = if app.ui.show_account_picture { control_h + 6.0 } else { 0.0 } + if app.ui.show_discord { 90.0 } else { 0.0 };
         let mut right = ui.new_child(

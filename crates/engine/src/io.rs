@@ -140,6 +140,26 @@ pub fn write_file(path: &str, _bytes: &[u8]) -> Result<(), String> {
     Err(format!("{path}: saving to a path is not available in the browser"))
 }
 
+/// Rename the file at `from` to `to`, which must not exist (a name that differs only in case is
+/// the same file and is allowed). Both paths pass the automation write check.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn rename_file(from: &str, to: &str) -> Result<(), String> {
+    crate::file_access::check_write(from)?;
+    crate::file_access::check_write(to)?;
+    if std::fs::symlink_metadata(to).is_ok() {
+        let same = matches!((std::fs::canonicalize(from), std::fs::canonicalize(to)), (Ok(a), Ok(b)) if a == b);
+        if !same {
+            return Err(format!("{to}: a file with that name already exists"));
+        }
+    }
+    std::fs::rename(from, to).map_err(|e| format!("{from}: {e}"))
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn rename_file(from: &str, _to: &str) -> Result<(), String> {
+    Err(format!("{from}: renaming a file is not available in the browser"))
+}
+
 /// The size in bytes of the file at `path`; `None` when it can't be read (or is outside the
 /// automation read root, so File › Info doesn't reveal files the agent may not read).
 #[cfg(not(target_arch = "wasm32"))]

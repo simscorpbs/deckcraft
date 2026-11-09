@@ -109,6 +109,7 @@ impl SlideApp {
             pending_files: Vec::new(),
             host_start: None,
             cloud_discovery: None,
+            versions: Default::default(),
             ime_tracker: egui::ime_context::ImeContextTracker::new(),
             ime_pending: None,
             ime_frame_viewport: None,
@@ -240,6 +241,10 @@ impl SlideApp {
         if !self.synthetic.is_empty() || !self.synthetic_next.is_empty() || self.synthetic_pending {
             ctx.request_repaint();
         }
+        // Quitting while a previous version is shown first returns to the presentation.
+        if ctx.input(|i| i.viewport().close_requested()) {
+            self.return_from_versions();
+        }
         // Closing the window with unsaved changes asks first, except for what AutoSave writes: a
         // presentation it covers is saved on the way out and needs no prompt.
         if ctx.input(|i| i.viewport().close_requested()) && !self.quit_confirmed && self.session.documents().iter().any(|d| d.is_dirty()) {
@@ -324,7 +329,9 @@ impl SlideApp {
         if self.backstage.is_none() && self.session.active().is_some() {
             ribbon::show(self, ui);
             status::status_bar(self, ui);
+            crate::versions_pane::previous_bar(self, ui);
         }
+        self.sync_versions();
         let now = ui.input(|i| i.time);
         if self.tick_anim_preview(now) {
             ctx.request_repaint();

@@ -591,6 +591,12 @@ pub(crate) fn save(s: &mut Session, p: &Value) -> Result<Value> {
     let len = bytes.len();
     // The history gets the bytes in the background; a failure there never fails the save.
     s.version_record(index, std::path::Path::new(&path), bytes, prep, &encoded);
+    // Saving a previous version makes a copy of it in a file of its own; the version is done with
+    // and the presentation it came from is in front again.
+    if let Some(version) = s.previous_version(index).map(|v| v.info.id.clone()) {
+        let back = s.close_previous_version(index);
+        return Ok(json!({"path": path, "bytes": len, "saved": true, "copyOf": version, "document": back}));
+    }
     Ok(json!({"path": path, "bytes": len, "saved": true}))
 }
 
@@ -770,7 +776,10 @@ fn info(s: &mut Session, _p: &Value) -> Result<Value> {
 
 fn close(s: &mut Session, _p: &Value) -> Result<Value> {
     if let Some(i) = s.active_index() {
-        s.close_document(i);
+        // Closing a previous version stops there: the presentation it came from stays open and in front.
+        if s.previous_version(i).is_none() || s.close_previous_version(i).is_none() {
+            s.close_document(i);
+        }
     }
     ok()
 }
