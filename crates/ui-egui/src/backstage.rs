@@ -421,7 +421,7 @@ pub fn show(app: &mut SlideApp, ui: &mut Ui) {
                     Page::Home => home(app, ui, &mut bs, &mut out),
                     Page::New => new_page(app, ui, &mut bs),
                     Page::Open => open_page(app, ui, &mut bs),
-                    Page::Info => info(app, ui, &mut bs),
+                    Page::Info => info(app, ui, &mut bs, &mut out),
                     Page::SaveAs => save_as(app, ui, &mut bs, &mut out),
                     Page::Print => print(app, ui, &mut bs),
                     Page::Export => export(app, ui, &mut bs),

@@ -25,7 +25,7 @@ pub(super) const PROPERTIES: [(&str, &str, &str); 7] = [
 
 /// Info: the presentation's name and location, Inspect and Manage on the left, its properties
 /// (editable, through `file.properties`) on the right.
-pub(super) fn info(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
+pub(super) fn info(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage, out: &mut Outcome) {
     let t = Tokens::get(ui.ctx());
     let Ok(v) = app.session.execute("file.info", &json!({})) else {
         dim(ui, "No presentation is open.");
@@ -75,6 +75,18 @@ pub(super) fn info(app: &mut SlideApp, ui: &mut Ui, bs: &mut Backstage) {
             };
             if task(ui, Icon::ResetSlide, "Revert", "Manage Presentation", detail, can_revert) {
                 let _ = app.run("file.revert", json!({}));
+            }
+            if task(
+                ui,
+                Icon::Recent,
+                "Version History",
+                "Version History",
+                "Look at earlier versions of this presentation, compare one with the current presentation, or restore it.",
+                true,
+            ) {
+                // The history opens as a pane beside the slides, so the File tab closes.
+                out.close = true;
+                let _ = app.run("view.pane", json!({"pane": "versions"}));
             }
         });
         ui.add_space(30.0);

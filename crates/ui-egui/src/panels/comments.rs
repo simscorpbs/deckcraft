@@ -14,23 +14,28 @@ pub(super) fn revisions(app: &mut SlideApp, ui: &mut Ui) {
         ui.label(egui::RichText::new(crate::tl!("Not a copy of this presentation: slides are matched by position.")).size(11.0).color(t.text_faint));
     }
     ui.add_space(4.0);
+    // A previous version is compared read only: nothing here accepts, rejects or ends the review
+    // (the Previous version bar's Compare shows the version again).
+    let read_only = app.session.active_previous_version().is_some();
     if changes.is_empty() {
         ui.label(crate::tl!("No differences left."));
-        if ui.button(crate::tl!("End Review")).clicked() {
+        if !read_only && ui.button(crate::tl!("End Review")).clicked() {
             run(app, "review.endCompare", json!({}));
             app.ui.pane = None;
         }
         return;
     }
-    ui.horizontal(|ui| {
-        if ui.button(crate::i18n::fmt(crate::tl!("Accept All ({count})"), &[("count", &changes.len().to_string())])).clicked() {
-            run(app, "review.accept", json!({"all": true}));
-        }
-        if ui.button(crate::i18n::fmt(crate::tl!("Reject All ({count})"), &[("count", &changes.len().to_string())])).clicked() {
-            run(app, "review.reject", json!({"all": true}));
-        }
-    });
-    ui.separator();
+    if !read_only {
+        ui.horizontal(|ui| {
+            if ui.button(crate::i18n::fmt(crate::tl!("Accept All ({count})"), &[("count", &changes.len().to_string())])).clicked() {
+                run(app, "review.accept", json!({"all": true}));
+            }
+            if ui.button(crate::i18n::fmt(crate::tl!("Reject All ({count})"), &[("count", &changes.len().to_string())])).clicked() {
+                run(app, "review.reject", json!({"all": true}));
+            }
+        });
+        ui.separator();
+    }
     for (i, c) in changes.iter().enumerate() {
         let slide = c["slide"].as_u64().unwrap_or(0);
         let (head, col) = match c["kind"].as_str().unwrap_or("") {
@@ -47,14 +52,16 @@ pub(super) fn revisions(app: &mut SlideApp, ui: &mut Ui) {
                     let max = app.session.active().map(|d| d.doc.slides.len().saturating_sub(1)).unwrap_or(0);
                     run(app, "slide.go", json!({"index": (slide as usize).min(max)}));
                 }
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui.small_button(crate::tl!("Reject")).clicked() {
-                        run(app, "review.reject", json!({"index": i}));
-                    }
-                    if ui.small_button(crate::tl!("Accept")).clicked() {
-                        run(app, "review.accept", json!({"index": i}));
-                    }
-                });
+                if !read_only {
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        if ui.small_button(crate::tl!("Reject")).clicked() {
+                            run(app, "review.reject", json!({"index": i}));
+                        }
+                        if ui.small_button(crate::tl!("Accept")).clicked() {
+                            run(app, "review.accept", json!({"index": i}));
+                        }
+                    });
+                }
             });
             for d in c["details"].as_array().into_iter().flatten().filter_map(Value::as_str).take(8) {
                 ui.label(egui::RichText::new(format!("• {d}")).size(11.5).color(t.text_dim));

@@ -1578,3 +1578,24 @@ direction	From top right	Sup. dir.
 	This document's version history was deleted.	O histórico de versões deste documento foi excluído.
 	Version History	Histórico de Versões
 	Version history folder:	Pasta do histórico de versões:
+# --- painel de versoes ---
+	Back to the current version	Voltar à versão atual
+	File name	Nome do arquivo
+	Look at earlier versions of this presentation, compare one with the current presentation, or restore it.	Veja versões anteriores desta apresentação, compare uma com a apresentação atual ou restaure-a.
+	No versions yet.	Ainda não há versões.
+	Not saved	Não salvo
+	Open version	Abrir versão
+	Previous version	Versão anterior
+	Renamed to {name}	Renomeado para {name}
+	Save a copy	Salvar uma cópia
+	Save a copy needs the desktop app	Salvar uma cópia exige o aplicativo para computador
+	Save the presentation to start its version history.	Salve a apresentação para iniciar o histórico de versões.
+	Saved a copy of the previous version as {path}	Cópia da versão anterior salva como {path}
+	Show the previous version again	Mostrar a versão anterior de novo
+	Show what changed since this version	Mostrar o que mudou desde esta versão
+	The {ext} extension stays	A extensão {ext} é mantida
+	This is a previous version. Restore it or save a copy to make changes.	Esta é uma versão anterior. Restaure-a ou salve uma cópia para fazer alterações.
+	Today	Hoje
+	Version history is kept by the desktop app.	O histórico de versões é mantido pelo aplicativo para computador.
+	Version history isn't available here.	O histórico de versões não está disponível aqui.
+	Yesterday	Ontem

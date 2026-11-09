@@ -63,6 +63,7 @@ mod ime_hooks;
 pub mod panels;
 mod services;
 mod state;
+pub mod versions_pane;
 
 pub use app::key_name;
 #[cfg(test)]
@@ -120,7 +121,7 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
     ("view.zoom", "Set Zoom", None, "{percent}"),
     ("view.zoomDialog", "Zoom…", None, "{}"),
     ("view.fit", "Fit to Window", None, "{}"),
-    ("view.pane", "Task Pane", None, "{pane: format|animation|selection|comments|designer|background|smartart|null}"),
+    ("view.pane", "Task Pane", None, "{pane: format|animation|selection|comments|designer|background|smartart|versions|null}"),
     ("review.thesaurusPane", "Thesaurus", Some("Shift+F7"), "{word?}: open the Thesaurus pane on the selected word"),
     ("view.tab", "Ribbon Tab", None, "{tab}"),
     ("view.collapseRibbon", "Collapse the Ribbon", Some("Cmd+F1"), "{}"),
@@ -355,6 +356,8 @@ pub struct SlideApp {
     host_start: Option<u64>,
     /// The cloud folders being looked for on a worker thread ([`SlideApp::discover_cloud`]).
     cloud_discovery: Option<std::sync::mpsc::Receiver<Vec<deckcraft_engine::cloud::CloudRoot>>>,
+    /// The Version History pane's listing and the title bar file menu's name field.
+    versions: versions_pane::State,
     /// Owner/generation/cause bookkeeping for the canvas text IME producer.
     ime_tracker: egui::ime_context::ImeContextTracker,
     /// Canvas IME geometry for this pass: the caret while editing, or the selected shape.
@@ -495,6 +498,8 @@ mod slide_size_tests;
 mod split_button_tests;
 #[cfg(test)]
 mod texture_limit_tests;
+#[cfg(test)]
+mod versions_tests;
 #[cfg(test)]
 mod ui_soak_tests;
 #[cfg(test)]

@@ -30,6 +30,7 @@ pub mod table;
 pub mod text;
 pub mod three_d;
 pub mod transition;
+pub mod version_view;
 pub mod versions;
 pub mod zoom;
 
@@ -167,6 +168,7 @@ pub fn command_specs() -> &'static [CommandSpec] {
         v.extend(file::specs());
         v.extend(cloud::specs());
         v.extend(versions::specs());
+        v.extend(version_view::specs());
         v.extend(edit::specs());
         v.extend(slide::specs());
         v.extend(reuse::specs());

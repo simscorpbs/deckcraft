@@ -357,9 +357,13 @@ pub(crate) mod meta;
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) mod pack;
 mod session;
+mod view;
+pub use view::{PreviousVersion, READ_ONLY};
 pub(crate) use session::with_document_id;
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_view;
 
 /// The device label versions record when the user has not chosen one: the system's name only
 /// ("Windows", "Mac"), never the computer's own name.
@@ -724,6 +728,9 @@ pub struct DocVersions {
     pub(crate) next_kind: Option<VersionKind>,
     /// The last error of this presentation's history, if any.
     pub error: Option<String>,
+    /// A previous version being saved as a copy: where it comes from. The copy's first save is a
+    /// new file with an id of its own that records this origin.
+    pub(crate) copy_of: Option<VersionOrigin>,
 }
 
 impl DocVersions {

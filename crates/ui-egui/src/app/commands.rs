@@ -18,6 +18,11 @@ impl SlideApp {
     /// Run a command by id (UI commands here, everything else in the engine). Errors show in the
     /// status bar and are returned.
     pub fn run(&mut self, id: &str, params: Value) -> Result<Value, String> {
+        // AutoSave writes the presentation first when a version is opened or restored; a save
+        // conflict stops the command and asks.
+        if !self.versions_before(id, &params) {
+            return Ok(json!({"pending": "saveConflict"}));
+        }
         let r = if UI_COMMANDS.iter().any(|c| c.0 == id) {
             self.run_ui(id, &params)
         } else if id == "file.save" && self.services.host_save.is_some() && params.get("path").is_none() {
@@ -37,8 +42,9 @@ impl SlideApp {
                 }
             }
             Ok(_) => {}
-            Err(e) => self.set_status(e.clone()),
+            Err(e) => self.set_status(crate::versions_pane::status_text(e)),
         }
+        self.versions_after(id, &r);
         self.drain_requests();
         r
     }

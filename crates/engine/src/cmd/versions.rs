@@ -5,8 +5,10 @@
 //! - `file.versions` with no parameters lists the versions of the presentation, newest first.
 //! - `{"delete": "document"}` deletes its history and `{"delete": "all"}` every presentation's,
 //!   in every history folder.
-//! - `{"open": "id"}` answers with a version's record and bytes, for a front end that shows it
-//!   read only. It changes nothing in the session.
+//! - `{"open": "id"}` answers with a version's record and bytes. It changes nothing in the
+//!   session; `file.openVersion` is what shows a version read only (`cmd::version_view`).
+//! - While a previous version is in front, the commands act on the history of the presentation it
+//!   came from. A restore first closes the version, then replaces that presentation.
 //! - `{"restore": "id"}` replaces the presentation with the version in one Undo step. Changes
 //!   not yet written to its file are first stored as an `autosave` version, and the restored bytes
 //!   are recorded at once as a `restore` version.
@@ -27,6 +29,15 @@ pub fn specs() -> Vec<CommandSpec> {
             "{open?: version id | restore?: version id | delete?: document|all, document?: uid of an open presentation (default: the active one)} → with no parameters, the versions newest first: [{id, savedAt, author, size, stored, kind: save|autosave|restore|original|external|saveAs|conflictCopy, storage, documentId, supersedes, details}]; delete → {deleted}; open → {version, name, bytes, data: base64}; restore → {restored, savedAt}",
             always,
             versions
+        ),
+        cmd!(
+            noundo "file.rename",
+            "Rename",
+            ["File"],
+            None,
+            "{name: the new file name (the extension is kept), document?: uid of an open presentation (default: the active one)} → {renamed, path}: renames the presentation's file in its folder; its version history follows",
+            super::has_doc,
+            rename
         ),
         cmd!(
             noundo "file.options",
@@ -87,7 +98,7 @@ fn versions(s: &mut Session, p: &Value) -> Result<Value> {
         if !s.versions_enabled() {
             return Err(unavailable());
         }
-        let index = if scope == DeleteScope::Document { Some(super::file::target_index(s, p, "file.versions")?) } else { None };
+        let index = if scope == DeleteScope::Document { Some(history_index(s, p)?) } else { None };
         let deleted = s.delete_version_history(index, scope).map_err(EngineError::Other)?;
         return Ok(json!({"deleted": deleted}));
     }
@@ -102,8 +113,15 @@ fn versions(s: &mut Session, p: &Value) -> Result<Value> {
     list(s, p)
 }
 
+/// The presentation whose history a command means: the one it names (default the active one), or
+/// for a previous version the presentation it came from.
+fn history_index(s: &Session, p: &Value) -> Result<usize> {
+    let at = super::file::target_index(s, p, "file.versions")?;
+    s.history_owner(at).ok_or_else(|| EngineError::Other("the presentation this version belongs to is closed".into()))
+}
+
 fn list(s: &mut Session, p: &Value) -> Result<Value> {
-    let index = super::file::target_index(s, p, "file.versions")?;
+    let index = history_index(s, p)?;
     let list = s.version_infos(index);
     Ok(Value::Array(list.iter().map(version_json).collect()))
 }
@@ -114,7 +132,7 @@ fn open(s: &mut Session, p: &Value, id: &str) -> Result<Value> {
     if !s.versions_enabled() {
         return Err(unavailable());
     }
-    let index = super::file::target_index(s, p, "file.versions")?;
+    let index = history_index(s, p)?;
     let (info, bytes) = s.read_version(index, id).map_err(EngineError::Other)?;
     let stem = s
         .documents()
@@ -135,7 +153,17 @@ fn restore(s: &mut Session, p: &Value, id: &str) -> Result<Value> {
     if !s.versions_enabled() {
         return Err(unavailable());
     }
-    let index = super::file::target_index(s, p, "file.versions")?;
+    // Restoring from a previous version first goes back to the presentation it came from.
+    let at = super::file::target_index(s, p, "file.versions")?;
+    let index = match s.history_owner(at) {
+        Some(owner) if owner != at => {
+            let uid = s.documents().get(owner).map_or(0, |d| d.uid);
+            s.close_previous_version(at);
+            s.index_of_uid(uid).ok_or(EngineError::NoDocument)?
+        }
+        Some(owner) => owner,
+        None => return Err(EngineError::Other("the presentation this version belongs to is closed".into())),
+    };
     if s.active_index() != Some(index) {
         return Err(bad("file.versions", "only the active presentation can be restored"));
     }
@@ -221,4 +249,87 @@ fn options(s: &mut Session, p: &Value) -> Result<Value> {
         "deviceLabelDefault": crate::versions::default_device_label(),
         "enabled": s.versions_enabled(),
     }))
+}
+
+/// Characters a file name cannot hold on Windows, which is the strictest of the systems DeckCraft
+/// runs on: a name that works there works everywhere.
+const BAD_NAME_CHARS: [char; 9] = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+
+/// The file name `name` asks for, next to a file whose extension is `ext` (with its dot, or
+/// empty): the extension is kept, and a name that cannot be a file name is refused.
+fn renamed_file_name(name: &str, ext: &str) -> std::result::Result<String, String> {
+    let name = name.trim();
+    if name.is_empty() {
+        return Err("the name is empty".into());
+    }
+    if name.chars().count() > 200 {
+        return Err("the name is longer than 200 characters".into());
+    }
+    if name.chars().any(|c| c.is_control() || BAD_NAME_CHARS.contains(&c)) {
+        return Err("a file name cannot hold any of / \\ : * ? \" < > |".into());
+    }
+    if name.ends_with('.') || name == "." || name == ".." {
+        return Err("a file name cannot end with a dot".into());
+    }
+    let cut = name.len().saturating_sub(ext.len());
+    let stem = match name.get(cut..) {
+        Some(tail) if !ext.is_empty() && tail.eq_ignore_ascii_case(ext) => name.get(..cut).unwrap_or(name),
+        _ => name,
+    };
+    let stem = stem.trim_end();
+    if stem.is_empty() {
+        return Err("the name is empty".into());
+    }
+    Ok(format!("{stem}{ext}"))
+}
+
+/// `file.rename`: the presentation's file gets a new name in the same folder, and its version
+/// history follows (a file kept by path is moved with it; one kept by id needs nothing).
+fn rename(s: &mut Session, p: &Value) -> Result<Value> {
+    let index = super::file::target_index(s, p, "file.rename")?;
+    let d = s.documents().get(index).ok_or(EngineError::NoDocument)?;
+    if d.previous.is_some() {
+        return Err(EngineError::Other("a previous version has no file to rename; save a copy first".into()));
+    }
+    let path = d.path.clone().ok_or_else(|| EngineError::Other("save the presentation before renaming its file".into()))?;
+    let name = str_param(p, "name").ok_or_else(|| bad("file.rename", "missing `name`"))?;
+    let from = std::path::PathBuf::from(&path);
+    let ext = from.extension().map(|e| format!(".{}", e.to_string_lossy())).unwrap_or_default();
+    let file_name = renamed_file_name(name, &ext).map_err(|m| bad("file.rename", m))?;
+    let to = from.with_file_name(&file_name);
+    if to == from {
+        return Ok(json!({"renamed": false, "path": path}));
+    }
+    // The history is keyed by the canonical path, so take it while the file is still there.
+    let before = crate::versions::canonical_path(&from);
+    crate::io::rename_file(&path, &to.to_string_lossy()).map_err(EngineError::Other)?;
+    let new_path = to.to_string_lossy().into_owned();
+    let on = {
+        let d = s.docs.get_mut(index).ok_or(EngineError::NoDocument)?;
+        d.path = Some(new_path.clone());
+        d.revision += 1;
+        d.autosave
+    };
+    // The AutoSave choice follows the file: forget it under the old name, remember it under the new.
+    let default = s.prefs.autosave_by_default;
+    s.autosave_memory.remember(&from, default, default);
+    s.set_autosave_of(index, on);
+    s.versions_renamed(index, &before, &to);
+    Ok(json!({"renamed": true, "path": new_path}))
+}
+
+#[cfg(test)]
+mod name_tests {
+    use super::renamed_file_name;
+
+    #[test]
+    fn a_new_name_keeps_the_extension_and_refuses_what_is_not_a_file_name() {
+        assert_eq!(renamed_file_name("Budget", ".pptx").unwrap(), "Budget.pptx");
+        assert_eq!(renamed_file_name("  Budget.PPTX ", ".pptx").unwrap(), "Budget.pptx");
+        assert_eq!(renamed_file_name("v1.2", ".pptx").unwrap(), "v1.2.pptx");
+        assert_eq!(renamed_file_name("Notes", "").unwrap(), "Notes");
+        for bad in ["", "   ", ".pptx", "a/b", "a\\b", "a:b", "what?", "tab\tname", "dots.", "..", &"x".repeat(201)] {
+            assert!(renamed_file_name(bad, ".pptx").is_err(), "{bad:?}");
+        }
+    }
 }

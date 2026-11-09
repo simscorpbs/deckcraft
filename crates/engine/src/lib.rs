@@ -256,6 +256,9 @@ pub struct DocState {
     /// What the version history keeps for this presentation: its editing session, its document
     /// id and what is known of its file ([`versions`]).
     pub versions: versions::DocVersions,
+    /// Set when this is a previous version opened from Version History: it is read only, shown
+    /// beside the presentation it came from ([`versions::PreviousVersion`]).
+    pub previous: Option<Box<versions::PreviousVersion>>,
 }
 
 static NEXT_UID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
@@ -290,6 +293,7 @@ impl DocState {
             conflict: None,
             autosave_run: Default::default(),
             versions: versions::DocVersions::started(),
+            previous: None,
         }
     }
     pub fn is_dirty(&self) -> bool {
@@ -665,6 +669,11 @@ impl Session {
         self.forget_vertex_kind_unless(was);
     }
     pub fn add_document(&mut self, mut d: DocState) -> usize {
+        // A previous version in front goes first: a new or opened presentation is not opened
+        // beside it, and the presentation it came from stays open.
+        if d.previous.is_none() && self.active().is_some_and(|a| a.previous.is_some()) {
+            self.close_previous_versions();
+        }
         let was = self.active().map(|d| d.uid);
         // A file takes the switch it was left with; a presentation with none, the default.
         d.autosave = self.autosave_for_path(d.path.as_deref());
@@ -681,6 +690,16 @@ impl Session {
                 recovery::discard(dir, d.uid);
             }
             self.active = if self.docs.is_empty() { None } else { Some(i.min(self.docs.len() - 1)) };
+            // Its previous versions have no presentation left to belong to.
+            if d.previous.is_none() {
+                while let Some(v) = self.previous_version_of(d.uid) {
+                    let keep = self.active().map(|a| a.uid);
+                    self.close_document(v);
+                    if let Some(at) = keep.and_then(|u| self.index_of_uid(u)) {
+                        self.active = Some(at);
+                    }
+                }
+            }
         }
         self.forget_vertex_kind_unless(was);
     }
@@ -709,6 +728,15 @@ impl Session {
         // Any other edit (or a click, a key, undo) settles an input method's composition first.
         if self.depth == 0 && (spec.journal || spec.undoable) && !matches!(id, "text.compose" | "text.commit") {
             self.settle_composition();
+        }
+        cmd::version_view::check_before(self, spec)?;
+        // Restoring from a previous version in front first goes back to the presentation it came
+        // from, so the restore is that presentation's own Undo step.
+        if id == "file.versions"
+            && params.get("restore").is_some_and(Value::is_string)
+            && let Some(i) = self.active_index().filter(|i| self.previous_version(*i).is_some())
+        {
+            self.close_previous_version(i);
         }
         if let Err(e) = (spec.enabled)(self) {
             let named = (e == cmd::NOTHING_SELECTED || e == cmd::SELECT_TWO) && (params.get("ids").is_some() || params.get("id").is_some());
