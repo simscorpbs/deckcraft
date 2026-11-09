@@ -43,7 +43,7 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
         // Dragging the empty title bar moves the window.
         let drag = ui.interact(rect, ui.scope_id().with("titledrag"), Sense::click_and_drag());
         // The drag surface is not a button: a full-width Button would be announced as one.
-        drag.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Window, true, "Window title bar"));
+        drag.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Window, true, crate::tl!("Window title bar")));
         if drag.drag_started() {
             ui.ctx().send_viewport_cmd(egui::ViewportCommand::StartDrag);
         }
@@ -60,8 +60,11 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
         let has_doc = app.session.active().is_some();
         let dirty = app.session.active().is_some_and(|d| d.is_dirty());
         crate::qat::show(app, &mut child);
-        let title =
-            app.session.active().map(|d| format!("{}{}", d.title(), if dirty { " — Edited" } else { "" })).unwrap_or_else(|| "DeckCraft".into());
+        let title = app
+            .session
+            .active()
+            .map(|d| format!("{}{}", d.title(), if dirty { format!(" — {}", crate::tl!("Edited")) } else { String::new() }))
+            .unwrap_or_else(|| "DeckCraft".into());
         ui.painter().text(rect.center(), Align2::CENTER_CENTER, title, theme::font(13.0), t.text);
         // Right side. The optional avatar and Discord button sit at its far end.
         let extras = if app.ui.show_account_picture { control_h + 6.0 } else { 0.0 } + if app.ui.show_discord { 90.0 } else { 0.0 };
@@ -74,9 +77,9 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
         if app.ui.show_account_picture {
             let (r, resp) = right.allocate_exact_size(vec2(control_h, control_h), Sense::click());
             right.painter().circle_filled(r.center(), control_h / 2.0 - 1.0, t.accent);
-            resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Profile avatar"));
+            resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, crate::tl!("Profile avatar")));
             right.painter().text(r.center(), Align2::CENTER_CENTER, initials(&app.session.prefs.author), theme::bold(10.5), t.accent_text);
-            if resp.on_hover_text("Account: set your name in Preferences").clicked() {
+            if resp.on_hover_text(crate::tl!("Account: set your name in Preferences")).clicked() {
                 let _ = app.run("app.preferences", json!({}));
             }
         }
@@ -88,7 +91,7 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
             right.painter().rect_stroke(r, r.height() / 2.0, egui::Stroke::new(1.0, t.accent), egui::StrokeKind::Inside);
             right.painter().text(r.center(), Align2::CENTER_CENTER, "Discord", theme::bold(12.0), ink);
             resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Discord"));
-            if resp.on_hover_text("Join the ArtCraft community on Discord").clicked() {
+            if resp.on_hover_text(crate::tl!("Join the ArtCraft community on Discord")).clicked() {
                 right.ctx().open_url(egui::OpenUrl::new_tab(deckcraft_engine::links::DISCORD));
             }
         }
@@ -96,7 +99,7 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
             app.palette = Some((String::new(), 0));
         }
         let share = right.add(
-            egui::Button::new(egui::RichText::new("  Present  ").color(t.accent_text).font(theme::bold(13.0)))
+            egui::Button::new(egui::RichText::new(format!("  {}  ", crate::tl!("Present"))).color(t.accent_text).font(theme::bold(13.0)))
                 .fill(t.accent)
                 .corner_radius(control_h / 2.0)
                 .min_size(vec2(84.0, control_h)),

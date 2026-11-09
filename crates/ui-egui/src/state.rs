@@ -58,6 +58,9 @@ pub struct UiState {
     /// Preferences > Show account avatar in the title bar. On by default except on macOS, whose
     /// integrated title bar is already crowded.
     pub show_account_picture: bool,
+    /// Preferences > Interface language: `auto` (follow the system) or a language code (`pt-br`).
+    /// See [`crate::i18n`]. A saved value this build has no catalog for reads as `auto` at use.
+    pub language: String,
     pub tab: String,
     pub ribbon_collapsed: bool,
     pub view: ViewMode,
@@ -110,6 +113,7 @@ impl Default for UiState {
             accent_color: theme::AccentColor::DEFAULT,
             show_discord: false,
             show_account_picture: !cfg!(target_os = "macos"),
+            language: crate::i18n::AUTO.into(),
             tab: "Home".into(),
             ribbon_collapsed: false,
             view: ViewMode::Normal,
@@ -159,6 +163,10 @@ impl UiState {
         self.thumbs_width = within(self.thumbs_width, 60.0, 1000.0, d.thumbs_width);
         self.pane_width = within(self.pane_width, 240.0, 520.0, d.pane_width);
         let short = |s: &String| s.len() <= 64;
+        // A language code is short ASCII (`pt-br`); anything else is a damaged file and reads as `auto`.
+        if self.language.len() > 16 || !self.language.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_') || self.language.is_empty() {
+            self.language = d.language.clone();
+        }
         if !short(&self.tab) {
             self.tab = d.tab;
         }

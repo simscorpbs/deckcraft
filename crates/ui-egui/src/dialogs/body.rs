@@ -1335,6 +1335,38 @@ fn dlg_autocorrect(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     ok || cancel
 }
 
+/// Preferences > Interface language: Automatic (follow the system) or one of the embedded languages.
+/// It applies as it changes, like the rest of the dialog, and Cancel puts the old value back.
+fn interface_language_row(app: &mut SlideApp, ui: &mut Ui) {
+    use crate::i18n::{self, AUTO, Lang};
+    ui.horizontal(|ui| {
+        let label_text = crate::tl!("Interface language:");
+        let _label = ui.label(label_text);
+        let shown = if app.ui.language == AUTO || Lang::from_code(&app.ui.language).is_none() {
+            crate::tl!("Automatic (system language)").to_string()
+        } else {
+            Lang::from_pref(&app.ui.language).name().to_string()
+        };
+        let combo = craft_ui::ComboBox::from_id_salt("interface-language").selected_text(shown).show_ui(ui, |ui| {
+            let mut picked = None;
+            if ui.selectable_label(app.ui.language == AUTO, crate::tl!("Automatic (system language)")).clicked() {
+                picked = Some(AUTO.to_string());
+            }
+            for lang in Lang::all() {
+                if ui.selectable_label(app.ui.language.eq_ignore_ascii_case(lang.code()), lang.name()).clicked() {
+                    picked = Some(lang.code().to_string());
+                }
+            }
+            picked
+        });
+        combo.response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::ComboBox, true, label_text));
+        if let Some(Some(value)) = combo.inner {
+            let _ = app.run("ui.language", json!({"value": value}));
+            i18n::set_current(Lang::from_pref(&app.ui.language));
+        }
+    });
+}
+
 fn dlg_preferences(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     // The controls apply as they change, so the dialog remembers what it opened with and
     // Cancel (or Esc, or the close button: see `show`) puts that back.
@@ -1365,6 +1397,7 @@ fn dlg_preferences(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             let _ = app.run("ui.accentColor", json!({"value": accent.hex()}));
         }
     });
+    interface_language_row(app, ui);
     let mut discord = app.ui.show_discord;
     if ui.checkbox(&mut discord, "Show Discord button in the title bar").changed() {
         let _ = app.run("ui.showDiscord", json!({"value": discord}));

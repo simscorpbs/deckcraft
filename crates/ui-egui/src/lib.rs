@@ -15,6 +15,14 @@ pub const UPDATE_APP: craft_update::app::App = craft_update::app::App {
     ..craft_update::suite::DECKCRAFT
 };
 
+/// An English UI string in the current interface language ([`i18n::t`]).
+#[macro_export]
+macro_rules! tl {
+    ($s:expr) => {
+        $crate::i18n::t($s)
+    };
+}
+
 pub mod backstage;
 pub mod canvas;
 pub mod capture;
@@ -22,6 +30,7 @@ pub mod control;
 pub mod dialogs;
 pub mod doc_window;
 pub mod eyedropper;
+pub mod i18n;
 pub mod icons;
 pub mod media;
 pub mod menus;
@@ -119,6 +128,7 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
     ("view.grayscale", "Grayscale", None, "{on?: bool}"),
     ("ui.accentColor", "Accent Color", None, "{value?: RRGGBB}"),
     ("ui.showDiscord", "Show Discord Button", None, "{value?: bool}"),
+    ("ui.language", "Interface Language", None, "{value?: auto|en|pt-br}"),
     ("ui.showAccountPicture", "Show Account Avatar", None, "{value?: bool}"),
     ("view.newWindow", "New Window", None, "{on?: bool, slide?: index, delta?: int}"),
     ("show.start", "Slide Show", Some("F5"), "{from?: index, custom?: name}"),

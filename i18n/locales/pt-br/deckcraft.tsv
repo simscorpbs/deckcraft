@@ -1,0 +1,503 @@
+# Português (Brasil) (pt-br) interface catalog for DeckCraft.
+# Same format as craft-i18n (see common.tsv): context <TAB> English source text <TAB> translation.
+# Rows here win over common.tsv in this locale. Rows already in common.tsv are not repeated.
+#
+# Wording follows Brazilian PowerPoint terminology as chosen by the fork owner (Brenno): ribbon tabs
+# (context "tab"), groups and commands. Command ids, control-channel names and file text are never translated.
+
+	(no spelling suggestions)	(sem sugestões de ortografia)
+	(not checked)	(não verificado)
+	+ New Slide	+ Novo Slide
+	1 Column	1 coluna
+	1 Slide	1 slide
+	1 Spoke	1 raio
+	[No Sound]	[Sem Som]
+	[Stop Previous Sound]	[Parar Som Anterior]
+	About DeckCraft	Sobre o DeckCraft
+	Accept All	Aceitar Tudo
+	Account: set your name in Preferences	Conta: defina seu nome em Preferências
+	Across	Horizontalmente
+	Action	Ação
+	Action Button: {kind}	Botão de Ação: {kind}
+	Action Settings…	Configurações de Ação…
+	Add Animation	Adicionar Animação
+	Add Assistant	Adicionar Assistente
+	Add Horizontal Guide	Adicionar Guia Horizontal
+	Add Point	Adicionar Ponto
+	Add Section	Adicionar Seção
+	Add Shape	Adicionar Forma
+	Add Shape Above	Adicionar Forma Acima
+	Add Shape After	Adicionar Forma Depois
+	Add Shape Before	Adicionar Forma Antes
+	Add Shape Below	Adicionar Forma Abaixo
+	Add to Quick Access Toolbar	Adicionar à Barra de Ferramentas de Acesso Rápido
+	Add Vertical Guide	Adicionar Guia Vertical
+	After	Depois
+	After Previous	Após a Anterior
+	After:	Após:
+	Align Bottom	Alinhar na Parte Inferior
+	Align Center	Alinhar ao Centro
+	Align Left	Alinhar à Esquerda
+	Align Middle	Alinhar no Meio
+	Align Right	Alinhar à Direita
+	Align Selected Objects	Alinhar Objetos Selecionados
+	Align to Slide	Alinhar ao Slide
+	Align Top	Alinhar na Parte Superior
+	All Borders	Todas as Bordas
+	Animation Painter	Pincel de Animação
+	Animation Painter (double-click to keep it on)	Pincel de Animação (clique duas vezes para mantê-lo ativo)
+	Animation Pane	Painel de Animação
+	Animations	Animações
+	Apply only to this picture	Aplicar somente a esta imagem
+	Apply To All	Aplicar a Todos
+	Arrow at end	Seta no final
+	Arrow at start	Seta no início
+	Arrows at both ends	Setas em ambas as extremidades
+	Artistic Effects	Efeitos Artísticos
+	As One Object	Como Um Objeto
+	Audio from File…	Áudio de Arquivo…
+	Automatic (system language)	Automático (idioma do sistema)
+	Back	Voltar
+	Background Styles	Estilos de Plano de Fundo
+	Banded Columns	Colunas em Tiras
+	Banded Rows	Linhas em Tiras
+	Beginning	Início
+	Bevel	Bisel
+	Black Pen	Caneta Preta
+	Blue Pen	Caneta Azul
+	Body	Corpo
+	Bottom Border	Borda Inferior
+	Box In	Caixa para Dentro
+	Box Out	Caixa para Fora
+	Brightness {value}	Brilho {value}
+	Bring Forward	Avançar
+	Bring to Front	Trazer para a Frente
+	Browse for Themes…	Procurar Temas…
+	Bullets	Marcadores
+	Bullets and Numbering…	Marcadores e Numeração…
+	By Paragraph	Por Parágrafo
+	Cameo	Câmera
+	Camera capture is not available yet	A captura da câmera ainda não está disponível
+	Capitalize Each Word	Colocar Cada Palavra em Maiúscula
+	Cell Margins	Margens da Célula
+	Change Case	Maiúsculas e Minúsculas
+	Change Chart Type	Alterar Tipo de Gráfico
+	Change Colors	Alterar Cores
+	Change Picture	Alterar Imagem
+	Change Picture…	Alterar Imagem…
+	Change Shape	Alterar Forma
+	Character Spacing	Espaçamento entre Caracteres
+	Chart	Gráfico
+	Chart Design	Design do Gráfico
+	Check for Updates…	Verificar Atualizações…
+	Choosing a presentation to reuse needs the desktop app	Escolher uma apresentação para reutilizar exige o aplicativo para computador
+	Choosing a sound file needs the desktop app	Escolher um arquivo de som exige o aplicativo para computador
+	Circle In	Círculo para Dentro
+	Circle Out	Círculo para Fora
+	Clear All Formatting	Limpar Toda a Formatação
+	Click a colour in the picture to make it transparent	Clique em uma cor na imagem para torná-la transparente
+	Click the slide to take the colour under the pointer	Clique no slide para capturar a cor sob o ponteiro
+	Click to add notes	Clique para adicionar anotações
+	Click to add text	Clique para adicionar texto
+	Clockwise	Sentido Horário
+	Close Master View	Fechar Modo de Exibição Mestre
+	Close Path	Fechar Caminho
+	Command Palette	Paleta de Comandos
+	Compress	Compactar
+	Compress Pictures	Compactar Imagens
+	Compressed {n} picture(s): {before} KB → {after} KB	{n} imagem(ns) compactada(s): {before} KB → {after} KB
+	Compression options	Opções de compactação
+	Content	Conteúdo
+	Contrast {value}	Contraste {value}
+	Convert to Shapes	Converter em Formas
+	Convert to SmartArt	Converter em SmartArt
+	Convert to Text	Converter em Texto
+	Corner Point	Ponto de Canto
+	Corrections	Correções
+	Counterclockwise	Sentido Anti-horário
+	Crop 10% each side	Cortar 10% de cada lado
+	Crop 20% each side	Cortar 20% de cada lado
+	Crop to Shape	Cortar para Forma
+	Curved Segment	Segmento Curvo
+	Customize Colors…	Personalizar Cores…
+	Customize Fonts…	Personalizar Fontes…
+	Customize Quick Access Toolbar	Personalizar a Barra de Ferramentas de Acesso Rápido
+	Cycle	Ciclo
+	Dark Mode	Modo Escuro
+	Dash	Traço
+	Dash Dot	Traço-Ponto
+	Dashes	Tracejados
+	Date & Time	Data e Hora
+	Decrease List Level	Diminuir Nível da Lista
+	Decrease {label}	Diminuir {label}
+	Delay	Atraso
+	Delay:	Atraso:
+	Delete Columns	Excluir Colunas
+	Delete cropped areas of pictures	Excluir áreas cortadas das imagens
+	Delete Point	Excluir Ponto
+	Delete Repeated Word	Excluir Palavra Repetida
+	Delete Rows	Excluir Linhas
+	Delete Segment	Excluir Segmento
+	Delete Slide	Excluir Slide
+	Delete Table	Excluir Tabela
+	Demote	Rebaixar
+	Design	Design
+	Diagonal Down Border	Borda Diagonal para Baixo
+	Diagonal Up Border	Borda Diagonal para Cima
+	Diamond In	Losango para Dentro
+	Diamond Out	Losango para Fora
+	Distribute Columns	Distribuir Colunas
+	Distribute Horizontally	Distribuir Horizontalmente
+	Distribute Rows	Distribuir Linhas
+	Distribute Vertically	Distribuir Verticalmente
+	Draw Table	Desenhar Tabela
+	Duplicate Selected Slides	Duplicar Slides Selecionados
+	Duplicate Slide	Duplicar Slide
+	Duration:	Duração:
+	Dynamic Content	Conteúdo Dinâmico
+	E-mail (96 ppi): minimise document size for sharing	E-mail (96 ppi): reduz o tamanho do documento para compartilhar
+	Edit Alt Text…	Editar Texto Alternativo…
+	Edit Photo Album…	Editar Álbum de Fotos…
+	Edit Points	Editar Pontos
+	Edit Shape	Editar Forma
+	Edit Text	Editar Texto
+	Edited	Editado
+	Effect Options	Opções de Efeito
+	Emphasis	Ênfase
+	End	Fim
+	End Review	Encerrar Revisão
+	Entrance	Entrada
+	Exciting	Empolgante
+	Exit Edit Points	Sair de Editar Pontos
+	File (Alt+F)	Arquivo (Alt+F)
+	First Column	Primeira Coluna
+	Fit slide to current window	Ajustar o slide à janela atual
+	Fit to Window	Ajustar à Janela
+	Follow Path	Seguir Trajetória
+	Font Color	Cor da Fonte
+	Font…	Fonte…
+	Footer	Rodapé
+	Footers	Rodapés
+	For rectangles and rounded rectangles	Para retângulos e retângulos arredondados
+	Format Background…	Formatar Plano de Fundo…
+	Format Painter	Pincel de Formatação
+	Format Painter (double-click to keep it on)	Pincel de Formatação (clique duas vezes para mantê-lo ativo)
+	Format Shape…	Formatar Forma…
+	Forward	Avançar
+	From Beginning	Do Começo
+	From Bottom	De Baixo
+	From Bottom-Left	Do Canto Inferior Esquerdo
+	From Bottom-Right	Do Canto Inferior Direito
+	From Current Slide	Do Slide Atual
+	From Left	Da Esquerda
+	From Right	Da Direita
+	From Top	De Cima
+	From Top-Left	Do Canto Superior Esquerdo
+	From Top-Right	Do Canto Superior Direito
+	Gradient…	Gradiente…
+	Grid and Guides	Grade e Guias
+	Grid Options	Opções de Grade
+	Grid Options…	Opções de Grade…
+	Gridlines	Linhas de Grade
+	Group Objects	Agrupar Objetos
+	Half	Metade
+	Handout Master	Mestre de Folhetos
+	HD (330 ppi): good quality for high-definition displays	HD (330 ppi): boa qualidade para telas de alta definição
+	Header	Cabeçalho
+	Header & Footer	Cabeçalho e Rodapé
+	Header Row	Linha de Cabeçalho
+	Hide During Show	Ocultar Durante a Apresentação
+	Hide Slide	Ocultar Slide
+	Hierarchy	Hierarquia
+	Highlighter	Marca-Texto
+	Horizontal In	Horizontal para Dentro
+	Horizontal Out	Horizontal para Fora
+	Icons	Ícones
+	In	Para Dentro
+	Increase List Level	Aumentar Nível da Lista
+	Increase {label}	Aumentar {label}
+	Information	Informações
+	Ink to Math	Tinta em Equação
+	Ink to Math (coming soon)	Tinta em Equação (em breve)
+	Ink to Shape	Tinta em Forma
+	Ink to Shape: turn drawn lines, rectangles, ovals and triangles into shapes	Tinta em Forma: transforma linhas, retângulos, ovais e triângulos desenhados em formas
+	Ink to Text	Tinta em Texto
+	Ink to Text (coming soon)	Tinta em Texto (em breve)
+	Inner	Interna
+	Insert Above	Inserir Acima
+	Insert Below	Inserir Abaixo
+	Insert Layout	Inserir Layout
+	Insert Left	Inserir à Esquerda
+	Insert Picture	Inserir Imagem
+	Insert Placeholder	Inserir Espaço Reservado
+	Insert Right	Inserir à Direita
+	Insert Table	Inserir Tabela
+	Insert Table…	Inserir Tabela…
+	Inside Borders	Bordas Internas
+	Inside Horizontal Border	Borda Horizontal Interna
+	Inside Vertical Border	Borda Vertical Interna
+	Interface language:	Idioma da interface:
+	Join the ArtCraft community on Discord	Participe da comunidade ArtCraft no Discord
+	Last Column	Última Coluna
+	Layouts	Layouts
+	Learn More	Saiba Mais
+	Left Border	Borda Esquerda
+	Left Down	Esquerda e para Baixo
+	Left Up	Esquerda e para Cima
+	Light/Dark appearance	Aparência clara/escura
+	Line Spacing	Espaçamento entre Linhas
+	Line Spacing Options…	Opções de Espaçamento entre Linhas…
+	Link…	Link…
+	Long Dash	Traço Longo
+	Long Dash Dot	Traço Longo-Ponto
+	Loop Until Next Sound	Repetir até o Próximo Som
+	Loop until Stopped	Repetir até Parar
+	Loose	Espaçado
+	Matrix	Matriz
+	Media	Mídia
+	Merge Shapes	Mesclar Formas
+	More Colors… #	Mais Cores… #
+	More Columns…	Mais Colunas…
+	More Picture Styles	Mais Estilos de Imagem
+	Motion Paths	Trajetórias de Movimento
+	Move Section Down	Mover Seção para Baixo
+	Move Section Up	Mover Seção para Cima
+	Movie	Filme
+	Mute	Sem Áudio
+	Narrow	Estreita
+	New Comment	Novo Comentário
+	New Photo Album…	Novo Álbum de Fotos…
+	New Presentation	Nova Apresentação
+	New Slide	Novo Slide
+	New Slide (⇧⌘N)	Novo Slide (⇧⌘N)
+	No Border	Sem Borda
+	No Fill	Sem Preenchimento
+	No Glow	Sem Brilho
+	No icons match.	Nenhum ícone corresponde.
+	No Outline	Sem Contorno
+	No Reflection	Sem Reflexo
+	No Shadow	Sem Sombra
+	No slides.	Nenhum slide.
+	No Soft Edges	Sem Bordas Suaves
+	No Transform	Sem Transformação
+	Notes	Anotações
+	Notes Master	Mestre de Anotações
+	Notes Page	Página de Anotações
+	Numbering	Numeração
+	On Click	Ao Clicar
+	On Click of {name}	Ao Clicar em {name}
+	On Click of… (none)	Ao Clicar em… (nenhum)
+	On Mouse Click	Ao Clicar com o Mouse
+	Open another window on this presentation	Abrir outra janela com esta apresentação
+	Open Path	Abrir Caminho
+	Order Objects	Ordenar Objetos
+	Other Sound…	Outro Som…
+	Out	Para Fora
+	Outer	Externa
+	Outline View	Estrutura de Tópicos
+	Outside Borders	Bordas Externas
+	Oval ends	Extremidades ovais
+	Page Number	Número da Página
+	Page Setup…	Configurar Página…
+	Paragraph…	Parágrafo…
+	Paste (⌘V)	Colar (⌘V)
+	Paste and Match Formatting	Colar e Corresponder à Formatação
+	Paste Formatting	Colar Formatação
+	Paste Special…	Colar Especial…
+	Pen Color	Cor da Caneta
+	Pen Style	Estilo da Caneta
+	Pen Weight	Espessura da Caneta
+	Photo Album	Álbum de Fotos
+	Photo Album options	Opções de Álbum de Fotos
+	Photo Album…	Álbum de Fotos…
+	Picture	Imagem
+	Picture Border	Borda da Imagem
+	Picture Format	Formato da Imagem
+	Picture from File…	Imagem de Arquivo…
+	Pictures	Imagens
+	Pictures are already at or below that resolution	As imagens já estão nessa resolução ou abaixo dela
+	Play Across Slides	Reproduzir entre Slides
+	Play from Current Slide	Reproduzir do Slide Atual
+	Play from Start	Reproduzir desde o Início
+	Play Full Screen	Reproduzir em Tela Inteira
+	Play Narrations	Reproduzir Narrações
+	Play this slide's animations on the canvas	Reproduzir as animações deste slide na tela
+	Play this slide's transition	Reproduzir a transição deste slide
+	Playback	Reprodução
+	Plus In	Mais para Dentro
+	Plus Out	Mais para Fora
+	Position Objects	Posicionar Objetos
+	Present	Apresentar
+	Presenter View	Modo de Exibição do Apresentador
+	Print (220 ppi): excellent quality on most printers and screens	Impressão (220 ppi): excelente qualidade na maioria das impressoras e telas
+	Process	Processo
+	Profile avatar	Avatar do perfil
+	Promote	Promover
+	Put a picture in the selected node's picture placeholder	Coloca uma imagem no espaço reservado para imagem do nó selecionado
+	Quick Styles	Estilos Rápidos
+	Reading View	Modo de Exibição de Leitura
+	Recolor	Recolorir
+	Record	Gravar
+	Recording narration needs audio capture (coming soon)	Gravar narração exige captura de áudio (em breve)
+	Red Pen	Caneta Vermelha
+	Reflection	Reflexo
+	Regroup	Reagrupar
+	Rehearse Timings	Ensaiar Intervalos
+	Relationship	Relação
+	Remove All Sections	Remover Todas as Seções
+	Remove from Quick Access Toolbar	Remover da Barra de Ferramentas de Acesso Rápido
+	Remove Less (tighter)	Remover Menos (mais restrito)
+	Remove More (looser)	Remover Mais (menos restrito)
+	Remove Section	Remover Seção
+	Remove Section & Slides	Remover Seção e Slides
+	Remove the picture style	Remover o estilo da imagem
+	Rename Section…	Renomear Seção…
+	Replace Fonts…	Substituir Fontes…
+	Replace…	Substituir…
+	Rescan Installed Fonts	Verificar Novamente as Fontes Instaladas
+	Reset Crop	Redefinir Corte
+	Reset Picture	Redefinir Imagem
+	Reset Slide	Redefinir Slide
+	Reset Slide Background	Redefinir Plano de Fundo do Slide
+	Reset Style	Redefinir Estilo
+	Reset to Defaults	Restaurar Padrões
+	Return	Retornar
+	Reuse Slides (Keep Source Formatting)…	Reutilizar Slides (Manter Formatação de Origem)…
+	Reuse Slides…	Reutilizar Slides…
+	Rewind after Playing	Retroceder após Reproduzir
+	Right Border	Borda Direita
+	Right Down	Direita e para Baixo
+	Right Up	Direita e para Cima
+	Right-click any ribbon button to add it.	Clique com o botão direito em qualquer botão da faixa de opções para adicioná-lo.
+	Right-to-Left Text Direction	Direção do Texto da Direita para a Esquerda
+	Rotate all text 270°	Girar todo o texto 270°
+	Rotate all text 90°	Girar todo o texto 90°
+	Rotate Left 90°	Girar 90° para a Esquerda
+	Rotate Right 90°	Girar 90° para a Direita
+	Round Dot	Ponto Redondo
+	Saturation {value}	Saturação {value}
+	Screenshot	Captura de Tela
+	Screenshot (not available yet)	Captura de Tela (ainda não disponível)
+	Scroll ribbon left	Rolar a faixa de opções para a esquerda
+	Scroll ribbon right	Rolar a faixa de opções para a direita
+	Search commands (⇧⌘P)	Pesquisar comandos (⇧⌘P)
+	Search commands…	Pesquisar comandos…
+	Search icons	Pesquisar ícones
+	Section	Seção
+	Section Zoom	Zoom de Seção
+	Select an object on the slide and add an animation from the Animations tab.	Selecione um objeto no slide e adicione uma animação na guia Animações.
+	Selection Pane	Painel de Seleção
+	Selection Pane…	Painel de Seleção…
+	Send Backward	Recuar
+	Send to Back	Enviar para Trás
+	Sentence case.	Primeira letra da frase em maiúscula.
+	Set as Default Shape	Definir como Forma Padrão
+	Set Transparent Color	Definir Cor Transparente
+	Set Up Show…	Configurar Apresentação…
+	Shading	Sombreamento
+	Shape Fill	Preenchimento da Forma
+	Shape Format	Formato da Forma
+	Shape Outline	Contorno da Forma
+	Shape Styles	Estilos de Forma
+	Show Comments	Mostrar Comentários
+	Show Media Controls	Mostrar Controles de Mídia
+	Show Slide	Mostrar Slide
+	Size and Position…	Tamanho e Posição…
+	Slide Image	Imagem do Slide
+	Slide Master	Slide Mestre
+	Slide Number	Número do Slide
+	Slide Show	Apresentação de Slides
+	Slide Size	Tamanho do Slide
+	Slide Sorter	Classificação de Slides
+	Slide Zoom	Zoom de Slide
+	Slide {n} of {total}	Slide {n} de {total}
+	Slides from Outline…	Slides da Estrutura de Tópicos…
+	Slides Per Page: {n}	Slides por Página: {n}
+	SmartArt Design	Design do SmartArt
+	SmartArt Styles	Estilos de SmartArt
+	Smooth Corners	Cantos Suaves
+	Smooth Point	Ponto Suave
+	Soft Edges	Bordas Suaves
+	Solid	Sólido
+	Sound	Som
+	Sound:	Som:
+	Split Cells	Dividir Células
+	Square Dot	Ponto Quadrado
+	Standard (4:3)	Padrão (4:3)
+	Standard Colors	Cores Padrão
+	Start	Iniciar
+	Start After Previous	Iniciar Após a Anterior
+	Start Automatically	Iniciar Automaticamente
+	Start from Beginning	Iniciar do Começo
+	Start On Click	Iniciar ao Clicar
+	Start With Previous	Iniciar com a Anterior
+	Start:	Iniciar:
+	Stealth end	Seta furtiva no final
+	Straight Point	Ponto Reto
+	Straight Segment	Segmento Reto
+	Style {i}	Estilo {i}
+	Subtle	Sutil
+	Summary Zoom	Zoom de Resumo
+	Table Design	Design da Tabela
+	Table Eraser	Borracha de Tabela
+	Table…	Tabela…
+	Tabs…	Tabulações…
+	Text Box	Caixa de Texto
+	Text Direction	Direção do Texto
+	Text Effects	Efeitos de Texto
+	Text Fill	Preenchimento do Texto
+	Text Highlight Color	Cor de Realce do Texto
+	Text Outline	Contorno do Texto
+	Text Pane	Painel de Texto
+	The presentation has no sections. Add one with Home › Section.	A apresentação não tem seções. Adicione uma em Página Inicial › Seção.
+	Theme Colors	Cores do Tema
+	Themes	Temas
+	Thesaurus	Dicionário de Sinônimos
+	Tight	Junto
+	To Bottom	Para Baixo
+	To Bottom-Left	Para o Canto Inferior Esquerdo
+	To Bottom-Right	Para o Canto Inferior Direito
+	To Left	Para a Esquerda
+	To Right	Para a Direita
+	To Top	Para Cima
+	To Top-Left	Para o Canto Superior Esquerdo
+	To Top-Right	Para o Canto Superior Direito
+	tOGGLE cASE	aLTERNAR mAIÚSCULAS/mINÚSCULAS
+	Top Border	Borda Superior
+	Total Row	Linha de Totais
+	Transitions	Transições
+	Translation needs a language model (not bundled)	A tradução exige um modelo de linguagem (não incluído)
+	Trigger	Gatilho
+	Type and organise the diagram's text	Digite e organize o texto do diagrama
+	Use Timings	Usar Intervalos
+	Vertical In	Vertical para Dentro
+	Vertical Out	Vertical para Fora
+	Very Loose	Muito Espaçado
+	Very Tight	Muito Junto
+	Video from File…	Vídeo de Arquivo…
+	Volume	Volume
+	Web (150 ppi): good for web pages and projectors	Web (150 ppi): boa para páginas da Web e projetores
+	Wide	Larga
+	Widescreen (16:9)	Widescreen (16:9)
+	Window title bar	Barra de título da janela
+	With Previous	Com a Anterior
+	WordArt	WordArt
+	WordArt style {n}	Estilo de WordArt {n}
+	Zoom and Rotate	Zoom e Rotação
+	Zoom level	Nível de zoom
+	Zoom…	Zoom…
+	{cols}x{rows} Table	Tabela {cols}x{rows}
+	{f} (Body)	{f} (Corpo)
+	{f} (Headings)	{f} (Títulos)
+	{label} value	Valor de {label}
+	{name} options	Opções de {name}
+	{n} Columns	{n} colunas
+	{n} Slides	{n} slides
+	{n} Spokes	{n} raios
+	{r} pt glow	Brilho de {r} pt
+	■ Stop	■ Parar
+	▶ Play All	▶ Reproduzir Tudo
+animation	Emphasis	Ênfase
+animation	Entrance	Entrada
+animation	Exit	Saída
+tab	Home	Página Inicial

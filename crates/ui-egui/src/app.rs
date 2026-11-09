@@ -284,6 +284,8 @@ impl SlideApp {
         let ctx = ui.ctx().clone();
         self.ime_frame_viewport = Some(ctx.viewport_id());
         self.ime_pending = None;
+        // The interface language for this frame (the `language` setting; `auto` follows the system).
+        crate::i18n::set_current(crate::i18n::Lang::from_pref(&self.ui.language));
         if !self.ui_setup(&ctx) {
             // This pass is discarded for the new fonts. The input events were already consumed
             // by egui, so keep them queued for the next frame instead of silently losing them.
