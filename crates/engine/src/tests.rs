@@ -7069,3 +7069,23 @@ fn shape_adjust_and_quick_style_reject_invalid_index() {
     assert_eq!(s.doc().unwrap().shape(id).unwrap().style, before.style);
     s.execute("shape.adjust", &json!({"value": 0.4})).unwrap();
 }
+
+/// Edit Points on a shape whose outline and hole are subpaths of ONE path keeps them together,
+/// so the hole survives the conversion, an edit and the PPTX round trip (even-odd fill).
+#[test]
+fn edit_points_keeps_the_subpaths_of_one_path_together() {
+    use deckcraft_model::Geom;
+    let mut s = Session::with_new();
+    s.execute("slide.new", &json!({"layout": "blank"})).unwrap();
+    s.execute("shape.insert", &json!({"preset": "donut", "rect": [100, 100, 200, 200]})).unwrap();
+    s.execute("shape.editPoints", &json!({})).unwrap();
+    let d = |s: &Session| match &s.doc().unwrap().selected_shapes()[0].geom {
+        Geom::Custom { paths } => paths.iter().map(|p| p.d.clone()).collect::<Vec<_>>(),
+        g => panic!("not a freeform: {g:?}"),
+    };
+    let before = d(&s);
+    let moves = |ds: &[String]| ds.iter().map(|d| d.matches('M').count()).collect::<Vec<_>>();
+    assert!(moves(&before).iter().any(|n| *n >= 2), "ring and hole are subpaths of one path: {before:?}");
+    s.execute("shape.movePoint", &json!({"index": 0, "x": 90, "y": 90})).unwrap();
+    assert_eq!(moves(&d(&s)), moves(&before), "moving a point keeps every subpath where it was");
+}

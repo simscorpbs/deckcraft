@@ -3105,3 +3105,33 @@ fn a_shape_whose_outline_is_not_finite_is_not_drawable() {
     quad.paths[0].path = path;
     assert!(!crate::geometry::drawable(&quad, m, 100.0, 50.0));
 }
+
+/// Logos and icons: the subpaths of ONE custom path fill even-odd, so an inner outline cuts a hole
+/// whichever way it winds; separate paths each fill on their own and overlay (as in PowerPoint).
+#[test]
+fn custom_geometry_subpaths_of_one_path_keep_their_holes() {
+    let red = deckcraft_model::Fill::solid(deckcraft_model::ColorRef::rgb(deckcraft_model::Rgba::rgb(200, 0, 0)));
+    let custom = |paths: Vec<(&str, f64)>| Shape {
+        id: ShapeId(700),
+        xfrm: Some(Xfrm::new(100.0, 100.0, 200.0, 200.0)),
+        geom: Geom::Custom {
+            paths: paths
+                .into_iter()
+                .map(|(d, size)| deckcraft_model::CustomPath { w: size, h: size, d: d.into(), fill: deckcraft_geom::preset::FillMode::Norm, stroke: true })
+                .collect(),
+        },
+        fill: Some(red.clone()),
+        line: Some(deckcraft_model::Line::none()),
+        ..Default::default()
+    };
+    // Outer and inner square wound the SAME way: non-zero would fill the inner one.
+    let outer = "M 0 0 L 100 0 L 100 100 L 0 100 Z";
+    let inner = "M 25 25 L 75 25 L 75 75 L 25 75 Z";
+    let draw = |sh: Shape| render_slide(&deck_with(vec![sh]), 0, &RenderOpts { scale: 1.0, ..Default::default() });
+    let one = draw(custom(vec![(&format!("{outer} {inner}"), 100.0)]));
+    assert_eq!(one.pixel(110, 110), [200, 0, 0, 255], "the frame between the squares is filled");
+    assert_eq!(one.pixel(200, 200), [255, 255, 255, 255], "the inner square of one path is a hole");
+    let two = draw(custom(vec![(outer, 100.0), (inner, 100.0)]));
+    assert_eq!(two.pixel(110, 110), [200, 0, 0, 255]);
+    assert_eq!(two.pixel(200, 200), [200, 0, 0, 255], "separate paths overlay: no hole");
+}
