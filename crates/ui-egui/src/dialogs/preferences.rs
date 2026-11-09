@@ -40,5 +40,6 @@ pub(super) fn restore_preferences(app: &mut SlideApp, d: &Dialog) {
     }
     if let Some(prefs) = before.get("prefs").and_then(|p| serde_json::from_value(p.clone()).ok()) {
         app.session.prefs = prefs;
+        app.session.refresh_autosave();
     }
 }

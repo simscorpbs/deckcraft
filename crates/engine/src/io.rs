@@ -7,6 +7,14 @@
 /// The bytes of the file at `path`, inside the automation read root when there is one.
 #[cfg(not(target_arch = "wasm32"))]
 pub fn read_file(path: &str) -> Result<Vec<u8>, String> {
+    read_file_stamped(path).map(|(bytes, _)| bytes)
+}
+
+/// [`read_file`], and the file's disk stamp for AutoSave's conflict check: its size and date
+/// taken before the read, so a file that changes during the read cannot pair the new date with
+/// the old bytes. `None` when the stamp can't be made.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn read_file_stamped(path: &str) -> Result<(Vec<u8>, Option<deckcraft_cloud::DiskStamp>), String> {
     crate::file_access::check_read(path)?;
     let meta = std::fs::metadata(path).map_err(|e| format!("{path}: {e}"))?;
     if !meta.is_file() {
@@ -16,7 +24,9 @@ pub fn read_file(path: &str) -> Result<Vec<u8>, String> {
     if meta.len() > MAX_FILE_SIZE {
         return Err(format!("{path}: file size {} exceeds 2 GiB limit", meta.len()));
     }
-    std::fs::read(path).map_err(|e| format!("{path}: {e}"))
+    let bytes = std::fs::read(path).map_err(|e| format!("{path}: {e}"))?;
+    let stamp = (bytes.len() as u64 == meta.len()).then(|| deckcraft_cloud::DiskStamp::from_metadata(&meta, &bytes));
+    Ok((bytes, stamp))
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -110,6 +120,19 @@ fn rename_with_retry(
             other => return other,
         }
     }
+}
+
+/// [`write_file`], and the disk stamp of what was written, for AutoSave's conflict check (`None`
+/// when the file cannot be looked at again).
+#[cfg(not(target_arch = "wasm32"))]
+pub fn write_file_stamped(path: &str, bytes: &[u8]) -> Result<Option<deckcraft_cloud::DiskStamp>, String> {
+    write_file(path, bytes)?;
+    Ok(deckcraft_cloud::DiskStamp::of_bytes(std::path::Path::new(path), bytes).ok())
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn write_file_stamped(path: &str, _bytes: &[u8]) -> Result<Option<deckcraft_cloud::DiskStamp>, String> {
+    Err(format!("{path}: saving to a path is not available in the browser"))
 }
 
 #[cfg(target_arch = "wasm32")]

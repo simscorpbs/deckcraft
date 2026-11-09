@@ -303,6 +303,8 @@ impl SlideApp {
                 let d = p.get("id").and_then(Value::as_str).ok_or("missing `id`")?;
                 self.dialog = Some(dialogs::Dialog::new(d));
             }
+            "ui.saveConflict" => return self.answer_save_conflict(p),
+            "ui.saveToCloud" => return self.answer_save_to_cloud(p),
             "app.links" => {
                 use deckcraft_engine::links::{APP_PAGE, APPS, DISCORD, GITHUB, WEBSITE};
                 return Ok(json!({"discord": DISCORD, "website": WEBSITE, "apps": APPS, "appPage": APP_PAGE, "github": GITHUB}));

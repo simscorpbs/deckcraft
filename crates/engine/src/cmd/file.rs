@@ -33,7 +33,15 @@ pub fn specs() -> Vec<CommandSpec> {
             adopt
         ),
         cmd!(noundo "file.openBytes", "Open Data", [], None, "{name, data: base64}", always, open_bytes),
-        cmd!(noundo "file.save", "Save", ["File"], Some("Cmd+S"), "{path?, format?: deckcraft|pptx}", has_doc, save),
+        cmd!(
+            noundo "file.save",
+            "Save",
+            ["File"],
+            Some("Cmd+S"),
+            "{path?, format?: deckcraft|pptx, ifUnchanged?: bool (AutoSave: write the file only if it still holds what was last read or written here; else nothing is written and the answer is {saved: false, conflict: changed|missing}), document?: uid of an open presentation (default: the active one)} → {path, bytes, saved}",
+            has_doc,
+            save
+        ),
         cmd!(noundo "file.saveAs", "Save As…", ["File"], Some("Cmd+Shift+S"), "{path, format?}", has_doc, save_as),
         cmd!(noundo "file.saveTemplate", "Save as Template…", ["File"], None, "{path}", has_doc, save_as),
         cmd!(query "file.saveBytes", "Save to Data", [], None, "{format?: deckcraft|pptx} → {data: base64}", has_doc, save_bytes_cmd),
@@ -247,13 +255,17 @@ pub struct LoadedFile {
     pub native: bool,
     /// What the file had lost or damaged.
     pub damaged: Damage,
+    /// The file as read, for AutoSave's conflict check (`None` for bytes a page sent).
+    pub stamp: Option<deckcraft_cloud::DiskStamp>,
 }
 
 /// Read and parse the presentation at `path`.
 #[cfg(not(target_arch = "wasm32"))]
 pub fn read_presentation_file(path: &str) -> Result<LoadedFile> {
-    let bytes = crate::io::read_file(path).map_err(EngineError::Other)?;
-    loaded_file(path, &bytes)
+    let (bytes, stamp) = crate::io::read_file_stamped(path).map_err(EngineError::Other)?;
+    let mut f = loaded_file(path, &bytes)?;
+    f.stamp = stamp;
+    Ok(f)
 }
 
 /// Parse `bytes` as the presentation file `path`, as [`read_presentation_file`] does after
@@ -262,16 +274,20 @@ pub fn read_presentation_file(path: &str) -> Result<LoadedFile> {
 pub fn loaded_file(path: &str, bytes: &[u8]) -> Result<LoadedFile> {
     let (doc, damaged) = open_checked(path, bytes)?;
     let native = deckcraft_format::sniff(bytes) || deckcraft_pptx::sniff(bytes);
-    Ok(LoadedFile { path: path.to_string(), doc, native, damaged })
+    Ok(LoadedFile { path: path.to_string(), doc, native, damaged, stamp: None })
 }
 
 /// Add a loaded presentation as the active document: the shared end of `file.open` and
 /// `file.adopt`. A damaged file opens as an untitled repaired copy, so Save can't overwrite the
 /// original with the empty media.
 fn adopt_loaded(s: &mut Session, f: LoadedFile) -> Result<Value> {
-    let LoadedFile { path, doc, native, damaged } = f;
+    let LoadedFile { path, doc, native, damaged, stamp } = f;
     let keep_path = native && damaged.is_empty();
     let i = add_opened(s, &path, keep_path.then(|| path.clone()), doc);
+    // AutoSave checks this file is still the one read here before it writes.
+    if keep_path && let Some(st) = s.active_mut() {
+        st.stamp = stamp;
+    }
     report_damage(s, &damaged)?;
     let st = s.doc()?;
     Ok(json!({
@@ -481,7 +497,13 @@ pub fn format_for_path(path: &str) -> &'static str {
 /// becomes its file. `file.save` calls it after writing; the web host bridge calls it once the
 /// page has the bytes.
 pub fn mark_saved(s: &mut Session, path: Option<String>) -> Result<()> {
-    let st = s.doc_mut()?;
+    let i = s.active_index().ok_or(EngineError::NoDocument)?;
+    mark_saved_at(s, i, path)
+}
+
+/// [`mark_saved`] for presentation `index`.
+fn mark_saved_at(s: &mut Session, index: usize, path: Option<String>) -> Result<()> {
+    let st = s.docs.get_mut(index).ok_or(EngineError::NoDocument)?;
     st.saved_doc = st.doc.clone();
     if path.is_some() {
         st.path = path;
@@ -498,17 +520,55 @@ fn write_file(path: &str, bytes: &[u8]) -> Result<()> {
     crate::io::write_file(path, bytes).map_err(EngineError::Other)
 }
 
-fn save(s: &mut Session, p: &Value) -> Result<Value> {
-    let path = str_param(p, "path").map(String::from).or_else(|| s.active().and_then(|d| d.path.clone()));
+/// The presentation a command names with `document` (its uid), else the active one.
+pub(crate) fn target_index(s: &Session, p: &Value, cmd: &str) -> Result<usize> {
+    match p.get("document") {
+        None | Some(Value::Null) => s.active_index().ok_or(EngineError::NoDocument),
+        Some(v) => v
+            .as_u64()
+            .and_then(|uid| s.index_of_uid(uid))
+            .ok_or_else(|| bad(cmd, "`document` is not the uid of an open presentation")),
+    }
+}
+
+pub(crate) fn save(s: &mut Session, p: &Value) -> Result<Value> {
+    let index = target_index(s, p, "file.save")?;
+    let own_path = s.documents().get(index).and_then(|d| d.path.clone());
+    let path = str_param(p, "path").map(String::from).or_else(|| own_path.clone());
+    let if_unchanged = bool_or(p, "ifUnchanged", false);
     let Some(path) = path else {
+        if if_unchanged {
+            // AutoSave never asks where to save.
+            return Ok(json!({"saved": false, "blocked": "unsaved"}));
+        }
         s.ui_requests.push(crate::UiRequest::PickFile { purpose: "saveAs".into() });
         return Ok(json!({"needsPath": true}));
     };
+    let own = own_path.as_deref() == Some(path.as_str());
+    // AutoSave (`ifUnchanged`) never overwrites a file another device or program changed since it
+    // was read or written here, or that went missing: it reports the conflict for
+    // `file.resolveConflict` instead. Without a disk stamp there is nothing to check against.
+    if if_unchanged && own {
+        if let Some(conflict) = super::cloud::conflict_before_save(s, index, &path)? {
+            return Ok(json!({"saved": false, "conflict": conflict.id(), "path": path}));
+        }
+        if s.documents().get(index).is_some_and(|d| d.stamp.is_none()) {
+            return Ok(json!({"saved": false, "blocked": "notSavedHere", "path": path}));
+        }
+    }
     let format = str_param(p, "format").unwrap_or(format_for_path(&path));
-    let bytes = save_bytes(&s.doc()?.doc, format)?;
-    write_file(&path, &bytes)?;
-    mark_saved(s, Some(path.clone()))?;
-    Ok(json!({"path": path, "bytes": bytes.len()}))
+    let bytes = save_bytes(&s.documents().get(index).ok_or(EngineError::NoDocument)?.doc, format)?;
+    let stamp = crate::io::write_file_stamped(&path, &bytes).map_err(EngineError::Other)?;
+    mark_saved_at(s, index, Some(path.clone()))?;
+    if let Some(d) = s.docs.get_mut(index) {
+        d.stamp = stamp;
+        d.conflict = None;
+    }
+    // Save As (and Save to Cloud, Keep both) give the new file the switch the presentation had.
+    if !own && let Some(on) = s.documents().get(index).map(|d| d.autosave) {
+        s.set_autosave_of(index, on);
+    }
+    Ok(json!({"path": path, "bytes": bytes.len(), "saved": true}))
 }
 
 fn save_as(s: &mut Session, p: &Value) -> Result<Value> {

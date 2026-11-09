@@ -1535,3 +1535,30 @@ direction	From top right	Sup. dir.
 	Slide title	Título do slide
 	Slide text	Texto do slide
 	size (pt)	tamanho (pt)
+# --- autosave ---
+	AutoSave	Salvamento Automático
+	AutoSave couldn't write the file: {error}. It will try again shortly.	O Salvamento Automático não conseguiu gravar o arquivo: {error}. Ele tentará de novo em instantes.
+	AutoSave is paused: this file was changed on another device. Click to choose which version to keep.	O Salvamento Automático está pausado: este arquivo foi alterado em outro dispositivo. Clique para escolher qual versão manter.
+	AutoSave is paused: this file was moved or deleted elsewhere. Click to choose what to do.	O Salvamento Automático está pausado: este arquivo foi movido ou excluído em outro lugar. Clique para escolher o que fazer.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	O Salvamento Automático não está disponível no navegador: ele não pode gravar nos seus arquivos. Salvar baixa uma cópia.
+	AutoSave only keeps .deckcraft, .pptx, .potx and .ppsx files; {name} can't keep everything. Save as .pptx to turn on AutoSave.	O Salvamento Automático só cobre arquivos .deckcraft, .pptx, .potx e .ppsx; {name} não consegue manter tudo. Salve como .pptx para ativar o Salvamento Automático.
+	AutoSave saves every change to the file. DeckCraft remembers the switch for each file.	O Salvamento Automático salva cada alteração no arquivo. O DeckCraft lembra a chave de cada arquivo.
+	AutoSave stopped so that neither version is lost.	O Salvamento Automático parou para que nenhuma das versões se perca.
+	AutoSave writes your changes to the file a moment after you stop editing.	O Salvamento Automático grava suas alterações no arquivo logo depois que você para de editar.
+	Decide later	Decidir depois
+	File name:	Nome do arquivo:
+	Keep both	Manter ambos
+	Keep both saves this version as a copy beside the other.	Manter ambos salva esta versão como uma cópia ao lado da outra.
+	Keep this version	Manter esta versão
+	Open the other version	Abrir a outra versão
+	Other location…	Outro local…
+	Save Conflict	Conflito ao Salvar
+	Save it here again	Salvar aqui de novo
+	Save the presentation to turn on AutoSave	Salve a apresentação para ativar o Salvamento Automático
+	Save the presentation to turn on AutoSave (DeckCraft couldn't check this file on disk)	Salve a apresentação para ativar o Salvamento Automático (o DeckCraft não conseguiu verificar este arquivo no disco)
+	Save to Cloud	Salvar na Nuvem
+	Saving	Salvamento
+	Turn on AutoSave by default	Ativar o Salvamento Automático por padrão
+	Where should AutoSave keep this presentation?	Onde o Salvamento Automático deve guardar esta apresentação?
+	{name} was changed on another device	{name} foi alterado em outro dispositivo
+	{name} was moved or deleted elsewhere	{name} foi movido ou excluído em outro lugar

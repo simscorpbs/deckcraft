@@ -165,14 +165,21 @@ impl SlideApp {
     }
 
     /// File › Close and Ctrl+W: closes the active presentation, asking first when it has unsaved
-    /// changes (Save, Don't Save, Cancel), as PowerPoint does.
+    /// changes (Save, Don't Save, Cancel), as PowerPoint does. With AutoSave on for its file the
+    /// changes are written first and it closes without a prompt; if another device changed the
+    /// file, the Save Conflict dialog opens and the presentation stays open.
     pub fn close_presentation(&mut self) {
-        match self.session.active() {
-            None => {}
-            Some(d) if d.is_dirty() => self.dialog = Some(dialogs::Dialog::new("close")),
-            Some(_) => {
+        let Some(i) = self.session.active_index() else { return };
+        if !self.session.documents().get(i).is_some_and(|d| d.is_dirty()) {
+            let _ = self.run("file.close", json!({}));
+            return;
+        }
+        match self.autosave_before_close(i) {
+            deckcraft_engine::autosave::Flush::Saved => {
                 let _ = self.run("file.close", json!({}));
             }
+            deckcraft_engine::autosave::Flush::Conflict => {}
+            deckcraft_engine::autosave::Flush::NotCovered => self.dialog = Some(dialogs::Dialog::new("close")),
         }
     }
 
