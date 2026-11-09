@@ -166,6 +166,12 @@ impl SlideApp {
                 }
                 return Ok(json!({"accentColor": self.ui.accent_color.hex()}));
             }
+            "ui.language" => {
+                if let Some(v) = p.get("value").and_then(Value::as_str) {
+                    self.ui.language = crate::i18n::normalize_pref(v).ok_or("unknown interface language; use auto or a language code such as pt-br")?.into();
+                }
+                return Ok(json!({"language": self.ui.language, "shown": crate::i18n::Lang::from_pref(&self.ui.language).code()}));
+            }
             "ui.showDiscord" => {
                 self.ui.show_discord = p.get("value").and_then(Value::as_bool).unwrap_or(!self.ui.show_discord);
                 return Ok(json!({"showDiscord": self.ui.show_discord}));
@@ -272,7 +278,7 @@ impl SlideApp {
                     self.pick_and_insert("theme", "design.browseTheme");
                 } else {
                     // The browser's asynchronous picker would open the file as a new document.
-                    self.set_status("Browse for Themes needs the desktop app for now".to_string());
+                    self.set_status(crate::tl!("Browse for Themes needs the desktop app for now"));
                 }
             }
             "app.qat" => return qat::command(self, p),
@@ -290,7 +296,7 @@ impl SlideApp {
                     self.pick_and_insert("open", "review.compare");
                 } else {
                     // The browser's asynchronous picker would open the file as a new document.
-                    self.set_status("Compare needs the desktop app for now".to_string());
+                    self.set_status(crate::tl!("Compare needs the desktop app for now"));
                 }
             }
             "app.dialog" => {

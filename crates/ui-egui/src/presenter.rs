@@ -207,13 +207,13 @@ impl View {
         let key = |name: &str| Command::Key { name: name.into(), command: false, shift: false, alt: false, ctrl: false };
         ui.horizontal_wrapped(|ui| {
             ui.heading(&snapshot.elapsed);
-            ui.label(format!("Slide {} of {}", snapshot.slide.saturating_add(1), snapshot.total));
+            ui.label(crate::i18n::fmt(crate::tl!("Slide {n} of {total}"), &[("n", &snapshot.slide.saturating_add(1).to_string()), ("total", &snapshot.total.to_string())]));
             for (label, name) in [("◀ Previous", "ArrowLeft"), ("Next ▶", "ArrowRight")] {
-                if ui.button(label).clicked() {
+                if ui.button(crate::tl!(label)).clicked() {
                     commands.push(key(name));
                 }
             }
-            if ui.button("End Show").clicked() {
+            if ui.button(crate::tl!("End Show")).clicked() {
                 commands.push(Command::End);
             }
         });
@@ -226,7 +226,7 @@ impl View {
                 ("All slides", "G"),
                 ("Zoom", "Z"),
             ] {
-                if ui.button(label).clicked() {
+                if ui.button(crate::tl!(label)).clicked() {
                     commands.push(key(name));
                 }
             }
@@ -240,7 +240,7 @@ impl View {
         ui.columns(2, |columns| {
             let left = &mut columns[0];
             if snapshot.ended {
-                left.heading("End of slide show");
+                left.heading(crate::tl!("End of slide show"));
             } else if let Some(texture) = &self.current {
                 let response = left.add(
                     egui::Image::new(texture)
@@ -262,10 +262,10 @@ impl View {
                 }
             }
             if snapshot.zoom_armed {
-                left.label("Click the preview to zoom.");
+                left.label(crate::tl!("Click the preview to zoom."));
             }
             let right = &mut columns[1];
-            right.label("Next");
+            right.label(crate::tl!("Next"));
             if let Some(texture) = &self.next {
                 right.add(egui::Image::new(texture).fit_to_exact_size(fit_preview(
                     texture.size_vec2(),
@@ -273,10 +273,10 @@ impl View {
                     right.available_height() * 0.45,
                 )));
             } else {
-                right.label("End of slide show");
+                right.label(crate::tl!("End of slide show"));
             }
             right.horizontal(|ui| {
-                ui.label("Notes");
+                ui.label(crate::tl!("Notes"));
                 if ui.button("A−").clicked() {
                     commands.push(key(egui::Key::OpenBracket.name()));
                 }
@@ -286,7 +286,7 @@ impl View {
             });
             egui::ScrollArea::vertical().show(right, |ui| {
                 ui.label(
-                    egui::RichText::new(if snapshot.notes.is_empty() { "No notes." } else { &snapshot.notes })
+                    egui::RichText::new(if snapshot.notes.is_empty() { crate::tl!("No notes.") } else { &snapshot.notes })
                         .size(snapshot.notes_px.clamp(10.0, 72.0)),
                 );
             });
@@ -305,10 +305,10 @@ impl View {
                 .map(|(i, p)| p.image().map(|image| ui.ctx().load_texture(format!("remote-grid-{i}"), image, egui::TextureOptions::LINEAR)))
                 .collect();
         }
-        ui.heading("All slides");
-        ui.label("Choose a slide to show it, or press G to return.");
+        ui.heading(crate::tl!("All slides"));
+        ui.label(crate::tl!("Choose a slide to show it, or press G to return."));
         if snapshot.total > crate::show::GRID_CAP {
-            ui.label(format!("First {} slides", crate::show::GRID_CAP));
+            ui.label(crate::i18n::fmt(crate::tl!("First {n} slides"), &[("n", &crate::show::GRID_CAP.to_string())]));
         }
         egui::ScrollArea::vertical().show(ui, |ui| {
             ui.horizontal_wrapped(|ui| {

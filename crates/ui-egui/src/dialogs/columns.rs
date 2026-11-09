@@ -7,7 +7,7 @@ fn columns_value(d: &Dialog, shown_count: &str, shown_spacing: &str) -> Result<O
     let mut p = serde_json::Map::new();
     let count = field_of(d, "count");
     if count != shown_count {
-        let n = count.trim().parse::<u32>().ok().filter(|n| (1..=16).contains(n)).ok_or("Number must be a whole number from 1 to 16")?;
+        let n = count.trim().parse::<u32>().ok().filter(|n| (1..=16).contains(n)).ok_or(tl!("Number must be a whole number from 1 to 16"))?;
         p.insert("count".into(), json!(n));
     }
     let spacing = field_of(d, "spacing");
@@ -15,7 +15,7 @@ fn columns_value(d: &Dialog, shown_count: &str, shown_spacing: &str) -> Result<O
         let typed = spacing.trim().trim_end_matches("in").trim_end_matches('"').trim();
         let inches = deckcraft_geom::parse_decimal(typed)
             .filter(|v| v.is_finite() && (0.0..=22.0).contains(v))
-            .ok_or("Spacing must be from 0 to 22 inches")?;
+            .ok_or(tl!("Spacing must be from 0 to 22 inches"))?;
         p.insert("spacing".into(), json!(inches * 72.0));
     }
     Ok((!p.is_empty()).then_some(Value::Object(p)))

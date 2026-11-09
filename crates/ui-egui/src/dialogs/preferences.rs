@@ -8,6 +8,7 @@ pub(super) fn preferences_snapshot(app: &SlideApp) -> Value {
         "accent": app.ui.accent_color.hex(),
         "showDiscord": app.ui.show_discord,
         "showAccountPicture": app.ui.show_account_picture,
+        "language": app.ui.language,
         "prefs": serde_json::to_value(&app.session.prefs).unwrap_or(Value::Null),
     })
 }
@@ -33,6 +34,9 @@ pub(super) fn restore_preferences(app: &mut SlideApp, d: &Dialog) {
     }
     if let Some(on) = before.get("showAccountPicture").and_then(Value::as_bool) {
         app.ui.show_account_picture = on;
+    }
+    if let Some(language) = before.get("language").and_then(Value::as_str) {
+        app.ui.language = language.to_string();
     }
     if let Some(prefs) = before.get("prefs").and_then(|p| serde_json::from_value(p.clone()).ok()) {
         app.session.prefs = prefs;

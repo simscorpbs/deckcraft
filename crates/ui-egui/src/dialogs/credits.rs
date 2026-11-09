@@ -215,39 +215,46 @@ pub fn contributors_ui(ui: &mut egui::Ui) {
     let id = egui::Id::unique("credits_view");
     let mut v = ui.data_mut(|d| d.get_temp::<View>(id)).unwrap_or_default();
     ui.horizontal_wrapped(|ui| {
-        ui.label("Show");
+        ui.label(tl!("Show"));
         for m in NameMode::ALL {
-            if ui.selectable_label(v.names == m, m.label()).clicked() {
+            if ui.selectable_label(v.names == m, tl!(m.label())).clicked() {
                 v.names = m;
             }
         }
         ui.separator();
-        let field = ui.label("Sort");
-        let combo = craft_ui::ComboBox::from_id_salt("credits_sort").selected_text(v.key.label().0).show_ui(ui, |ui| {
+        let field = ui.label(tl!("Sort"));
+        let combo = craft_ui::ComboBox::from_id_salt("credits_sort").selected_text(tl!(v.key.label().0)).show_ui(ui, |ui| {
             for k in SortKey::ALL {
-                if ui.selectable_label(v.key == k, k.label().0).clicked() {
+                if ui.selectable_label(v.key == k, tl!(k.label().0)).clicked() {
                     v.key = k;
                     v.ascending = k.default_ascending();
                 }
             }
         });
         let _ = combo.response.labelled_by(field.id);
-        if ui.button(if v.ascending { "▲" } else { "▼" }).on_hover_text("Reverse the order").clicked() {
+        if ui.button(if v.ascending { "▲" } else { "▼" }).on_hover_text(tl!("Reverse the order")).clicked() {
             v.ascending = !v.ascending;
         }
         ui.separator();
-        if ui.selectable_label(!v.table, "Grab bag").clicked() {
+        if ui.selectable_label(!v.table, tl!("Grab bag")).clicked() {
             v.table = false;
         }
-        if ui.selectable_label(v.table, "Table").clicked() {
+        if ui.selectable_label(v.table, tl!("Table")).clicked() {
             v.table = true;
         }
     });
     let list = sorted(CONTRIBUTORS, v.names, v.key, v.ascending);
-    ui.label(RichText::new(format!("{} contributors · {} commits", list.len(), group(TOTAL_COMMITS))).small().weak());
+    ui.label(
+        RichText::new(crate::i18n::fmt(
+            tl!("{n} contributors · {commits} commits"),
+            &[("n", &list.len().to_string()), ("commits", &group(TOTAL_COMMITS))],
+        ))
+        .small()
+        .weak(),
+    );
     ui.separator();
     if list.is_empty() {
-        ui.label("No contributor data was built into this copy.");
+        ui.label(tl!("No contributor data was built into this copy."));
     } else if v.table {
         // The table scrolls vertically itself, under a fixed header; it only scrolls sideways
         // once its columns are dragged wider than the dialog.
@@ -363,7 +370,7 @@ fn cells(c: &Contributor) -> [String; 9] {
 /// A contributor-table header. The sorted column is highlighted; its direction shows on the
 /// toolbar's sort-order button, so no arrow widens the column.
 fn header_text(k: SortKey) -> RichText {
-    RichText::new(k.label().1).strong()
+    RichText::new(tl!(k.label().1)).strong()
 }
 
 fn table(ui: &mut egui::Ui, list: &[&Contributor], v: &mut View) {
@@ -381,7 +388,7 @@ fn table(ui: &mut egui::Ui, list: &[&Contributor], v: &mut View) {
         .header(h + 4.0, |mut header| {
             for k in SortKey::ALL {
                 header.col(|ui| {
-                    let r = aligned(ui, k != SortKey::Name, |ui| ui.selectable_label(v.key == k, header_text(k))).on_hover_text(k.label().0);
+                    let r = aligned(ui, k != SortKey::Name, |ui| ui.selectable_label(v.key == k, header_text(k))).on_hover_text(tl!(k.label().0));
 
                     if r.clicked() {
                         if v.key == k {
@@ -414,7 +421,7 @@ fn table(ui: &mut egui::Ui, list: &[&Contributor], v: &mut View) {
 /// About ▸ Models: AI models credited in Co-Authored-By trailers.
 pub fn models_ui(ui: &mut egui::Ui) {
     if MODELS.is_empty() {
-        ui.label("No model credits were built into this copy.");
+        ui.label(tl!("No model credits were built into this copy."));
         return;
     }
     let assisted: u64 = MODELS.iter().map(|m| m.commits).max().unwrap_or(0).max(1);
@@ -438,14 +445,14 @@ pub fn models_ui(ui: &mut egui::Ui) {
     let widths: Vec<f32> = titles
         .iter()
         .enumerate()
-        .map(|(i, title)| natural(ui, RichText::new(*title).strong(), rows.iter().filter_map(|r| r.get(i).cloned())))
+        .map(|(i, title)| natural(ui, RichText::new(tl!(*title)).strong(), rows.iter().filter_map(|r| r.get(i).cloned())))
         .collect();
     egui::ScrollArea::horizontal().id_salt("credits_models").auto_shrink([false, false]).show(ui, |ui| {
         fitted_table(ui, "credits_models", &widths, &MODEL_GROW)
             .header(h + 4.0, |mut header| {
                 for (title, r) in titles.into_iter().zip(right) {
                     header.col(|ui| {
-                        aligned(ui, r, |ui| ui.label(RichText::new(title).strong()));
+                        aligned(ui, r, |ui| ui.label(RichText::new(tl!(title)).strong()));
                     });
                 }
             })

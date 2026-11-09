@@ -89,7 +89,7 @@ pub(super) fn ruler_markers(app: &mut SlideApp, ui: &mut Ui, p: &egui::Painter, 
     p.rect_stroke(area, CornerRadius::ZERO, Stroke::new(1.0, t.text_faint.gamma_multiply(0.5)), egui::StrokeKind::Inside);
 
     let resp = ui.interact(top, ui.scope_id().with("ruler_markers"), Sense::click_and_drag());
-    resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Unknown, true, "Text ruler"));
+    resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Unknown, true, crate::tl!("Text ruler")));
     let id = ui.scope_id().with("ruler_drag");
     let mut drag: Option<RulerDrag> = ui.data(|d| d.get_temp::<RulerDrag>(id));
     let pointer = resp.interact_pointer_pos().or(resp.hover_pos());
@@ -166,8 +166,9 @@ pub(super) fn ruler_markers(app: &mut SlideApp, ui: &mut Ui, p: &egui::Painter, 
         ui.data_mut(|d| d.insert_temp(kind_id, kind));
     }
     let (kind_align, kind_label) = KINDS[kind % KINDS.len()];
+    let kind_label = crate::tl!(kind_label);
     cr.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, kind_label));
-    let cr = cr.on_hover_text(format!("{kind_label} (click to change)"));
+    let cr = cr.on_hover_text(crate::i18n::fmt_plain(crate::tl!("{kind} (click to change)"), &[("kind", kind_label)]));
     p.rect_stroke(
         corner.shrink(2.0),
         CornerRadius::same(2),

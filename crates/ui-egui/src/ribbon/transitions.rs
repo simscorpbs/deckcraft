@@ -14,7 +14,7 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
     group(ui, |ui| {
         let playing = app.show.as_ref().is_some_and(|s| s.preview_only);
         let (resp, _) = widgets::big_button_ex(ui, Icon::Preview, "Preview", true, false, playing);
-        if resp.on_hover_text("Play this slide's transition").clicked() {
+        if resp.on_hover_text(crate::tl!("Play this slide's transition")).clicked() {
             let to = app.session.active().map(|d| d.selection.slide).unwrap_or(0);
             app.start_show(to, true);
             let now = ui.input(|i| i.time);
@@ -41,7 +41,7 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
         let more = widgets::drop_button(ui, "", vec2(14.0, 52.0), true);
         egui::Popup::menu(&more).width(480.0).show(|ui| {
             for cat in ["Subtle", "Exciting", "Dynamic Content"] {
-                ui.label(egui::RichText::new(cat).font(theme::bold(12.0)));
+                ui.label(egui::RichText::new(crate::tl!(cat)).font(theme::bold(12.0)));
                 ui.horizontal_wrapped(|ui| {
                     for x in list.iter().filter(|x| x.2 == cat) {
                         let (r, resp) = ui.allocate_exact_size(vec2(56.0, 58.0), Sense::click());
@@ -64,7 +64,7 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
         let r = big_button(ui, Icon::EffectOptions, "Effect\nOptions", !rows.is_empty());
         egui::Popup::menu(&r).show(|ui| {
             for &(o, on) in &rows {
-                if ui.selectable_label(on, deckcraft_model::anim::transition_option_label(&kind, o)).clicked() {
+                if ui.selectable_label(on, crate::tl!(&deckcraft_model::anim::transition_option_label(&kind, o))).clicked() {
                     run(app, "transition.options", json!({"option": o}));
                     ui.close();
                 }
@@ -75,39 +75,39 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
         // Sound in its own column, so the timing column keeps its three rows.
         rows(ui, |ui| {
             ui.horizontal(|ui| {
-                let field = ui.label("Sound:");
+                let field = ui.label(crate::tl!("Sound:"));
                 let stop = cur.as_ref().is_some_and(|t| t.stop_sound);
                 let name = cur
                     .as_ref()
                     .and_then(|t| t.sound)
                     .and_then(|m| app.session.active().and_then(|d| d.doc.media(m).map(|i| i.name.trim_end_matches(".wav").to_string())))
-                    .unwrap_or_else(|| if stop { "[Stop Previous Sound]".into() } else { "[No Sound]".into() });
+                    .unwrap_or_else(|| if stop { crate::tl!("[Stop Previous Sound]").into() } else { crate::tl!("[No Sound]").into() });
                 let combo = craft_ui::ComboBox::from_id_salt("transition_sound").width(140.0).selected_text(name).show_ui(ui, |ui| {
                     let none = cur.as_ref().is_none_or(|t| t.sound.is_none() && !t.stop_sound);
-                    if ui.selectable_label(none, "[No Sound]").clicked() {
+                    if ui.selectable_label(none, crate::tl!("[No Sound]")).clicked() {
                         run(app, "transition.sound", json!({"none": true}));
                     }
-                    if ui.selectable_label(stop, "[Stop Previous Sound]").clicked() {
+                    if ui.selectable_label(stop, crate::tl!("[Stop Previous Sound]")).clicked() {
                         run(app, "transition.sound", json!({"stopPrevious": true}));
                     }
                     ui.separator();
                     for (id, label) in deckcraft_engine::sounds::BUILTIN {
-                        if ui.button(label).clicked() {
+                        if ui.button(crate::tl!(label)).clicked() {
                             let lp = cur.as_ref().is_some_and(|t| t.sound_loop);
                             run(app, "transition.sound", json!({"builtin": id, "loop": lp}));
                         }
                     }
                     ui.separator();
                     let can_pick = app.services.pick_open.is_some();
-                    let r = ui.add_enabled(can_pick, egui::Button::new("Other Sound…"));
+                    let r = ui.add_enabled(can_pick, egui::Button::new(crate::tl!("Other Sound…")));
                     if r.clicked() {
                         app.pick_transition_sound();
                     }
-                    r.on_disabled_hover_text("Choosing a sound file needs the desktop app");
+                    r.on_disabled_hover_text(crate::tl!("Choosing a sound file needs the desktop app"));
                     ui.separator();
                     let has = cur.as_ref().is_some_and(|t| t.sound.is_some());
                     let mut lp = cur.as_ref().is_some_and(|t| t.sound_loop);
-                    if ui.add_enabled(has, egui::Checkbox::new(&mut lp, "Loop Until Next Sound")).changed() {
+                    if ui.add_enabled(has, egui::Checkbox::new(&mut lp, crate::tl!("Loop Until Next Sound"))).changed() {
                         run(app, "transition.sound", json!({"loop": lp}));
                     }
                 });
@@ -116,7 +116,7 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
         });
         rows(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.label("Duration:");
+                ui.label(crate::tl!("Duration:"));
                 let d = cur.as_ref().map(|t| t.duration_ms as f64 / 1000.0).unwrap_or(1.0);
                 if let Some(v) = widgets::spinner(ui, "tdur", "Duration", d, 0.25, "", 46.0) {
                     run(app, "transition.timing", json!({"duration": (v.max(0.0) * 1000.0).round() as u64}));
@@ -124,14 +124,14 @@ pub(super) fn transitions(app: &mut SlideApp, ui: &mut Ui) {
             });
             ui.horizontal(|ui| {
                 let mut click = cur.as_ref().is_none_or(|t| t.advance_on_click);
-                if ui.checkbox(&mut click, "On Mouse Click").changed() {
+                if ui.checkbox(&mut click, crate::tl!("On Mouse Click")).changed() {
                     run(app, "transition.timing", json!({"onClick": click}));
                 }
             });
             ui.horizontal(|ui| {
                 let after = cur.as_ref().and_then(|t| t.advance_after_ms);
                 let mut on = after.is_some();
-                if ui.checkbox(&mut on, "After:").changed() {
+                if ui.checkbox(&mut on, crate::tl!("After:")).changed() {
                     run(app, "transition.timing", json!({"after": if on { json!(after.unwrap_or(0)) } else { Value::Null }}));
                 }
                 if let Some(v) = widgets::spinner(ui, "tafter", "After", after.unwrap_or(0) as f64 / 1000.0, 1.0, "", 46.0) {
@@ -235,7 +235,7 @@ pub fn paint_transition_tile(p: &egui::Painter, r: Rect, (id, label): (&str, &st
         }
     }
     p.rect_stroke(pic, CornerRadius::same(2), Stroke::new(1.0, Color32::from_rgb(0x9B, 0xB4, 0xDB)), egui::StrokeKind::Inside);
-    p.text(pos2(r.center().x, r.max.y - 7.0), Align2::CENTER_CENTER, label, theme::font(10.0), t.text);
+    p.text(pos2(r.center().x, r.max.y - 7.0), Align2::CENTER_CENTER, crate::tl!(label), theme::font(10.0), t.text);
 }
 
 /// One row of Transitions ▸ Effect Options: the stored option and whether it is the current one.
