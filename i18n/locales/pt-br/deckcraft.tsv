@@ -1562,3 +1562,19 @@ direction	From top right	Sup. dir.
 	Where should AutoSave keep this presentation?	Onde o Salvamento Automático deve guardar esta apresentação?
 	{name} was changed on another device	{name} foi alterado em outro dispositivo
 	{name} was moved or deleted elsewhere	{name} foi movido ou excluído em outro lugar
+# --- historico de versoes ---
+	Copy the history already kept	Copiar o histórico já guardado
+	Delete all history	Excluir todo o histórico
+	Delete the version history of every document? This can't be undone.	Excluir o histórico de versões de todos os documentos? Esta ação não pode ser desfeita.
+	Delete the version history of this document? This can't be undone.	Excluir o histórico de versões deste documento? Esta ação não pode ser desfeita.
+	Delete this document's history	Excluir o histórico deste documento
+	Don't delete	Não excluir
+	Leave it where it is	Deixar onde está
+	Leave the folder empty to keep the history in DeckCraft's settings folder. With a mirror folder, every version is written to both.	Deixe a pasta vazia para manter o histórico na pasta de configurações do DeckCraft. Com uma pasta espelho, cada versão é gravada nas duas.
+	Mirror folder	Pasta espelho
+	Move the history already kept	Mover o histórico já guardado
+	Not reachable now: {folders}. It is brought up to date when it is back.	Inacessível no momento: {folders}. Ela é atualizada quando voltar.
+	The version history was deleted.	O histórico de versões foi excluído.
+	This document's version history was deleted.	O histórico de versões deste documento foi excluído.
+	Version History	Histórico de Versões
+	Version history folder:	Pasta do histórico de versões:

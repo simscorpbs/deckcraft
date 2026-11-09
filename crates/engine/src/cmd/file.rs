@@ -38,7 +38,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Save",
             ["File"],
             Some("Cmd+S"),
-            "{path?, format?: deckcraft|pptx, ifUnchanged?: bool (AutoSave: write the file only if it still holds what was last read or written here; else nothing is written and the answer is {saved: false, conflict: changed|missing}), document?: uid of an open presentation (default: the active one)} → {path, bytes, saved}",
+            "{path?, format?: deckcraft|pptx, ifUnchanged?: bool (AutoSave: write the file only if it still holds what was last read or written here; else nothing is written and the answer is {saved: false, conflict: changed|missing}), trigger?: close (AutoSave before the presentation closes: the last write of the editing session joins its version in the history), document?: uid of an open presentation (default: the active one)} → {path, bytes, saved}",
             has_doc,
             save
         ),
@@ -536,6 +536,12 @@ pub(crate) fn save(s: &mut Session, p: &Value) -> Result<Value> {
     let own_path = s.documents().get(index).and_then(|d| d.path.clone());
     let path = str_param(p, "path").map(String::from).or_else(|| own_path.clone());
     let if_unchanged = bool_or(p, "ifUnchanged", false);
+    // What made the write, for the version history; nothing else is accepted.
+    let trigger = match p.get("trigger") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(t)) if t == "close" => Some("close"),
+        Some(_) => return Err(bad("file.save", "`trigger` is `close`")),
+    };
     let Some(path) = path else {
         if if_unchanged {
             // AutoSave never asks where to save.
@@ -557,8 +563,22 @@ pub(crate) fn save(s: &mut Session, p: &Value) -> Result<Value> {
         }
     }
     let format = str_param(p, "format").unwrap_or(format_for_path(&path));
-    let bytes = save_bytes(&s.documents().get(index).ok_or(EngineError::NoDocument)?.doc, format)?;
+    // Before the file is replaced: the presentation's identity in its history, and the bytes on
+    // disk kept there if they are not already (`crate::versions`). Nothing here can fail the save.
+    let prep = s.version_prepare(index, std::path::Path::new(&path), format, trigger, if_unchanged);
+    let current = s.documents().get(index).ok_or(EngineError::NoDocument)?.doc.clone();
+    let encoded = match &prep.embed_id {
+        Some(id) => std::sync::Arc::new(crate::versions::with_document_id(&current, id)),
+        None => current,
+    };
+    let bytes = save_bytes(&encoded, format)?;
     let stamp = crate::io::write_file_stamped(&path, &bytes).map_err(EngineError::Other)?;
+    if prep.embed_id.is_some()
+        && let Some(d) = s.docs.get_mut(index)
+    {
+        // The package now carries the id: the presentation holds it too (it is saved as it is).
+        d.doc = encoded.clone();
+    }
     mark_saved_at(s, index, Some(path.clone()))?;
     if let Some(d) = s.docs.get_mut(index) {
         d.stamp = stamp;
@@ -568,7 +588,10 @@ pub(crate) fn save(s: &mut Session, p: &Value) -> Result<Value> {
     if !own && let Some(on) = s.documents().get(index).map(|d| d.autosave) {
         s.set_autosave_of(index, on);
     }
-    Ok(json!({"path": path, "bytes": bytes.len(), "saved": true}))
+    let len = bytes.len();
+    // The history gets the bytes in the background; a failure there never fails the save.
+    s.version_record(index, std::path::Path::new(&path), bytes, prep, &encoded);
+    Ok(json!({"path": path, "bytes": len, "saved": true}))
 }
 
 fn save_as(s: &mut Session, p: &Value) -> Result<Value> {

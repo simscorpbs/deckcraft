@@ -18,6 +18,7 @@ use super::tabs::tabs_dialog;
 use super::theme_colors::theme_colors_dialog;
 use super::theme_fonts::theme_fonts_dialog;
 use super::trim::{seconds_text_to_ms, trim_seed};
+use super::version_history::{apply_version_options, version_history_section};
 use super::zoom::zoom_dialog;
 use super::{Dialog, SlideApp, Tokens, Ui, Value, buttons, check, field, field_of, json, num, theme, tp, vec2};
 
@@ -1476,6 +1477,7 @@ fn dlg_preferences(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         app.session.set_autosave_by_default(autosave);
     }
     ui.label(egui::RichText::new(tl!("AutoSave writes your changes to the file a moment after you stop editing.")).color(ui.visuals().weak_text_color()));
+    version_history_section(app, ui, d);
     ui.label(egui::RichText::new(tl!("Editing")).font(theme::bold(13.0)));
     ui.checkbox(&mut app.session.prefs.smart_guides, tl!("Show smart guides"));
     ui.checkbox(&mut app.session.prefs.snap_to_grid, tl!("Snap objects to grid"));
@@ -1498,6 +1500,10 @@ fn dlg_preferences(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     let (ok, cancel) = buttons(ui, "Done");
     if cancel {
         restore_preferences(app, d);
+    }
+    // Done applies the version history folders; a refusal keeps the dialog open.
+    if ok && !apply_version_options(app, d) {
+        return false;
     }
     ok || cancel
 }

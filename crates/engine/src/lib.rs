@@ -29,6 +29,7 @@ pub mod spell;
 pub mod templates;
 pub mod thesaurus;
 pub mod tools;
+pub mod versions;
 
 use std::sync::Arc;
 
@@ -252,6 +253,9 @@ pub struct DocState {
     /// AutoSave's schedule for this presentation: when it last changed, and the writes that
     /// keep failing ([`Session::autosave_tick`]).
     pub autosave_run: autosave::AutoSaveRun,
+    /// What the version history keeps for this presentation: its editing session, its document
+    /// id and what is known of its file ([`versions`]).
+    pub versions: versions::DocVersions,
 }
 
 static NEXT_UID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
@@ -285,6 +289,7 @@ impl DocState {
             stamp: None,
             conflict: None,
             autosave_run: Default::default(),
+            versions: versions::DocVersions::started(),
         }
     }
     pub fn is_dirty(&self) -> bool {
@@ -380,6 +385,15 @@ pub struct Prefs {
     /// Whether AutoSave is on for files with no choice of their own (Preferences ▸ Turn on
     /// AutoSave by default). Each file remembers its own switch ([`autosave`]).
     pub autosave_by_default: bool,
+    /// Version history folder (Preferences ▸ Version history folder): `None` keeps the history in
+    /// the settings folder alone; a folder replaces it, or with [`Self::versions_mirror`] is
+    /// written beside it.
+    pub versions_folder: Option<String>,
+    /// Write the history to the settings folder and to [`Self::versions_folder`] both.
+    pub versions_mirror: bool,
+    /// What versions call this computer; `None` records only the system's name ("Windows",
+    /// "Mac"). The host name and the account name are never recorded.
+    pub device_label: Option<String>,
     /// The unit the rulers, the Format pane and the size dialogs show (Preferences); the deck
     /// itself always stores points.
     pub units: deckcraft_geom::Unit,
@@ -407,6 +421,9 @@ impl Default for Prefs {
             undo_limit: 500,
             recovery_minutes: 1.0,
             autosave_by_default: true,
+            versions_folder: None,
+            versions_mirror: false,
+            device_label: None,
             units: deckcraft_geom::Unit::Inches,
         }
     }
@@ -428,6 +445,9 @@ impl Prefs {
         if self.author.chars().count() > 256 {
             self.author = self.author.chars().take(256).collect();
         }
+        let short = |text: Option<String>, max: usize| text.map(|t| t.trim().chars().take(max).collect::<String>()).filter(|t| !t.is_empty());
+        self.versions_folder = short(self.versions_folder.take(), 4096);
+        self.device_label = short(self.device_label.take(), 64);
         self
     }
 }
@@ -546,6 +566,10 @@ pub struct Session {
     /// looked ([`Session::discover_cloud`]). Headless sessions and
     /// tests know none, so a script never writes into someone's cloud by accident.
     pub cloud_roots: Vec<deckcraft_cloud::CloudRoot>,
+    /// The local version history of saved presentations, once the desktop host turned it on
+    /// ([`Session::enable_versions`]). Headless sessions and tests keep none unless they ask.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub(crate) version_store: Option<versions::Versions>,
 }
 
 impl Default for Session {
@@ -582,6 +606,8 @@ impl Session {
             composition_settles: 0,
             autosave_memory: Default::default(),
             cloud_roots: vec![],
+            #[cfg(not(target_arch = "wasm32"))]
+            version_store: None,
         }
     }
     /// Look for the providers' folders on this computer (the desktop host does this once; on

@@ -452,7 +452,11 @@ mod tests {
     /// except `io.rs`, this module, `recovery.rs` (the recovery folder is set by the host
     /// application, never by a command's path, and a headless session has none), `autosave.rs`
     /// (the AutoSave choices in the settings folder: a switch per presentation path, never a
-    /// presentation) and the test files.
+    /// presentation), `versions.rs` and `versions/meta.rs` (the version history: immutable files
+    /// in the settings folder, or in the folders the user chose in Preferences, never at a path a
+    /// command names; the presentation's own file is read there only after `check_read`, see
+    /// `Versions::list` and `prepare`) and the test files. `versions/pack.rs` and
+    /// `versions/session.rs` have no exemption: they touch no file.
     #[test]
     fn commands_do_not_touch_the_file_system_themselves() {
         fn walk(dir: &Path, files: &mut Vec<PathBuf>) {
@@ -475,7 +479,9 @@ mod tests {
             // `io` and this module are the checked gateway; `tests*.rs` are test-only modules.
             // `recovery` and `spell` touch only the app's own folders (AutoRecover files, the
             // system and user spelling dictionaries), never a path a command names.
+            let history_store = path == src.join("versions.rs") || path == src.join("versions").join("meta.rs");
             if path.parent() == Some(src.as_path()) && matches!(name, "io.rs" | "file_access.rs" | "recovery.rs" | "spell.rs" | "autosave.rs")
+                || history_store
                 || name.starts_with("tests")
             {
                 continue;
