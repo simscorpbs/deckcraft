@@ -501,3 +501,548 @@ animation	Emphasis	Ênfase
 animation	Entrance	Entrada
 animation	Exit	Saída
 tab	Home	Página Inicial
+# --- paineis (panes, overlays, gallery names) ---
+	"Not Allowed" Symbol	Símbolo "Não Permitido"
+	+ Add	+ Adicionar
+	+ New Comment	+ Novo Comentário
+	3-D Format	Formato 3D
+	3-D Rotation	Rotação 3D
+	Accent Process	Processo com Destaque
+	Accept	Aceitar
+	Accept All ({count})	Aceitar Tudo ({count})
+	Action Button: Custom	Botão de Ação: Personalizado
+	Action Button: Document	Botão de Ação: Documento
+	Action Button: Get Information	Botão de Ação: Obter Informações
+	Action Button: Go Back	Botão de Ação: Voltar
+	Action Button: Go Back or Previous	Botão de Ação: Voltar ou Anterior
+	Action Button: Go Forward or Next	Botão de Ação: Avançar ou Próximo
+	Action Button: Go Home	Botão de Ação: Início
+	Action Button: Go to Beginning	Botão de Ação: Ir para o Começo
+	Action Button: Go to End	Botão de Ação: Ir para o Fim
+	Action Button: Help	Botão de Ação: Ajuda
+	Action Button: Sound	Botão de Ação: Som
+	Action Button: Video	Botão de Ação: Vídeo
+	Action Buttons	Botões de Ação
+	Add a title with a picture or some text to get layout ideas.	Adicione um título com uma imagem ou algum texto para receber ideias de layout.
+	Airplane	Avião
+	Alt Text	Texto Alternativo
+	Alt text	Texto alternativo
+	Apply to All	Aplicar a Todos
+	Arrow: Bent	Seta: Dobrada
+	Arrow: Bent-Up	Seta: Dobrada para Cima
+	Arrow: Chevron	Seta: Divisa
+	Arrow: Circular	Seta: Circular
+	Arrow: Circular Counter-clockwise	Seta: Circular no Sentido Anti-horário
+	Arrow: Circular Two-headed	Seta: Circular com Duas Pontas
+	Arrow: Curved Down	Seta: Curvada para Baixo
+	Arrow: Curved Left	Seta: Curvada para a Esquerda
+	Arrow: Curved Right	Seta: Curvada para a Direita
+	Arrow: Curved Up	Seta: Curvada para Cima
+	Arrow: Down	Seta: para Baixo
+	Arrow: Left	Seta: para a Esquerda
+	Arrow: Left-Right	Seta: para a Esquerda e para a Direita
+	Arrow: Left-Right-Up	Seta: para a Esquerda, para a Direita e para Cima
+	Arrow: Left-Up	Seta: para a Esquerda e para Cima
+	Arrow: Notched Right	Seta: Chanfrada para a Direita
+	Arrow: Pentagon	Seta: Pentágono
+	Arrow: Quad	Seta: Quádrupla
+	Arrow: Right	Seta: para a Direita
+	Arrow: Striped Right	Seta: Listrada para a Direita
+	Arrow: Swoosh	Seta: Curva Dinâmica
+	Arrow: U-Turn	Seta: Retorno
+	Arrow: Up	Seta: para Cima
+	Arrow: Up-Down	Seta: para Cima e para Baixo
+	Art deco	Art déco
+	Balanced	Equilibrada
+	Basic Bending Process	Processo de Curva Básica
+	Basic Block List	Lista de Blocos Básica
+	Basic Chevron Process	Processo de Divisa Básico
+	Basic Cycle	Ciclo Básico
+	Basic Matrix	Matriz Básica
+	Basic Pie	Pizza Básica
+	Basic Process	Processo Básico
+	Basic Pyramid	Pirâmide Básica
+	Basic Radial	Radial Básico
+	Basic Shapes	Formas Básicas
+	Basic Target	Alvo Básico
+	Basic Timeline	Linha do Tempo Básica
+	Basic Venn	Venn Básico
+	Begin arrow	Tipo de seta inicial
+	Begin size	Tamanho da seta inicial
+	Blinds	Persianas
+	Block Arc	Arco em Bloco
+	Block Arrows	Setas Largas
+	Block Cycle	Ciclo em Bloco
+	Bottom bevel	Bisel inferior
+	Bottom left	Inferior esquerdo
+	Bottom right	Inferior direito
+	Bottom shadow	Sombra inferior
+	Box	Caixa
+	Bright room	Sala clara
+	Callout: Bent Line	Texto Explicativo: Linha Dobrada
+	Callout: Bent Line with Accent Bar	Texto Explicativo: Linha Dobrada com Barra de Destaque
+	Callout: Bent Line with Border and Accent Bar	Texto Explicativo: Linha Dobrada com Borda e Barra de Destaque
+	Callout: Bent Line with No Border	Texto Explicativo: Linha Dobrada sem Borda
+	Callout: Double Bent Line	Texto Explicativo: Linha Dobrada Dupla
+	Callout: Double Bent Line with Accent Bar	Texto Explicativo: Linha Dobrada Dupla com Barra de Destaque
+	Callout: Double Bent Line with Border and Accent Bar	Texto Explicativo: Linha Dobrada Dupla com Borda e Barra de Destaque
+	Callout: Double Bent Line with No Border	Texto Explicativo: Linha Dobrada Dupla sem Borda
+	Callout: Down Arrow	Texto Explicativo: Seta para Baixo
+	Callout: Left Arrow	Texto Explicativo: Seta para a Esquerda
+	Callout: Left-Right Arrow	Texto Explicativo: Seta para a Esquerda e para a Direita
+	Callout: Line	Texto Explicativo: Linha
+	Callout: Line with Accent Bar	Texto Explicativo: Linha com Barra de Destaque
+	Callout: Line with Border and Accent Bar	Texto Explicativo: Linha com Borda e Barra de Destaque
+	Callout: Line with No Border	Texto Explicativo: Linha sem Borda
+	Callout: Quad Arrow	Texto Explicativo: Seta Quádrupla
+	Callout: Right Arrow	Texto Explicativo: Seta para a Direita
+	Callout: Up Arrow	Texto Explicativo: Seta para Cima
+	Callout: Up-Down Arrow	Texto Explicativo: Seta para Cima e para Baixo
+	Callouts	Textos Explicativos
+	Cap type	Tipo de extremidade
+	Center Tab	Tabulação Centralizada
+	Centered shadow	Sombra centralizada
+	Chart Marker: Cross Lines	Marcador de Gráfico: Linhas Cruzadas
+	Chart Marker: Plus Lines	Marcador de Gráfico: Linhas de Adição
+	Chart Marker: Star Lines	Marcador de Gráfico: Linhas de Estrela
+	Chilly	Frio
+	Chord	Corda
+	Clock	Relógio
+	Cloud	Nuvem
+	Columns…	Colunas…
+	Comb	Pente
+	Compare this presentation with a revised copy from Review › Compare.	Compare esta apresentação com uma cópia revisada em Revisão › Comparar.
+	Compared with {name}	Comparada com {name}
+	Compound type	Tipo composto
+	Connector: Curved	Conector: Curvado
+	Connector: Elbow	Conector: Angular
+	Connector: Elbow (one bend)	Conector: Angular (uma dobra)
+	Continuous Block Process	Processo de Bloco Contínuo
+	Continuous Cycle	Ciclo Contínuo
+	Contour	Contorno
+	Contrasting	Contrastante
+	Convex	Convexo
+	Conveyor	Esteira
+	Cool slant	Inclinação suave
+	Coral Reef	Recife de Coral
+	Corner Tabs: Quarter Circles	Guias de Canto: Quartos de Círculo
+	Corner Tabs: Squares	Guias de Canto: Quadrados
+	Corner Tabs: Triangles	Guias de Canto: Triângulos
+	Cover	Cobrir
+	Crush	Esmagar
+	Cube	Cubo
+	Curtains	Cortinas
+	Cycle Matrix	Matriz de Ciclo
+	Cylinder	Cilindro
+	Dark downward diagonal	Diagonal escura para baixo
+	Dark horizontal	Horizontal escura
+	Dark upward diagonal	Diagonal escura para cima
+	Dark vertical	Vertical escura
+	Dashed downward diagonal	Diagonal tracejada para baixo
+	Dashed horizontal	Horizontal tracejada
+	Dashed upward diagonal	Diagonal tracejada para cima
+	Dashed vertical	Vertical tracejada
+	Decagon	Decágono
+	Decimal Tab	Tabulação Decimal
+	DeckCraft	DeckCraft
+	Diagonal Stripe	Listra Diagonal
+	Diagonal brick	Tijolo diagonal
+	Diagonal cross	Cruzado diagonal
+	Diamonds From Bottom	Losangos de Baixo
+	Diamonds From Left	Losangos da Esquerda
+	Diamonds From Right	Losangos da Direita
+	Diamonds From Top	Losangos de Cima
+	Dissolve	Dissolver
+	Distance from ground	Distância do solo
+	Division Sign	Sinal de Divisão
+	Divot	Divot
+	Dk edge	Borda escura
+	Do not Autofit	Não Ajustar Automaticamente
+	Dodecagon	Dodecágono
+	Donut	Rosca
+	Doors	Portas
+	Dotted diamond	Losango pontilhado
+	Dotted grid	Grade pontilhada
+	Double	Dupla
+	Double Brace	Chaves Duplas
+	Double Bracket	Colchetes Duplos
+	Double Left	Dupla à Esquerda
+	Double Right	Dupla à Direita
+	Double Wave	Onda Dupla
+	Downward diagonal	Diagonal para baixo
+	Drape	Cortina Pesada
+	Duration handle {n}	Alça de duração {n}
+	Ember	Brasa
+	End arrow	Tipo de seta final
+	End size	Tamanho da seta final
+	Equals	Igual
+	Equation Shapes	Formas de Equação
+	Explosion: 14 Points	Explosão: 14 Pontos
+	Explosion: 8 Points	Explosão: 8 Pontos
+	Eyedropper: click the slide (Esc cancels)	Conta-gotas: clique no slide (Esc cancela)
+	Fade	Esmaecer
+	Fall Over	Tombar
+	Ferris Wheel	Roda-gigante
+	Fill & Line	Preenchimento e Linha
+	Flat	Plana
+	Flood	Inundação
+	Flowchart	Fluxograma
+	Flowchart: Alternate Process	Fluxograma: Processo Alternativo
+	Flowchart: Card	Fluxograma: Cartão
+	Flowchart: Collate	Fluxograma: Agrupar
+	Flowchart: Connector	Fluxograma: Conector
+	Flowchart: Data	Fluxograma: Dados
+	Flowchart: Decision	Fluxograma: Decisão
+	Flowchart: Delay	Fluxograma: Atraso
+	Flowchart: Direct Access Storage	Fluxograma: Armazenamento de Acesso Direto
+	Flowchart: Display	Fluxograma: Exibição
+	Flowchart: Document	Fluxograma: Documento
+	Flowchart: Extract	Fluxograma: Extrair
+	Flowchart: Internal Storage	Fluxograma: Armazenamento Interno
+	Flowchart: Magnetic Disk	Fluxograma: Disco Magnético
+	Flowchart: Manual Input	Fluxograma: Entrada Manual
+	Flowchart: Manual Operation	Fluxograma: Operação Manual
+	Flowchart: Merge	Fluxograma: Mesclar
+	Flowchart: Multidocument	Fluxograma: Vários Documentos
+	Flowchart: Off-page Connector	Fluxograma: Conector Fora da Página
+	Flowchart: Offline Storage	Fluxograma: Armazenamento Offline
+	Flowchart: Or	Fluxograma: Ou
+	Flowchart: Predefined Process	Fluxograma: Processo Predefinido
+	Flowchart: Preparation	Fluxograma: Preparação
+	Flowchart: Process	Fluxograma: Processo
+	Flowchart: Punched Tape	Fluxograma: Fita Perfurada
+	Flowchart: Sequential Access Storage	Fluxograma: Armazenamento de Acesso Sequencial
+	Flowchart: Sort	Fluxograma: Classificar
+	Flowchart: Stored Data	Fluxograma: Dados Armazenados
+	Flowchart: Summing Junction	Fluxograma: Junção de Soma
+	Flowchart: Terminator	Fluxograma: Terminação
+	Fly Through	Voar Através
+	Folded Corner	Canto Dobrado
+	Follow the layout	Seguir o layout
+	Foreground	Primeiro plano
+	Fracture	Fratura
+	Freeform: Scribble	Forma Livre: Rabisco
+	Freeform: Shape	Forma Livre: Forma
+	Freezing	Congelante
+	From bottom left	Do canto inferior esquerdo
+direction	From bottom left	Inf. esq.
+	From bottom right	Do canto inferior direito
+direction	From bottom right	Inf. dir.
+	From center	Do centro
+direction	From center	Centro
+	From top left	Do canto superior esquerdo
+direction	From top left	Sup. esq.
+	From top right	Do canto superior direito
+direction	From top right	Sup. dir.
+	Funnel	Funil
+	Gallery	Galeria
+	Gear	Engrenagem
+	Gear: 6 Teeth	Engrenagem: 6 Dentes
+	Gear: 9 Teeth	Engrenagem: 9 Dentes
+	Glitter	Brilho
+	Gradient bar	Barra de gradiente
+	Gradient fill	Preenchimento gradiente
+	Gradient stop {n}	Parada de gradiente {n}
+	Gradient stops	Paradas de gradiente
+	Grid Matrix	Matriz em Grade
+	Half Circle Organization Chart	Organograma de Meio Círculo
+	Half Frame	Meia Moldura
+	Harbor	Porto
+	Hard edge	Borda dura
+	Harsh	Intensa
+	Heptagon	Heptágono
+	Hexagons From Bottom	Hexágonos de Baixo
+	Hexagons From Left	Hexágonos da Esquerda
+	Hexagons From Right	Hexágonos da Direita
+	Hexagons From Top	Hexágonos de Cima
+	Hide background graphics	Ocultar elementos gráficos de plano de fundo
+	Honeycomb	Favo de Mel
+	Horizontal Bullet List	Lista de Marcadores Horizontal
+	Horizontal Hierarchy	Hierarquia Horizontal
+	Horizontal Picture List	Lista de Imagens Horizontal
+	Horizontal brick	Tijolo horizontal
+	In with Bounce	Para Dentro com Ressalto
+	Inner shadow	Sombra interna
+	Insert picture from file…	Inserir imagem de arquivo…
+	Insert…	Inserir…
+	Inverted Pyramid	Pirâmide Invertida
+	Isometric bottom down	Isométrica inferior para baixo
+	Isometric bottom up	Isométrica inferior para cima
+	Isometric left down	Isométrica esquerda para baixo
+	Isometric left up	Isométrica esquerda para cima
+	Isometric right down	Isométrica direita para baixo
+	Isometric right up	Isométrica direita para cima
+	Isometric top down	Isométrica superior para baixo
+	Isometric top up	Isométrica superior para cima
+	Isosceles Triangle	Triângulo Isósceles
+	Join type	Tipo de junção
+	L-Shape	Forma de L
+	Large checkerboard	Xadrez grande
+	Large confetti	Confete grande
+	Large grid	Grade grande
+	Left Brace	Chave Esquerda
+	Left Bracket	Colchete Esquerdo
+	Left Tab	Tabulação Esquerda
+	Legacy wireframe	Estrutura de arame (legado)
+	Light downward diagonal	Diagonal clara para baixo
+	Light horizontal	Horizontal clara
+	Light upward diagonal	Diagonal clara para cima
+	Light vertical	Vertical clara
+	Lightning Bolt	Raio
+	Line: Rising	Linha: Ascendente
+	Linear Venn	Venn Linear
+	Lock aspect ratio	Bloquear taxa de proporção
+	Look up	Pesquisar
+	Margins (pt)	Margens (pt)
+	Material	Material
+	Meadow	Campo
+	Metal	Metal
+	Minus Sign	Sinal de Subtração
+	Mirror type	Tipo de espelho
+	Miter	Meia-esquadria
+	Moon	Lua
+	Morning	Manhã
+	Morph	Transformação
+	Multidirectional Cycle	Ciclo Multidirecional
+	Multiplication Sign	Sinal de Multiplicação
+	Name and Title Organization Chart	Organograma de Nome e Cargo
+	Narrow horizontal	Horizontal estreita
+	Narrow vertical	Vertical estreita
+	Nested Target	Alvo Aninhado
+	No comments.	Sem comentários.
+	No differences left.	Não há mais diferenças.
+	No fill	Sem preenchimento
+	No glow	Sem brilho
+	No line	Sem linha
+	No shadow	Sem sombra
+	No soft edges	Sem bordas suaves
+	No synonyms for "{word}".	Nenhum sinônimo para "{word}".
+	Nocturne	Noturno
+	Not Equal	Diferente
+	Not a copy of this presentation: slides are matched by position.	Não é uma cópia desta apresentação: os slides são associados pela posição.
+	Objects	Objetos
+	Oblique bottom left	Oblíqua inferior esquerda
+	Oblique bottom right	Oblíqua inferior direita
+	Oblique top left	Oblíqua superior esquerda
+	Oblique top right	Oblíqua superior direita
+	Offset X	Deslocamento X
+	Offset Y	Deslocamento Y
+	Offset bottom	Deslocamento inferior
+	Offset left	Deslocamento à esquerda
+	Offset right	Deslocamento à direita
+	Offset top	Deslocamento superior
+	Open Arrow	Seta Aberta
+	Orbit	Órbita
+	Organization Chart	Organograma
+	Origami	Origami
+	Orthographic front	Ortográfica frontal
+	Out with Bounce	Para Fora com Ressalto
+	Outer shadow	Sombra externa
+	Outlined diamond	Losango contornado
+	Page Curl	Enrolar Página
+	Pan	Panorâmica
+	Parallelogram	Paralelogramo
+	Partial Circle	Círculo Parcial
+	Particles In	Partículas para Dentro
+	Particles Out	Partículas para Fora
+	Pattern fill	Preenchimento com padrão
+	Pause animated GIF	Pausar GIF animado
+	Peel Off	Descascar
+	Perspective above	Perspectiva acima
+	Perspective above left facing	Perspectiva acima voltada para a esquerda
+	Perspective above right facing	Perspectiva acima voltada para a direita
+	Perspective below	Perspectiva abaixo
+	Perspective contrasting left facing	Perspectiva contrastante voltada para a esquerda
+	Perspective contrasting right facing	Perspectiva contrastante voltada para a direita
+	Perspective front	Perspectiva frontal
+	Perspective heroic extreme left facing	Perspectiva heroica extrema voltada para a esquerda
+	Perspective heroic extreme right facing	Perspectiva heroica extrema voltada para a direita
+	Perspective heroic left facing	Perspectiva heroica voltada para a esquerda
+	Perspective heroic right facing	Perspectiva heroica voltada para a direita
+	Perspective left	Perspectiva à esquerda
+	Perspective relaxed	Perspectiva relaxada
+	Perspective relaxed moderately	Perspectiva moderadamente relaxada
+	Perspective right	Perspectiva à direita
+	Perspective shadow	Sombra em perspectiva
+	Pick a design for this slide. Ideas are generated on your device.	Escolha um design para este slide. As ideias são geradas no seu dispositivo.
+	Picture Accent Process	Processo de Imagem com Destaque
+	Picture Caption List	Lista de Legendas de Imagem
+	Picture or texture fill	Preenchimento com imagem ou textura
+	Picture source	Origem da imagem
+	Plaid	Xadrez escocês
+	Plaque	Placa
+	Plastic	Plástico
+	Play animated GIF	Reproduzir GIF animado
+	Plus Sign	Sinal de Adição
+	Powder	Pó
+	Preset gradients	Gradientes predefinidos
+	Prestige	Prestígio
+	Push	Empurrar
+	Quarter Wedge	Quarto de Cunha
+	Random Bars	Barras Aleatórias
+	Rectangle: Diagonal Corners Rounded	Retângulo: Cantos Diagonais Arredondados
+	Rectangle: Diagonal Corners Snipped	Retângulo: Cantos Diagonais Cortados
+	Rectangle: Rounded Corners	Retângulo: Cantos Arredondados
+	Rectangle: Single Corner Rounded	Retângulo: Canto Único Arredondado
+	Rectangle: Single Corner Snipped	Retângulo: Canto Único Cortado
+	Rectangle: Top Corners One Rounded and One Snipped	Retângulo: Cantos Superiores, um Arredondado e um Cortado
+	Rectangle: Top Corners Rounded	Retângulo: Cantos Superiores Arredondados
+	Rectangle: Top Corners Snipped	Retângulo: Cantos Superiores Cortados
+	Rectangles	Retângulos
+	Regular Pentagon	Pentágono Regular
+	Reject	Rejeitar
+	Reject All ({count})	Rejeitar Tudo ({count})
+	Relaxed inset	Entalhe relaxado
+	Remove stop	Remover parada
+	Reopen	Reabrir
+	Reply…	Responder…
+	Reset 3-D	Redefinir 3D
+	Reset Background	Redefinir Plano de Fundo
+	Reset Effects	Redefinir Efeitos
+	Resize shape to fit text	Redimensionar forma para ajustar ao texto
+	Resolve	Resolver
+	Resolved	Resolvido
+	Reveal	Revelar
+	Ribbon: Curved and Tilted Down	Fita: Curvada e Inclinada para Baixo
+	Ribbon: Curved and Tilted Up	Fita: Curvada e Inclinada para Cima
+	Ribbon: Left-Right Fold	Fita: Dobra Esquerda-Direita
+	Ribbon: Tilted Down	Fita: Inclinada para Baixo
+	Ribbon: Tilted Up	Fita: Inclinada para Cima
+	Riblet	Nervura
+	Right Brace	Chave Direita
+	Right Bracket	Colchete Direito
+	Right Tab	Tabulação Direita
+	Right Triangle	Triângulo Retângulo
+	Ripple	Ondulação
+	Rotate with shape	Girar com a forma
+	Scale Height	Altura da escala
+	Scale Width	Largura da escala
+	Scale X	Escala X
+	Scale Y	Escala Y
+	Scroll: Horizontal	Pergaminho: Horizontal
+	Scroll: Vertical	Pergaminho: Vertical
+	Search for a word	Pesquisar uma palavra
+	Segmented Cycle	Ciclo Segmentado
+	Segmented Pyramid	Pirâmide Segmentada
+	Select a SmartArt graphic to edit its text.	Selecione um elemento gráfico SmartArt para editar o texto.
+	Select a shape to format it.	Selecione uma forma para formatá-la.
+	Select a word on the slide, or type one above.	Selecione uma palavra no slide ou digite uma acima.
+	Set Transparent Color: click the colour in the picture (Esc cancels)	Definir Cor Transparente: clique na cor da imagem (Esc cancela)
+	Shape {n}	Forma {n}
+	Shingle	Telhas
+	Shred	Triturar
+	Shrink text on overflow	Reduzir texto ao transbordar
+	Single	Simples
+	Single Left	Simples à Esquerda
+	Single Right	Simples à Direita
+	Size & Properties	Tamanho e Propriedades
+	Slate	Ardósia
+	Slide background fill	Preenchimento do plano de fundo do slide
+	Slide inserted after {n}	Slide inserido após {n}
+	Slide {n}	Slide {n}
+	Slide {n} changed	Slide {n} alterado
+	Slide {n} deleted	Slide {n} excluído
+	Slope	Rampa
+	Small checkerboard	Xadrez pequeno
+	Small confetti	Confete pequeno
+	Small grid	Grade pequena
+	SmartArt text	Texto do SmartArt
+	Smiley Face	Rosto Sorridente
+	Smoothly	Suavemente
+	Smoothly From Left	Suavemente da Esquerda
+	Smoothly From Right	Suavemente da Direita
+	Soft edge	Borda suave
+	Soft round	Arredondado suave
+	Softmetal	Metal suave
+	Solid diamond	Losango sólido
+	Solid fill	Preenchimento sólido
+	Solid line	Linha sólida
+	Speech Bubble: Oval	Balão de Fala: Oval
+	Speech Bubble: Rectangle	Balão de Fala: Retângulo
+	Speech Bubble: Rectangle with Corners Rounded	Balão de Fala: Retângulo com Cantos Arredondados
+	Sphere	Esfera
+	Stacked Venn	Venn Empilhado
+	Star: 10 Points	Estrela: 10 Pontas
+	Star: 12 Points	Estrela: 12 Pontas
+	Star: 16 Points	Estrela: 16 Pontas
+	Star: 24 Points	Estrela: 24 Pontas
+	Star: 32 Points	Estrela: 32 Pontas
+	Star: 4 Points	Estrela: 4 Pontas
+	Star: 5 Points	Estrela: 5 Pontas
+	Star: 6 Points	Estrela: 6 Pontas
+	Star: 7 Points	Estrela: 7 Pontas
+	Star: 8 Points	Estrela: 8 Pontas
+	Stars and Banners	Estrelas e Faixas
+	Start: {start}s, End: {end}s	Início: {start}s, Fim: {end}s
+	Stealth	Stealth
+	Step Up Process	Processo de Etapas Ascendentes
+	Strips In	Tiras para Dentro
+	Strips Out	Tiras para Fora
+	Sun	Sol
+	Sunrise	Nascer do sol
+	Sunset	Pôr do sol
+	Switch	Alternar
+	Table List	Lista de Tabela
+	Teardrop	Gota
+	Text Cycle	Ciclo de Texto
+	Text Options	Opções de Texto
+	Text ruler	Régua de texto
+	The Eyedropper takes colours from a slide	O Conta-gotas só retira cores de um slide
+	Themes (whole presentation)	Temas (apresentação inteira)
+	Thick Thin	Espessa e fina
+	Thin Thick	Fina e espessa
+	Thought Bubble: Cloud	Balão de Pensamento: Nuvem
+	Three pt	Três pontos
+	Through Black	Através do Preto
+	Through Black From Left	Através do Preto da Esquerda
+	Through Black From Right	Através do Preto da Direita
+	Tile picture as texture	Colocar imagem lado a lado como textura
+	Timing bar {n}	Barra de tempo {n}
+	Titled Matrix	Matriz com Títulos
+	Top Left Corner	Canto Superior Esquerdo
+	Top bevel	Bisel superior
+	Top left	Superior esquerdo
+	Top right	Superior direito
+	Translucent powder	Pó translúcido
+	Trapezoid	Trapézio
+	Trapezoid List	Lista de Trapézios
+	Trapezoid: Uneven Sides	Trapézio: Lados Desiguais
+	Trellis	Treliça
+	Triple	Tripla
+	Two pt	Dois pontos
+	Type your text here	Digite seu texto aqui
+	Uncover	Descobrir
+	Upward diagonal	Diagonal para cima
+	Vertical Box List	Lista de Caixas Vertical
+	Vertical Bullet List	Lista de Marcadores Vertical
+	Vertical Picture List	Lista de Imagens Vertical
+	Vertical Process	Processo Vertical
+	Vertical alignment	Alinhamento vertical
+	Vortex	Vórtice
+	Warm matte	Fosco quente
+	Weave	Trançado
+	Wedge	Cunha
+	Wide downward diagonal	Diagonal larga para baixo
+	Wide upward diagonal	Diagonal larga para cima
+	Wind	Vento
+	Wipe	Revelação
+	Wrap text in shape	Quebrar texto automaticamente na forma
+	X Rotation	Rotação X
+	Y Rotation	Rotação Y
+	Z Rotation	Rotação Z
+	Zig zag	Zigue-zague
+	circle	Círculo
+	diamond	Losango
+	plus	Mais
+	{kind} (click to change)	{kind} (clique para alterar)
+	{label} color	Cor de {label}
+	▶ Play From	▶ Reproduzir a Partir de
+	Format Shape	Formatar Forma
+	Format Background	Formatar Plano de Fundo
+	Design Ideas	Ideias de Design
+	Pane	Painel
+	Revisions	Revisões
+	Click to add first slide	Clique para adicionar o primeiro slide
+	Slide title	Título do slide
+	Slide text	Texto do slide
+	size (pt)	tamanho (pt)

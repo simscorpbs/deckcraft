@@ -25,9 +25,9 @@ pub(super) fn animation(app: &mut SlideApp, ui: &mut Ui) {
     ui.horizontal(|ui| {
         let playing = app.anim_preview_active();
         let label = match (playing, from) {
-            (true, _) => "■ Stop",
-            (false, Some(_)) => "▶ Play From",
-            (false, None) => "▶ Play All",
+            (true, _) => crate::tl!("■ Stop"),
+            (false, Some(_)) => crate::tl!("▶ Play From"),
+            (false, None) => crate::tl!("▶ Play All"),
         };
         if ui.button(label).clicked() {
             let p = match (playing, from) {
@@ -39,7 +39,7 @@ pub(super) fn animation(app: &mut SlideApp, ui: &mut Ui) {
     });
     ui.separator();
     if anims.is_empty() {
-        ui.label(egui::RichText::new("Select an object on the slide and add an animation from the Animations tab.").color(t.text_dim));
+        ui.label(egui::RichText::new(crate::tl!("Select an object on the slide and add an animation from the Animations tab.")).color(t.text_dim));
         return;
     }
     let bars = animtimeline::bars(anims.len(), &effects);
@@ -51,7 +51,7 @@ pub(super) fn animation(app: &mut SlideApp, ui: &mut Ui) {
         if a.start == AnimStart::OnClick {
             click += 1;
         }
-        let name = names.iter().find(|(id, _)| *id == a.shape.0).map(|(_, n)| n.clone()).unwrap_or_else(|| format!("Shape {}", a.shape));
+        let name = names.iter().find(|(id, _)| *id == a.shape.0).map(|(_, n)| n.clone()).unwrap_or_else(|| crate::i18n::fmt_plain(crate::tl!("Shape {n}"), &[("n", &a.shape.to_string())]));
         let (r, resp) = ui.allocate_exact_size(vec2(ui.available_width(), 30.0), Sense::click());
         let sel = selected.contains(&a.shape.0);
         if sel || resp.hovered() {
@@ -92,9 +92,9 @@ pub(super) fn animation(app: &mut SlideApp, ui: &mut Ui) {
             );
             let edge = Rect::from_min_max(pos2(bar.max.x - 3.0, bar.min.y - 3.0), pos2(bar.max.x + 4.0, bar.max.y + 3.0));
             let body_resp = ui.interact(bar, ui.scope_id().with(("anim_bar", i)), Sense::drag()).on_hover_text(animtimeline::label(b));
-            body_resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Unknown, true, format!("Timing bar {}", i + 1)));
+            body_resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Unknown, true, crate::i18n::fmt_plain(crate::tl!("Timing bar {n}"), &[("n", &(i + 1).to_string())])));
             let edge_resp = ui.interact(edge, ui.scope_id().with(("anim_edge", i)), Sense::drag());
-            edge_resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Unknown, true, format!("Duration handle {}", i + 1)));
+            edge_resp.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Unknown, true, crate::i18n::fmt_plain(crate::tl!("Duration handle {n}"), &[("n", &(i + 1).to_string())])));
             if edge_resp.hovered() || edge_resp.dragged() {
                 ui.ctx().set_cursor_icon(egui::CursorIcon::ResizeHorizontal);
             } else if body_resp.hovered() || body_resp.dragged() {
