@@ -728,3 +728,48 @@ fn raster_scale_caps_total_pixels_not_each_side() {
     let s = raster_scale(720.0, (960.0, 540.0), 200.0);
     assert!((s - 720.0 / 72.0 * 200.0 / 960.0).abs() < 1e-12);
 }
+
+/// Logos keep their holes in the exported PDF: the subpaths of one custom path fill even-odd, so
+/// the inner square is transparent in the slide's content raster; separate paths overlay.
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen_test::wasm_bindgen_test)]
+#[cfg_attr(not(target_arch = "wasm32"), test)]
+fn custom_path_subpaths_keep_their_holes_in_the_pdf() {
+    use deckcraft_model::{CustomPath, Geom, Shape, ShapeId, Xfrm};
+    use hayro_syntax::object::{Dict, Number, Stream};
+    let outer = "M 0 0 L 100 0 L 100 100 L 0 100 Z";
+    let inner = "M 25 25 L 75 25 L 75 75 L 25 75 Z";
+    let path = |d: &str| CustomPath { w: 100.0, h: 100.0, d: d.into(), ..Default::default() };
+    // Alpha of the slide content raster at slide point (x, y).
+    let alpha_at = |paths: Vec<CustomPath>, pts: [(f64, f64); 2]| -> [u8; 2] {
+        let mut p = deck(1);
+        let slide = Arc::make_mut(&mut p.slides[0]);
+        slide.shapes.clear();
+        slide.shapes.push(Shape {
+            id: ShapeId(9100),
+            xfrm: Some(Xfrm::new(100.0, 100.0, 200.0, 200.0)),
+            geom: Geom::Custom { paths },
+            fill: Some(deckcraft_model::Fill::solid(deckcraft_model::ColorRef::rgb(deckcraft_model::Rgba::rgb(200, 0, 0)))),
+            line: Some(deckcraft_model::Line::none()),
+            ..Default::default()
+        });
+        let bytes = export(&p, &opts(PageLayout::Slides)).expect("export");
+        let pdf = hayro_syntax::Pdf::new(bytes).expect("pdf");
+        let page = &pdf.pages()[0];
+        let resources = page.raw().get::<Dict>(b"Resources").expect("resources");
+        let xobjects = resources.get::<Dict>(b"XObject").expect("xobjects");
+        for key in xobjects.keys() {
+            let stream = xobjects.get::<Stream>(key).expect("stream");
+            let dict = stream.dict();
+            let Some(mask) = dict.get::<Stream>(b"SMask") else { continue };
+            let alpha = mask.decoded().expect("decoded").into_owned();
+            let w = dict.get::<Number>(b"Width").expect("width").as_f64() as usize;
+            let s = opts(PageLayout::Slides).dpi / 72.0;
+            let at = |(x, y): (f64, f64)| alpha[(y * s) as usize * w + (x * s) as usize];
+            return [at(pts[0]), at(pts[1])];
+        }
+        panic!("no content raster with an alpha mask");
+    };
+    let probes = [(110.0, 110.0), (200.0, 200.0)];
+    assert_eq!(alpha_at(vec![path(&format!("{outer} {inner}"))], probes), [255, 0], "one path: the frame is filled, the inner square is a hole");
+    assert_eq!(alpha_at(vec![path(outer), path(inner)], probes), [255, 255], "two paths overlay, no hole");
+}

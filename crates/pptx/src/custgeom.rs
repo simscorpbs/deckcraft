@@ -484,6 +484,34 @@ mod tests {
     }
 
     #[test]
+    fn subpaths_of_one_path_stay_in_one_path_and_separate_paths_stay_apart() {
+        let sq = |a: i32, b: i32| {
+            format!(
+                "<a:moveTo><a:pt x=\"{a}\" y=\"{a}\"/></a:moveTo><a:lnTo><a:pt x=\"{b}\" y=\"{a}\"/></a:lnTo>\
+                 <a:lnTo><a:pt x=\"{b}\" y=\"{b}\"/></a:lnTo><a:lnTo><a:pt x=\"{a}\" y=\"{b}\"/></a:lnTo><a:close/>"
+            )
+        };
+        let xml = format!(
+            "<a:custGeom xmlns:a=\"x\"><a:pathLst><a:path w=\"100\" h=\"100\">{}{}</a:path><a:path w=\"100\" h=\"100\">{}</a:path></a:pathLst></a:custGeom>",
+            sq(0, 100),
+            sq(25, 75),
+            sq(40, 60)
+        );
+        let paths = read_cust_geom(&parse(xml.as_bytes()).unwrap().root, 100.0, 100.0);
+        assert_eq!(paths.len(), 2, "two a:path elements");
+        assert_eq!(paths[0].d.matches('M').count(), 2, "outline and counter share one path: {}", paths[0].d);
+        assert_eq!(paths[0].d.matches('Z').count(), 2);
+        assert_eq!(paths[1].d.matches('M').count(), 1);
+        // Saving keeps the subpaths together in their a:path.
+        let mut w = W::frag();
+        write_cust_geom(&mut w, &paths);
+        let back = read_cust_geom(&parse(w.s.as_bytes()).unwrap().root, 1.0, 1.0);
+        assert_eq!(back.len(), 2);
+        assert_eq!(back[0].d.matches('M').count(), 2);
+        assert_eq!(back[1].d.matches('M').count(), 1);
+    }
+
+    #[test]
     fn parse_path_uppercase_exponent() {
         assert_eq!(parse_path("M 1E-5 2 L 3 4"), vec![('M', vec![1e-5, 2.0]), ('L', vec![3.0, 4.0])]);
         assert_eq!(parse_path("M 1.5E3 2"), vec![('M', vec![1500.0, 2.0])]);
