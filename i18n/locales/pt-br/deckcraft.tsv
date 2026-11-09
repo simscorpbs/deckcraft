@@ -697,7 +697,6 @@ tab	Home	Página Inicial
 	Handouts (4 slides per page)	Folhetos (4 slides por página)
 	Handouts (6 slides per page)	Folhetos (6 slides por página)
 	Handouts (9 slides per page)	Folhetos (9 slides por página)
-	Full Page Slides	Slides em Página Inteira
 	Include hidden slides	Incluir slides ocultos
 	Transparent background	Plano de fundo transparente
 	Leave the slide background out: only what is on the slide is drawn	Omitir o plano de fundo do slide: só o que está no slide é desenhado
@@ -926,8 +925,6 @@ unit	in	pol.
 	Enter a zoom percent	Informe uma porcentagem de zoom
 	Presentations and slide shows, rebuilt from scratch in pure Rust.	Apresentações e exibições de slides, reconstruídas do zero em Rust puro.
 	An open-source, clean-room project. Not affiliated with Microsoft.	Um projeto de código aberto, criado em sala limpa. Sem afiliação com a Microsoft.
-	Join our community on Discord	Participe da nossa comunidade no Discord
-	Source on GitHub	Código-fonte no GitHub
 	Grab bag	Mistura
 	{n} contributors · {commits} commits	{n} colaboradores · {commits} commits
 	No contributor data was built into this copy.	Nenhum dado de colaboradores foi incluído nesta cópia.
@@ -952,15 +949,12 @@ hint	Outline	Estrutura de tópicos
 	Keeps the layout, fonts and pictures	Preserva o layout, as fontes e as imagens
 	Opens on any device with a PDF viewer	Abre em qualquer dispositivo com um leitor de PDF
 	The presentation keeps its own file	A apresentação mantém o próprio arquivo
-	Include hidden slides	Incluir slides ocultos
 	Create PDF	Criar PDF
 	Several slides on each page of a PDF	Vários slides em cada página de um PDF
 	Three a page leaves lines for notes	Três por página deixa linhas para anotações
 	Print them for your audience	Imprima-os para o público
 	{n} slides per page	{n} slides por página
 	Slides per page	Slides por página
-	Transparent background	Plano de fundo transparente
-	Leave the slide background out: only what is on the slide is drawn	Omite o plano de fundo do slide: só o que está no slide é desenhado
 	Still opening {name}	Ainda abrindo {name}
 	Stopped opening {name}	Abertura de {name} interrompida
 	Opening {name}…	Abrindo {name}…
@@ -981,14 +975,12 @@ hint	Outline	Estrutura de tópicos
 	{a}, {b}, {c} and {n} more	{a}, {b}, {c} e mais {n}
 	{names} isn't installed on this computer. Text that uses it is shown in a similar font.	{names} não está instalada neste computador. O texto que a usa é exibido em uma fonte semelhante.
 	{names} aren't installed on this computer. Text that uses them is shown in a similar font.	{names} não estão instaladas neste computador. O texto que as usa é exibido em uma fonte semelhante.
-	All slides	Todos os slides
 	First {n} slides	Primeiros {n} slides
 	End of slide show, click to exit.	Fim da apresentação de slides. Clique para sair.
 	Go to slide {n}	Ir para o slide {n}
 	Click the slide to zoom in. Esc cancels.	Clique no slide para ampliar. Esc cancela.
 	Zoom on	Zoom ativado
 	Slide timings recorded.	Intervalos de slides gravados.
-	End Show	Encerrar Apresentação
 	◀ Previous	◀ Anterior
 	Next ▶	Próximo ▶
 	Black on	Preto ativado
@@ -1030,9 +1022,6 @@ hint	Outline	Estrutura de tópicos
 	Action Buttons	Botões de Ação
 	Add a title with a picture or some text to get layout ideas.	Adicione um título com uma imagem ou algum texto para receber ideias de layout.
 	Airplane	Avião
-	Alt Text	Texto Alternativo
-	Alt text	Texto alternativo
-	Apply to All	Aplicar a Todos
 	Arrow: Bent	Seta: Dobrada
 	Arrow: Bent-Up	Seta: Dobrada para Cima
 	Arrow: Chevron	Seta: Divisa
@@ -1062,10 +1051,8 @@ hint	Outline	Estrutura de tópicos
 	Basic Bending Process	Processo de Curva Básica
 	Basic Block List	Lista de Blocos Básica
 	Basic Chevron Process	Processo de Divisa Básico
-	Basic Cycle	Ciclo Básico
 	Basic Matrix	Matriz Básica
 	Basic Pie	Pizza Básica
-	Basic Process	Processo Básico
 	Basic Pyramid	Pirâmide Básica
 	Basic Radial	Radial Básico
 	Basic Shapes	Formas Básicas
@@ -1168,7 +1155,6 @@ hint	Outline	Estrutura de tópicos
 	Doors	Portas
 	Dotted diamond	Losango pontilhado
 	Dotted grid	Grade pontilhada
-	Double	Dupla
 	Double Brace	Chaves Duplas
 	Double Bracket	Colchetes Duplos
 	Double Left	Dupla à Esquerda
@@ -1296,7 +1282,6 @@ direction	From top right	Sup. dir.
 	Lightning Bolt	Raio
 	Line: Rising	Linha: Ascendente
 	Linear Venn	Venn Linear
-	Lock aspect ratio	Bloquear taxa de proporção
 	Look up	Pesquisar
 	Margins (pt)	Margens (pt)
 	Material	Material
@@ -1437,7 +1422,6 @@ direction	From top right	Sup. dir.
 	Shingle	Telhas
 	Shred	Triturar
 	Shrink text on overflow	Reduzir texto ao transbordar
-	Single	Simples
 	Single Left	Simples à Esquerda
 	Single Right	Simples à Direita
 	Size & Properties	Tamanho e Propriedades
