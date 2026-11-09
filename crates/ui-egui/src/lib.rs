@@ -117,6 +117,9 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
     ("view.collapseRibbon", "Collapse the Ribbon", Some("Cmd+F1"), "{}"),
     ("view.dark", "Dark Mode", None, "{on?: bool}"),
     ("view.grayscale", "Grayscale", None, "{on?: bool}"),
+    ("ui.accentColor", "Accent Color", None, "{value?: RRGGBB}"),
+    ("ui.showDiscord", "Show Discord Button", None, "{value?: bool}"),
+    ("ui.showAccountPicture", "Show Account Avatar", None, "{value?: bool}"),
     ("view.newWindow", "New Window", None, "{on?: bool, slide?: index, delta?: int}"),
     ("show.start", "Slide Show", Some("F5"), "{from?: index, custom?: name}"),
     (

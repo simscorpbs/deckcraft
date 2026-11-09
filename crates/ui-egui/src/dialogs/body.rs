@@ -1346,6 +1346,33 @@ fn dlg_preferences(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     if ui.checkbox(&mut dark, "Dark appearance").changed() {
         let _ = app.run("view.dark", json!({"on": dark}));
     }
+    ui.horizontal(|ui| {
+        ui.label("Accent color:");
+        let current = app.ui.accent_color;
+        for (name, accent) in theme::AccentColor::PRESETS {
+            let text = egui::RichText::new(name).color(theme::Tokens::light().accent_text);
+            let picked = current == accent;
+            let button = egui::Button::new(text)
+                .fill(accent.color32())
+                .stroke(if picked { egui::Stroke::new(2.0, ui.visuals().text_color()) } else { egui::Stroke::NONE });
+            if ui.add(button).on_hover_text(format!("Use the {name} accent")).clicked() {
+                let _ = app.run("ui.accentColor", json!({"value": accent.hex()}));
+            }
+        }
+        let mut custom = current.color32();
+        if ui.color_edit_button_srgba(&mut custom).on_hover_text("Custom accent color").changed() {
+            let accent = theme::AccentColor([custom.r(), custom.g(), custom.b()]);
+            let _ = app.run("ui.accentColor", json!({"value": accent.hex()}));
+        }
+    });
+    let mut discord = app.ui.show_discord;
+    if ui.checkbox(&mut discord, "Show Discord button in the title bar").changed() {
+        let _ = app.run("ui.showDiscord", json!({"value": discord}));
+    }
+    let mut avatar = app.ui.show_account_picture;
+    if ui.checkbox(&mut avatar, "Show account avatar in the title bar").changed() {
+        let _ = app.run("ui.showAccountPicture", json!({"value": avatar}));
+    }
     // While the pointer holds the slider its value only waits in the dialog: applying it
     // would rescale the slider under the pointer and run it to an end (#767). It applies
     // on release, and at once from the keyboard.

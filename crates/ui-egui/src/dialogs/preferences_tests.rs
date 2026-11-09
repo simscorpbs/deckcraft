@@ -132,3 +132,45 @@ fn options_close_button_restores_the_settings() {
     assert_eq!(h.state().session.prefs.smart_guides, was, "the close button restores the setting");
     assert!(h.state().dialog.is_none(), "and the dialog closes");
 }
+
+#[test]
+fn accent_and_title_bar_options_apply_live_and_cancel_restores_them() {
+    let mut h = harness();
+    {
+        let app = h.state();
+        assert_eq!(app.ui.accent_color, crate::theme::AccentColor::DEFAULT);
+        assert!(!app.ui.show_discord);
+    }
+    open_options(&mut h);
+    let app = h.state_mut();
+    assert_eq!(app.run("ui.accentColor", json!({"value": "#1F5FBF"})).unwrap(), json!({"accentColor": "1F5FBF"}));
+    assert!(app.run("ui.accentColor", json!({"value": "nope"})).is_err());
+    assert_eq!(app.ui.accent_color.hex(), "1F5FBF");
+    assert_eq!(app.run("ui.showDiscord", json!({})).unwrap(), json!({"showDiscord": true}));
+    let avatar = app.ui.show_account_picture;
+    assert_eq!(app.run("ui.showAccountPicture", json!({})).unwrap(), json!({"showAccountPicture": !avatar}));
+    h.run_steps(3);
+    // Cancel (Esc) puts the three settings back.
+    h.key_press(egui::Key::Escape);
+    h.run_steps(3);
+    let app = h.state();
+    assert!(app.dialog.is_none());
+    assert_eq!(app.ui.accent_color, crate::theme::AccentColor::DEFAULT);
+    assert!(!app.ui.show_discord);
+    assert_eq!(app.ui.show_account_picture, avatar);
+}
+
+#[test]
+fn the_title_bar_draws_the_optional_buttons_when_asked() {
+    use egui_kittest::kittest::Queryable;
+    let mut h = harness();
+    assert!(h.query_by_label("Discord").is_none(), "Discord is off by default");
+    h.state_mut().run("ui.showDiscord", json!({"value": true})).unwrap();
+    h.state_mut().run("ui.showAccountPicture", json!({"value": true})).unwrap();
+    h.run_steps(3);
+    assert!(h.query_by_label("Discord").is_some());
+    assert!(h.query_by_label("Profile avatar").is_some());
+    h.state_mut().run("ui.showAccountPicture", json!({"value": false})).unwrap();
+    h.run_steps(3);
+    assert!(h.query_by_label("Profile avatar").is_none());
+}
