@@ -705,8 +705,52 @@ pub struct Word {
 /// a paragraph would multiply it.
 const MAX_LANG_LEN: usize = 64;
 
+/// Which characters belong to an e-mail address or a web address (`http://`, `https://`, `ftp://`,
+/// `www.`, `mailto:`, `name@host.tld`). Those are not words to check, whatever letters they hold.
+fn address_mask(chars: &[(char, usize)]) -> Vec<bool> {
+    let mut mask = vec![false; chars.len()];
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i].0.is_whitespace() {
+            i += 1;
+            continue;
+        }
+        let start = i;
+        while i < chars.len() && !chars[i].0.is_whitespace() {
+            i += 1;
+        }
+        // Drop the punctuation that wraps a token: `(a@b.co),` `<https://x.org>.`
+        let (mut a, mut b) = (start, i);
+        while a < b && matches!(chars[a].0, '(' | '[' | '{' | '<' | '"' | '\'' | '“' | '‘') {
+            a += 1;
+        }
+        while b > a && matches!(chars[b - 1].0, ')' | ']' | '}' | '>' | '"' | '\'' | '”' | '’' | ',' | ';' | ':' | '.' | '!' | '?') {
+            b -= 1;
+        }
+        let token: String = chars[a..b].iter().map(|c| c.0).collect::<String>().to_lowercase();
+        if looks_like_address(&token) {
+            mask[a..b].fill(true);
+        }
+    }
+    mask
+}
+
+fn looks_like_address(t: &str) -> bool {
+    const SCHEMES: [&str; 5] = ["http://", "https://", "ftp://", "www.", "mailto:"];
+    if SCHEMES.iter().any(|p| t.len() > p.len() && t.starts_with(p)) {
+        return true;
+    }
+    // name@host.tld: something before the `@`, a dot inside what follows it.
+    match t.split_once('@') {
+        Some((local, host)) => {
+            !local.is_empty() && !host.contains('@') && host.split('.').count() >= 2 && host.split('.').all(|part| !part.is_empty())
+        }
+        None => false,
+    }
+}
+
 /// The words of `p`, each with its run's language (`lang` on the run, else `default`). Words
-/// with digits are skipped; apostrophes inside a word belong to it; hyphenated words are checked
+/// with digits, e-mail addresses and web addresses are skipped; apostrophes inside a word belong to it; hyphenated words are checked
 /// part by part. A language over [`MAX_LANG_LEN`] counts as none.
 pub fn paragraph_words(p: &deckcraft_model::Paragraph, default: &str) -> Vec<Word> {
     let mut chars: Vec<(char, usize)> = vec![];
@@ -725,6 +769,7 @@ pub fn paragraph_words(p: &deckcraft_model::Paragraph, default: &str) -> Vec<Wor
     };
     // Combining marks (decomposed accents) belong to the letter before them.
     let inside = |c: char| c.is_alphanumeric() || deckcraft_model::words::is_combining_mark(c) || c == '\'' || c == '’' || c == '-';
+    let address = address_mask(&chars);
     let mut out = vec![];
     let mut i = 0;
     while i < chars.len() {
@@ -750,7 +795,7 @@ pub fn paragraph_words(p: &deckcraft_model::Paragraph, default: &str) -> Vec<Wor
             b = k;
         }
         let text: String = chars[a..b].iter().map(|c| c.0).collect();
-        if text.is_empty() || text.chars().any(|c| c.is_ascii_digit()) || !text.chars().any(char::is_alphabetic) {
+        if text.is_empty() || address[a..b].iter().any(|m| *m) || text.chars().any(|c| c.is_ascii_digit()) || !text.chars().any(char::is_alphabetic) {
             continue;
         }
         let mut k = a;
@@ -848,6 +893,19 @@ SFX D Y 1\nSFX D 0 ed/S .\n";
         let p = deckcraft_model::Paragraph::new("Das na\u{ef}ve Caf\u{e9} und cafe\u{301} na\u{308}ive");
         let w: Vec<String> = paragraph_words(&p, "en-US").into_iter().map(|w| w.text).collect();
         assert_eq!(w, ["Das", "na\u{ef}ve", "Caf\u{e9}", "und", "cafe\u{301}", "na\u{308}ive"]);
+    }
+
+    #[test]
+    fn email_and_web_addresses_are_not_checked() {
+        let words = |t: &str| -> Vec<String> { paragraph_words(&deckcraft_model::Paragraph::new(t), "en-US").into_iter().map(|w| w.text).collect() };
+        assert_eq!(words("write to jose.silva@exemplo.com.br today"), ["write", "to", "today"]);
+        assert_eq!(words("see https://exemplo.org/pagina-teste and www.exemplo.org, then mailto:a@b.co."), ["see", "and", "then"]);
+        assert_eq!(words("(zxqv@wvut.io) ok"), ["ok"]);
+        assert_eq!(words("<http://wxyz.test/qq>"), Vec::<String>::new());
+        // Only the address is skipped, not the words next to it.
+        assert_eq!(words("fine, zxqv@wvut.io, fine"), ["fine", "fine"]);
+        // A lone `@`, or an `@` without a dotted host, is ordinary text.
+        assert_eq!(words("at @ home and foo@bar"), ["at", "home", "and", "foo", "bar"]);
     }
 
     #[test]
