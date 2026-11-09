@@ -52,7 +52,7 @@ pub fn show(app: &mut SlideApp, ctx: &egui::Context) {
         return;
     }
     let t = Tokens::get(ctx);
-    let text = toast.text.clone();
+    let text = crate::i18n::user_error(&toast.text).into_owned();
     let mut close = false;
     egui::Area::new(egui::Id::unique("toast")).anchor(Align2::CENTER_BOTTOM, vec2(0.0, -44.0)).order(egui::Order::Foreground).show(ctx, |ui| {
         egui::Frame::NONE

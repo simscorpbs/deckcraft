@@ -12,12 +12,12 @@ use crate::widgets::{
     self, RIBBON_H, big_button, big_button_ex, color_split, dropdown, group, icon_toggle, rows, small_button, small_button_ex, small_button_named,
 };
 
-mod animations;
+pub(crate) mod animations;
 mod arrange;
 mod chart;
 mod design;
 mod draw;
-mod galleries;
+pub(crate) mod galleries;
 mod home;
 mod insert;
 mod masters;

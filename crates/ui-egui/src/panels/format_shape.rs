@@ -222,7 +222,7 @@ fn size_tab(app: &mut SlideApp, ui: &mut Ui, sh: &deckcraft_model::Shape, x: dec
                     ui.selectable_value(&mut center, false, crate::tl!("Top Left Corner"));
                     ui.selectable_value(&mut center, true, crate::tl!("Center"));
                 });
-            combo.response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::ComboBox, true, "From"));
+            combo.response.widget_info(|| egui::WidgetInfo::labeled(egui::Role::ComboBox, true, crate::tl!("From")));
         })
     });
     if single {

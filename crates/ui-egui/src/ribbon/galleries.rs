@@ -328,7 +328,7 @@ pub fn effects_menu(app: &mut SlideApp, ui: &mut Ui) {
             "hardEdge",
             "artDeco",
         ] {
-            if ui.button(crate::tl!(b)).clicked() {
+            if ui.button(crate::i18n::tc("bevel", bevel_name(b))).clicked() {
                 run(app, "shape.effects", json!({"bevel": b}));
             }
         }
@@ -387,4 +387,25 @@ fn paint_freeform_icon(p: &egui::Painter, r: Rect, name: &str, ink: Color32) {
         _ => (0..=40).map(|i| i as f32 / 40.0).map(|u| at(u, 0.5 + 0.35 * (u * 19.0).sin() * (1.0 - u * 0.4))).collect(),
     };
     p.add(egui::Shape::line(pts, egui::Stroke::new(1.3, ink)));
+}
+
+/// The English name of a bevel preset id as the Bevel menu shows it (`relaxedInset` is "Relaxed Inset").
+/// Unknown ids come back as they are.
+pub(crate) fn bevel_name(id: &str) -> &str {
+    match id {
+        "none" => "None",
+        "circle" => "Circle",
+        "relaxedInset" => "Relaxed Inset",
+        "cross" => "Cross",
+        "coolSlant" => "Cool Slant",
+        "angle" => "Angle",
+        "softRound" => "Soft Round",
+        "convex" => "Convex",
+        "slope" => "Slope",
+        "divot" => "Divot",
+        "riblet" => "Riblet",
+        "hardEdge" => "Hard Edge",
+        "artDeco" => "Art Deco",
+        other => other,
+    }
 }

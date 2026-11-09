@@ -785,7 +785,6 @@ tab	Home	Página Inicial
 	English (United Kingdom)	Inglês (Reino Unido)
 	French (France)	Francês (França)
 	Swedish	Sueco
-	Month names and AM/PM are listed for English. Other languages list the numeric date and 24-hour time.	Nomes de meses e AM/PM aparecem só para o inglês. Os outros idiomas listam a data numérica e a hora no formato de 24 horas.
 	Update automatically	Atualizar automaticamente
 	Small (640 px wide)	Pequeno (640 px de largura)
 	Medium (960 px wide)	Médio (960 px de largura)
@@ -1611,3 +1610,262 @@ clipboard	Clear All	Limpar Tudo
 # --- pptm ---
 	Saved. Macros are not kept: the .pptm was saved without them.	Salvo. As macros não são mantidas: o .pptm foi salvo sem elas.
 	Saved {path}. Macros are not kept: the .pptm was saved without them.	Salvo em {path}. As macros não são mantidas: o .pptm foi salvo sem elas.
+# --- restante ---
+animation	Appear	Aparecer
+	Fly In	Surgir
+	Float In	Flutuar para Dentro
+animation	Wipe	Revelar
+	Wheel	Roda
+	Grow & Turn	Crescer e Girar
+	Swivel	Girar
+	Bounce	Saltar
+	Dissolve In	Dissolver para Dentro
+	Peek In	Espiar para Dentro
+	Strips	Tiras
+	Rise Up	Subir
+	Spinner	Girador
+	Pulse	Pulsar
+	Color Pulse	Pulso de Cor
+	Teeter	Balançar
+	Spin	Girar
+	Grow/Shrink	Aumentar/Diminuir
+	Object Color	Cor do Objeto
+	Complementary Color	Cor Complementar
+	Line Color	Cor da Linha
+	Fill Color	Cor de Preenchimento
+	Bold Flash	Negrito Intermitente
+	Disappear	Desaparecer
+	Fly Out	Voar para Fora
+	Float Out	Flutuar para Fora
+	Shrink & Turn	Reduzir e Girar
+	Dissolve Out	Dissolver para Fora
+	Peek Out	Espiar para Fora
+	Sink Down	Afundar
+	Contract	Contrair
+	Arcs	Arcos
+	Turns	Curvas
+	Loops	Laços
+	Diagonal Down Right	Diagonal para Baixo e para a Direita
+	Diagonal Up Right	Diagonal para Cima e para a Direita
+	Zigzag	Ziguezague
+	Sine Wave	Onda Senoidal
+	Decaying Wave	Onda Decrescente
+	Heartbeat	Batimento Cardíaco
+	S Curve 1	Curva em S 1
+	S Curve 2	Curva em S 2
+	Stairs Down	Escada para Baixo
+	Bounce Right	Saltar para a Direita
+	Bounce Left	Saltar para a Esquerda
+	Spiral Right	Espiral para a Direita
+	Spiral Left	Espiral para a Esquerda
+	Spring	Mola
+	Swoosh	Rastro
+	4 Point Star	Estrela de 4 Pontas
+	5 Point Star	Estrela de 5 Pontas
+	6 Point Star	Estrela de 6 Pontas
+	8 Point Star	Estrela de 8 Pontas
+	Crescent Moon	Lua Crescente
+	Football	Bola de Futebol Americano
+	Plus	Mais
+	Curved Square	Quadrado Curvo
+	Horizontal Figure 8	Oito Horizontal
+	Vertical Figure 8	Oito Vertical
+	Loop de Loop	Looping
+	Bean	Feijão
+	Peanut	Amendoim
+	Neutron	Nêutron
+	Custom Path	Trajetória Personalizada
+animation	From Bottom	Da Parte Inferior
+animation	From Bottom-Left	Da Parte Inferior Esquerda
+animation	From Left	Da Esquerda
+animation	From Top-Left	Da Parte Superior Esquerda
+animation	From Top	Da Parte Superior
+animation	From Top-Right	Da Parte Superior Direita
+animation	From Right	Da Direita
+animation	From Bottom-Right	Da Parte Inferior Direita
+animation	To Bottom	Para a Parte Inferior
+animation	To Bottom-Left	Para a Parte Inferior Esquerda
+animation	To Left	Para a Esquerda
+animation	To Top-Left	Para a Parte Superior Esquerda
+animation	To Top	Para a Parte Superior
+animation	To Top-Right	Para a Parte Superior Direita
+animation	To Right	Para a Direita
+animation	To Bottom-Right	Para a Parte Inferior Direita
+animation	Horizontal In	Horizontal para Dentro
+animation	Horizontal Out	Horizontal para Fora
+animation	Vertical In	Vertical para Dentro
+animation	Vertical Out	Vertical para Fora
+animation	Circle In	Círculo para Dentro
+animation	Circle Out	Círculo para Fora
+animation	Box In	Caixa para Dentro
+animation	Box Out	Caixa para Fora
+animation	Diamond In	Losango para Dentro
+animation	Diamond Out	Losango para Fora
+animation	Plus In	Mais para Dentro
+animation	Plus Out	Mais para Fora
+animation	2 Spokes	2 raios
+animation	3 Spokes	3 raios
+animation	4 Spokes	4 raios
+animation	8 Spokes	8 raios
+animation	Zoom In	Zoom para Dentro
+animation	Zoom Out	Zoom para Fora
+animation	Left Up	Esquerda Acima
+animation	Right Up	Direita Acima
+animation	Left Down	Esquerda Abaixo
+animation	Right Down	Direita Abaixo
+animation	Both	Ambos
+	Relaxed Inset	Inserção Relaxada
+	Cool Slant	Inclinação Suave
+	Soft Round	Arredondamento Suave
+	Hard Edge	Borda Rígida
+	Art Deco	Art Déco
+	Briefing	Briefing
+	Lesson	Aula
+	Pitch	Pitch
+	Field Notes	Notas de Campo
+	Quarterly	Trimestral
+	Evening Talk	Palestra Noturna
+	A weekly check-in: what changed, what's stuck, and who does the next thing	Um acompanhamento semanal: o que mudou, o que está parado e quem faz o próximo passo
+	A short class that ends with the learner explaining the idea	Uma aula curta que termina com o aluno explicando a ideia
+	A ten-minute conversation about one promise, not a tour of features	Uma conversa de dez minutos sobre uma promessa, e não um tour pelos recursos
+	What an outing set out to see, and what it actually found	O que um passeio se propôs a ver e o que realmente encontrou
+	A report meant to be read aloud in half an hour	Um relatório feito para ser lido em voz alta em meia hora
+	A public talk the audience can check on the way home	Uma palestra pública que o público consegue conferir no caminho de casa
+	English (Australia)	Inglês (Austrália)
+	English (Canada)	Inglês (Canadá)
+	Español (España)	Espanhol (Espanha)
+	Español (México)	Espanhol (México)
+	Français (France)	Francês (França)
+	Français (Canada)	Francês (Canadá)
+	Deutsch (Deutschland)	Alemão (Alemanha)
+	Deutsch (Schweiz)	Alemão (Suíça)
+	Italiano	Italiano
+	Nederlands	Holandês
+	Português (Brasil)	Português (Brasil)
+	Português (Portugal)	Português (Portugal)
+	Polski	Polonês
+	Svenska	Sueco
+	Dansk	Dinamarquês
+	Norsk bokmål	Norueguês (Bokmål)
+	Suomi	Finlandês
+	Čeština	Tcheco
+	Українська	Ucraniano
+	Русский	Russo
+	Беларуская	Bielorrusso
+	Türkçe	Turco
+	Ελληνικά	Grego
+	日本語	Japonês
+	中文(中国)	Chinês (China)
+	한국어	Coreano
+	العربية	Árabe
+	עברית	Hebraico
+	Portuguese (Brazil)	Português (Brasil)
+	Month names are listed for English and Portuguese, AM/PM for English. Other languages list the numeric date and 24-hour time.	Os nomes de meses aparecem para inglês e português, e AM/PM só para inglês. Os outros idiomas listam a data numérica e a hora no formato de 24 horas.
+	{name}: not a presentation DeckCraft can read	{name}: não é uma apresentação que o DeckCraft consiga ler
+	{name} is password-protected. DeckCraft can't open password-protected presentations yet.	{name} está protegido por senha. O DeckCraft ainda não abre apresentações protegidas por senha.
+	{name}: DeckCraft can't open this kind of file	{name}: o DeckCraft não abre este tipo de arquivo
+	Couldn't save {name}: {reason}	Não foi possível salvar {name}: {reason}
+	{path}: not a regular file	{path}: não é um arquivo comum
+	{path}: {reason} (another program has the file open; close it and save again)	{path}: {reason} (outro programa está com o arquivo aberto; feche-o e salve de novo)
+	{name}: the picture can't be read	{name}: não foi possível ler a imagem
+	{name} was not applied: the presentation it was chosen for is closed	{name} não foi aplicado: a apresentação para a qual foi escolhido está fechada
+	{name} was not applied: {reason}	{name} não foi aplicado: {reason}
+	not a PPTX file: {detail}	não é um arquivo PPTX: {detail}
+	unsupported: {detail}	sem suporte: {detail}
+	write failed: {detail}	falha ao gravar: {detail}
+	malformed XML: {detail}	XML malformado: {detail}
+	some version history could not be deleted: {reason}	parte do histórico de versões não pôde ser excluída: {reason}
+	{path} can't be reopened as it is now; use Keep both instead	{path} não pode ser reaberto como está agora; use Manter ambos
+	No such file or directory (os error 2)	Arquivo ou diretório não encontrado (erro do sistema 2)
+	The system cannot find the file specified. (os error 2)	O sistema não encontra o arquivo especificado. (erro do sistema 2)
+	The system cannot find the path specified. (os error 3)	O sistema não encontra o caminho especificado. (erro do sistema 3)
+	Permission denied (os error 13)	Permissão negada (erro do sistema 13)
+	Access is denied. (os error 5)	Acesso negado. (erro do sistema 5)
+	Is a directory (os error 21)	É uma pasta (erro do sistema 21)
+	Read-only file system (os error 30)	Sistema de arquivos somente leitura (erro do sistema 30)
+	No space left on device (os error 28)	Sem espaço no dispositivo (erro do sistema 28)
+	There is not enough space on the disk. (os error 112)	Não há espaço suficiente no disco. (erro do sistema 112)
+	File exists (os error 17)	O arquivo já existe (erro do sistema 17)
+	The process cannot access the file because it is being used by another process. (os error 32)	O processo não pode acessar o arquivo porque ele está sendo usado por outro processo. (erro do sistema 32)
+	no active presentation	nenhuma apresentação ativa
+bevel	Slope	Declive
+	Custom Show	Apresentação Personalizada
+	Check Accessibility	Verificar Acessibilidade
+	MIT OR Apache-2.0 · © 2026 ArtCraft Team and the DeckCraft contributors	MIT OR Apache-2.0 · © 2026 ArtCraft Team e colaboradores do DeckCraft
+	Edit Data	Editar Dados
+	Trim	Cortar
+	Format Pane	Painel de Formatação
+	Round	Arredondada
+	PDF (*.pdf)	PDF (*.pdf)
+	Slides:	Slides:
+	New Window needs an open presentation	Nova Janela precisa de uma apresentação aberta
+	New Window needs a slide	Nova Janela precisa de um slide
+	Accent Color	Cor de Destaque
+	Align Cell Text	Alinhar Texto da Célula
+	Animation Gallery	Galeria de Animações
+	Animations on Slide	Animações no Slide
+	Apply Animation	Aplicar Animação
+	AutoCorrect Options	Opções de Autocorreção
+	Chart Elements	Elementos do Gráfico
+	Chart…	Gráfico…
+	Clipboard Items	Itens da Área de Transferência
+	Close Version	Fechar Versão
+	Cloud Status	Status da Nuvem
+	Collapse the Ribbon	Recolher a Faixa de Opções
+	Community Links	Links da Comunidade
+	Compare Version	Comparar Versão
+	Compare…	Comparar…
+	Delete Comment	Excluir Comentário
+	Delete Layout	Excluir Layout
+	Delete Text	Excluir Texto
+	Discard Recovered Presentations	Descartar Apresentações Recuperadas
+	Edit SmartArt Text	Editar Texto do SmartArt
+	Fonts in Presentation	Fontes na Apresentação
+	Formatting State	Estado da Formatação
+	Get Text	Obter Texto
+	Handout Placeholders	Espaços Reservados do Folheto
+	Header and Footer…	Cabeçalho e Rodapé…
+	Hide Background Graphics	Ocultar Elementos Gráficos de Plano de Fundo
+	Icon Gallery	Galeria de Ícones
+	Inspect Slide	Inspecionar Slide
+	Inspect Slide Actions	Inspecionar Ações do Slide
+	Keep Mouse Cursor Visible	Manter o Cursor do Mouse Visível
+	Language for All Text	Idioma de Todo o Texto
+	Layout Placeholders	Espaços Reservados do Layout
+	List Commands	Listar Comandos
+	Media Info	Informações da Mídia
+	Next Comment	Próximo Comentário
+	Next Window	Próxima Janela
+	Notes Placeholders	Espaços Reservados das Anotações
+	Open Recovered Presentations	Abrir Apresentações Recuperadas
+	Picture Style Gallery	Galeria de Estilos de Imagem
+	Play/Pause	Reproduzir/Pausar
+	Play/Pause GIF	Reproduzir/Pausar GIF
+	Poster Frame	Quadro de Pôster
+	Preview Animations	Visualizar Animações
+	Previous Comment	Comentário Anterior
+	Recolor Gallery	Galeria de Recolorir
+	Recovered Presentations	Apresentações Recuperadas
+	Remove All Animations	Remover Todas as Animações
+	Render Slide	Renderizar Slide
+	Save AutoRecover Information	Salvar Informações de AutoRecuperação
+	Save Options	Opções de Salvamento
+	Save to Data	Salvar em Dados
+	Select All Text	Selecionar Todo o Texto
+	Select Paragraph	Selecionar Parágrafo
+	Select Slides	Selecionar Slides
+	Select Word	Selecionar Palavra
+	Set Up Slide Show…	Configurar Apresentação de Slides…
+	Shape Gallery	Galeria de Formas
+	Show Account Avatar	Mostrar Avatar da Conta
+	Show Discord Button	Mostrar Botão do Discord
+	Show/Hide	Mostrar/Ocultar
+	Spelling Dictionary	Dicionário de Ortografia
+	Starter Templates	Modelos Iniciais
+	Stop Editing Text	Parar de Editar Texto
+	Table Style Options	Opções de Estilo de Tabela
+	Text Box Margins	Margens da Caixa de Texto
+	Text Shadow	Sombra do Texto
+	Theme Gallery	Galeria de Temas
+	Transition Gallery	Galeria de Transições
+	Variant Gallery	Galeria de Variantes
