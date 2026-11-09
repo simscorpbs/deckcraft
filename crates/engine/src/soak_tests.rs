@@ -177,3 +177,87 @@ fn undo_stack_stays_bounded_and_drains() {
     assert_eq!(undone, limit);
     assert!(s.doc().unwrap().doc.validate().is_empty());
 }
+
+/// Hostile values for one parameter: empty, huge, negative, out of range, wrong type, deeply nested.
+/// (JSON cannot carry NaN or infinity; they arrive as `null`, which is in the list.)
+fn hostile_values() -> Vec<Value> {
+    let mut nested = json!(0);
+    for _ in 0..40 {
+        nested = json!([nested, {"a": 1}]);
+    }
+    vec![
+        Value::Null,
+        json!(""),
+        json!("\u{0}"),
+        json!("x".repeat(100_000)),
+        json!("../../../etc/passwd\u{0}"),
+        json!("\u{202e}\u{200d}\u{fffd}𝒳"),
+        json!(0),
+        json!(-1),
+        json!(-1e308),
+        json!(1e308),
+        json!(f64::MIN_POSITIVE),
+        json!(i64::MIN),
+        json!(u64::MAX),
+        json!(0.5),
+        json!(true),
+        json!([]),
+        json!([null, null, null, null]),
+        json!([-1e308, 1e308, 0, -1]),
+        json!([u64::MAX, u64::MAX]),
+        json!(vec![1; 5000]),
+        json!({}),
+        json!({"x": -1, "y": null, "w": 1e308, "h": -1e308}),
+        nested,
+    ]
+}
+
+/// Every registered command, given every hostile value for each of its parameters (and for all of
+/// them at once), on a document with real content: none may panic. An `Err` is the right answer.
+/// The guard turns a panic into `EngineError::Internal` and counts it, so both are checked, and
+/// a panic that got past the guard fails the test too.
+#[test]
+fn hostile_params_never_panic() {
+    use std::panic::{AssertUnwindSafe, catch_unwind};
+    let values = hostile_values();
+    let mut failures: Vec<String> = vec![];
+    let mut runs = 0usize;
+    for spec in command_specs().iter().filter(|c| !skipped(c.id)) {
+        let keys = crate::cmd::param_keys(spec.params).unwrap_or_default();
+        let mut sets: Vec<Value> = vec![json!({}), Value::Null, json!([]), json!("x"), json!(1)];
+        for v in &values {
+            for k in &keys {
+                sets.push(json!({ *k: v.clone() }));
+            }
+            // A selection's worth of ids with the hostile value beside it, and every key at once.
+            sets.push(json!({"ids": [1], "id": 1, "index": 0, "value": v.clone()}));
+            sets.push(Value::Object(keys.iter().map(|k| (k.to_string(), v.clone())).collect()));
+        }
+        let mut s = Session::new();
+        if sample::open_sample(&mut s).is_err() {
+            failures.push("the sample deck did not open".into());
+            continue;
+        }
+        for p in &sets {
+            runs += 1;
+            let before = s.panics_caught;
+            let res = catch_unwind(AssertUnwindSafe(|| s.execute(spec.id, p)));
+            let short = |p: &Value| p.to_string().chars().take(200).collect::<String>();
+            match res {
+                Err(_) => failures.push(format!("{} panicked past the guard with {}", spec.id, short(p))),
+                Ok(r) => {
+                    if matches!(r, Err(EngineError::Internal(..))) || s.panics_caught != before {
+                        failures.push(format!("{} panicked (caught by the guard) with {}: {r:?}", spec.id, short(p)));
+                    }
+                }
+            }
+            // A command may close the document or open another; keep going on a fresh sample.
+            if s.documents().len() != 1 || s.active().is_none() {
+                s = Session::new();
+                let _ = sample::open_sample(&mut s);
+            }
+        }
+    }
+    assert!(runs > 1000, "only {runs} runs");
+    assert!(failures.is_empty(), "{} hostile calls panicked:\n{}", failures.len(), failures.iter().take(30).cloned().collect::<Vec<_>>().join("\n"));
+}

@@ -61,12 +61,55 @@ pub fn write_file(path: &str, bytes: &[u8]) -> Result<(), String> {
     }
     let written = file.write_all(bytes).and_then(|()| file.sync_all());
     drop(file);
-    let result = written.and_then(|()| std::fs::rename(&tmp, &target_path));
+    let result = written.and_then(|()| rename_with_retry(&tmp, &target_path, |a, b| std::fs::rename(a, b), is_locked, &LOCK_RETRY_DELAYS, std::thread::sleep));
     if let Err(e) = result {
         let _ = std::fs::remove_file(&tmp);
-        return Err(err(e));
+        return Err(if is_locked(&e) { format!("{path}: {e} (another program has the file open; close it and save again)") } else { err(e) });
     }
     Ok(())
+}
+
+/// How long the final rename of a save waits between tries when the target is locked: about
+/// 1.35 s in all, enough for an antivirus scan or a OneDrive sync to let go.
+#[cfg(not(target_arch = "wasm32"))]
+const LOCK_RETRY_DELAYS: [std::time::Duration; 6] = [
+    std::time::Duration::from_millis(50),
+    std::time::Duration::from_millis(100),
+    std::time::Duration::from_millis(200),
+    std::time::Duration::from_millis(300),
+    std::time::Duration::from_millis(300),
+    std::time::Duration::from_millis(400),
+];
+
+/// Is `e` a file another program holds open for the moment? On Windows that is access denied,
+/// a sharing violation or a lock violation (OneDrive, antivirus, the search indexer open files
+/// without delete sharing). Elsewhere a rename is never held up by another reader, so nothing is.
+#[cfg(not(target_arch = "wasm32"))]
+fn is_locked(e: &std::io::Error) -> bool {
+    cfg!(windows) && (e.kind() == std::io::ErrorKind::PermissionDenied || matches!(e.raw_os_error(), Some(5 | 32 | 33)))
+}
+
+/// `rename(from, to)`, tried again after each of `delays` while it fails with an error
+/// `retryable` accepts; any other error, or the last failure, is returned as it came.
+#[cfg(not(target_arch = "wasm32"))]
+fn rename_with_retry(
+    from: &std::path::Path,
+    to: &std::path::Path,
+    mut rename: impl FnMut(&std::path::Path, &std::path::Path) -> std::io::Result<()>,
+    retryable: impl Fn(&std::io::Error) -> bool,
+    delays: &[std::time::Duration],
+    mut sleep: impl FnMut(std::time::Duration),
+) -> std::io::Result<()> {
+    let mut tries = delays.iter();
+    loop {
+        match rename(from, to) {
+            Err(e) if retryable(&e) => match tries.next() {
+                Some(delay) => sleep(*delay),
+                None => return Err(e),
+            },
+            other => return other,
+        }
+    }
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -148,5 +191,87 @@ mod tests {
         assert!(res.unwrap_err().contains("outside the write root"));
         assert_eq!(std::fs::read_dir(&base).unwrap().count(), 1, "only the root is there");
         let _ = std::fs::remove_dir_all(&base);
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod save_retry_tests {
+    use std::io::{Error, ErrorKind};
+    use std::path::Path;
+    use std::time::Duration;
+
+    use super::{LOCK_RETRY_DELAYS, rename_with_retry};
+
+    fn locked() -> Error {
+        Error::new(ErrorKind::PermissionDenied, "sharing violation")
+    }
+
+    #[test]
+    fn a_brief_lock_is_waited_out() {
+        let (mut calls, mut slept) = (0, vec![]);
+        let r = rename_with_retry(
+            Path::new("a"),
+            Path::new("b"),
+            |_, _| {
+                calls += 1;
+                if calls < 4 { Err(locked()) } else { Ok(()) }
+            },
+            |e| e.kind() == ErrorKind::PermissionDenied,
+            &LOCK_RETRY_DELAYS,
+            |d| slept.push(d),
+        );
+        assert!(r.is_ok());
+        assert_eq!(calls, 4);
+        assert_eq!(slept, LOCK_RETRY_DELAYS[..3]);
+    }
+
+    #[test]
+    fn a_lock_that_stays_fails_after_the_last_try() {
+        let (mut calls, mut slept) = (0, Duration::ZERO);
+        let r = rename_with_retry(
+            Path::new("a"),
+            Path::new("b"),
+            |_, _| {
+                calls += 1;
+                Err(locked())
+            },
+            |e| e.kind() == ErrorKind::PermissionDenied,
+            &LOCK_RETRY_DELAYS,
+            |d| slept += d,
+        );
+        assert_eq!(r.unwrap_err().kind(), ErrorKind::PermissionDenied);
+        assert_eq!(calls, LOCK_RETRY_DELAYS.len() + 1);
+        assert_eq!(slept, Duration::from_millis(1350));
+    }
+
+    #[test]
+    fn other_errors_are_not_retried() {
+        let mut calls = 0;
+        let r = rename_with_retry(
+            Path::new("a"),
+            Path::new("b"),
+            |_, _| {
+                calls += 1;
+                Err(Error::new(ErrorKind::NotFound, "gone"))
+            },
+            |e| e.kind() == ErrorKind::PermissionDenied,
+            &LOCK_RETRY_DELAYS,
+            |_| panic!("no waiting for an error that will not clear"),
+        );
+        assert_eq!(r.unwrap_err().kind(), ErrorKind::NotFound);
+        assert_eq!(calls, 1);
+    }
+
+    #[test]
+    fn saving_replaces_the_file_and_keeps_its_name() {
+        let dir = std::env::temp_dir().join(format!("deckcraft-save-retry-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("Report.pptx");
+        super::write_file(&file.to_string_lossy(), b"one").unwrap();
+        super::write_file(&file.to_string_lossy(), b"two").unwrap();
+        assert_eq!(std::fs::read(&file).unwrap(), b"two");
+        let names: Vec<String> = std::fs::read_dir(&dir).unwrap().filter_map(|e| e.ok()?.file_name().into_string().ok()).collect();
+        assert_eq!(names, ["Report.pptx"]);
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

@@ -15,7 +15,7 @@ pub(super) fn slide_dim_points(d: &Dialog, key: &str, ppu: f64, default: f64) ->
     {
         return pt;
     }
-    text.trim().trim_end_matches(['"', '%', ' ']).parse::<f64>().ok().filter(|v| v.is_finite()).map_or(default, |v| v * ppu)
+    deckcraft_geom::parse_decimal(text.trim().trim_end_matches(['"', '%', ' '])).map_or(default, |v| v * ppu)
 }
 
 /// The unit's abbreviation in a field label, "Width (cm):".

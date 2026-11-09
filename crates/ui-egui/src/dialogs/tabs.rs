@@ -21,7 +21,7 @@ pub(super) fn tabs_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bo
         .split('|')
         .filter_map(|x| {
             let (p, a) = x.split_once(':')?;
-            Some((p.parse::<f64>().ok().filter(|v| v.is_finite())?, a.to_string()))
+            Some((deckcraft_geom::parse_decimal(p)?, a.to_string()))
         })
         .collect();
     field(ui, d, "Default tab stops (in):", "default", "1");

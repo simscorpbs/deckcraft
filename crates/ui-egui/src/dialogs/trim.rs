@@ -9,7 +9,7 @@ pub(super) fn ms_as_seconds(ms: u32) -> String {
 /// Parse a seconds field back to milliseconds. Blank, junk and negatives become 0; the result is
 /// rounded so `0.333` is 333 ms, not 332.
 pub(super) fn seconds_text_to_ms(text: &str) -> u32 {
-    let v = text.trim().parse::<f64>().ok().filter(|v| v.is_finite()).unwrap_or(0.0);
+    let v = deckcraft_geom::parse_decimal(text).unwrap_or(0.0);
     let ms = (v.max(0.0) * 1000.0).round();
     if ms >= f64::from(u32::MAX) { u32::MAX } else { ms as u32 }
 }
@@ -67,6 +67,8 @@ mod trim_media_tests {
         assert_eq!(seconds_text_to_ms("nope"), 0);
         assert_eq!(seconds_text_to_ms("-2"), 0);
         assert_eq!(seconds_text_to_ms("1.5"), 1500);
+        assert_eq!(seconds_text_to_ms("1,5"), 1500);
+        assert_eq!(seconds_text_to_ms("0,333"), 333);
         assert_eq!(seconds_text_to_ms("999999999"), u32::MAX);
     }
 
