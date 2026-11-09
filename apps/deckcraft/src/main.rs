@@ -17,6 +17,8 @@
 #[cfg(target_os = "macos")]
 mod apple_events;
 mod audio;
+#[cfg(target_os = "macos")]
+mod color_space;
 mod control_server;
 #[cfg(all(unix, not(target_os = "macos")))]
 mod display;
@@ -328,6 +330,10 @@ fn main() -> eframe::Result {
                 }
             }
             app.integrated_titlebar = cfg!(target_os = "macos");
+            #[cfg(target_os = "macos")]
+            if !color_space::tag_window_srgb() {
+                log::warn!("window colour space: no window to tag sRGB");
+            }
             if let Some(port) = control_port {
                 let rx = control_server::start(port, cc.egui_ctx.clone());
                 app = app.with_control(rx);
