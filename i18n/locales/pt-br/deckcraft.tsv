@@ -501,3 +501,364 @@ animation	Emphasis	Ênfase
 animation	Entrance	Entrada
 animation	Exit	Saída
 tab	Home	Página Inicial
+# --- dialogos ---
+	Size and Position	Tamanho e Posição
+	Header and Footer	Cabeçalho e Rodapé
+	Insert Hyperlink	Inserir Hiperlink
+	Set Up Slide Show	Configurar Apresentação de Slides
+	Alt Text	Texto Alternativo
+	Slides from Outline	Slides da Estrutura de Tópicos
+	Rename Section	Renomear Seção
+	Reuse Slides	Reutilizar Slides
+	Rename Layout	Renomear Layout
+	AutoCorrect	Autocorreção
+	Replace Font	Substituir Fonte
+	Equation	Equação
+	Accessibility Checker	Verificador de Acessibilidade
+	Custom Shows	Apresentações Personalizadas
+	Chart Data	Dados do Gráfico
+	Trim Media	Cortar Mídia
+	Choose a SmartArt Graphic	Escolher um Elemento Gráfico SmartArt
+	Bullets and Numbering	Marcadores e Numeração
+	Action Settings	Configurações de Ação
+	Create New Theme Colors	Criar Novas Cores do Tema
+	Create New Theme Fonts	Criar Novas Fontes do Tema
+	“{id}” is not available yet.	“{id}” ainda não está disponível.
+	Number of columns:	Número de colunas:
+	Number of rows:	Número de linhas:
+	Slides sized for:	Slides dimensionados para:
+	On-screen Show (16:10)	Apresentação na Tela (16:10)
+	Letter Paper (8.5x11 in)	Papel Carta (8,5x11 pol.)
+	Ledger Paper (11x17 in)	Papel Ledger (11x17 pol.)
+	A3 Paper (297x420 mm)	Papel A3 (297x420 mm)
+	A4 Paper (210x297 mm)	Papel A4 (210x297 mm)
+	B4 (ISO) Paper (250x353 mm)	Papel B4 (ISO) (250x353 mm)
+	B5 (ISO) Paper (176x250 mm)	Papel B5 (ISO) (176x250 mm)
+	35mm Slides	Slides de 35 mm
+	Overhead	Transparência
+	Banner	Faixa
+	Widescreen (13.333x7.5 in)	Widescreen (13,333x7,5 pol.)
+	Square (1:1)	Quadrado (1:1)
+	Portrait (9:16)	Retrato (9:16)
+	Width ({unit}):	Largura ({unit}):
+	Height ({unit}):	Altura ({unit}):
+	Maximize content (else ensure fit)	Maximizar o conteúdo (senão, garantir o ajuste)
+	Date and time	Data e hora
+	Fixed date (empty = update automatically):	Data fixa (vazio = atualizar automaticamente):
+	Slide number	Número do slide
+	Footer text:	Texto do rodapé:
+	Don't show on title slide	Não mostrar no slide de título
+	Apply to All	Aplicar a Todos
+	Web Page or File	Página da Web ou Arquivo
+	This Document	Neste Documento
+	Email Address	Endereço de Email
+	Email address:	Endereço de email:
+	Address:	Endereço:
+	ScreenTip:	Dica de Tela:
+	Show type	Tipo de apresentação
+	Presented by a speaker (full screen)	Apresentada por um orador (tela inteira)
+	Browsed by an individual (window)	Percorrida por um indivíduo (janela)
+	Browsed at a kiosk (full screen)	Percorrida em um quiosque (tela inteira)
+	Loop continuously until 'Esc'	Repetir continuamente até pressionar 'Esc'
+	Show without narration	Mostrar sem narração
+	Show without animation	Mostrar sem animação
+	Use timings, if present	Usar intervalos, se houver
+	Keep mouse cursor visible	Manter o cursor do mouse visível
+	Slides	Slides
+	All slides	Todos os slides
+@plural	{n} presentation|{n} presentations	{n} apresentação|{n} apresentações
+	Do you want to save the changes you made to {what}?	Deseja salvar as alterações feitas em {what}?
+	Post	Publicar
+	Bulleted	Com Marcadores
+	Numbered	Numerada
+	Custom character:	Caractere personalizado:
+	Size (% of text):	Tamanho (% do texto):
+	Accent 1	Ênfase 1
+	Accent 2	Ênfase 2
+	Accent 3	Ênfase 3
+	Accent 4	Ênfase 4
+	Accent 5	Ênfase 5
+	Accent 6	Ênfase 6
+	Remove bullets and numbering	Remover marcadores e numeração
+	Mouse Click	Clique do Mouse
+	Mouse Over	Passar o Mouse
+	Action on mouse over	Ação ao passar o mouse
+	Action on click	Ação ao clicar
+	Hyperlink to:	Hiperlink para:
+	Next Slide	Próximo Slide
+	Previous Slide	Slide Anterior
+	First Slide	Primeiro Slide
+	Last Slide	Último Slide
+	Last Slide Viewed	Último Slide Visto
+	End Show	Encerrar Apresentação
+	Custom Show…	Apresentação Personalizada…
+	Slide…	Slide…
+	URL…	URL…
+	This presentation has no custom shows (Slide Show ▸ Custom Slide Show).	Esta apresentação não tem apresentações personalizadas (Apresentação de Slides ▸ Apresentação de Slides Personalizada).
+	Run program:	Executar programa:
+	Program:	Programa:
+	Play the shape's media	Reproduzir a mídia da forma
+	Highlight click	Realçar clique
+	How would you describe this object and its context to someone who is blind or has low vision?	Como você descreveria este objeto e o contexto dele para alguém cego ou com baixa visão?
+	Alt text	Texto alternativo
+	Mark as decorative	Marcar como decorativo
+	Paste or type an outline. Unindented lines become slide titles; tab-indented lines become bullets.	Cole ou digite uma estrutura de tópicos. Linhas sem recuo viram títulos de slide; linhas recuadas com tabulação viram marcadores.
+	Insert slides from {name} after the current slide:	Inserir slides de {name} após o slide atual:
+	Select None	Selecionar Nenhum
+	{n}  (no title)	{n}  (sem título)
+	Keep source formatting	Manter formatação original
+	Tick at least one slide to insert	Marque pelo menos um slide para inserir
+	Export the presentation as:	Exportar a apresentação como:
+	PDF document (.pdf)	Documento PDF (.pdf)
+	PNG images (current slide)	Imagens PNG (slide atual)
+	PNG images (all slides)	Imagens PNG (todos os slides)
+	JPEG image (current slide)	Imagem JPEG (slide atual)
+	PowerPoint Presentation (.pptx)	Apresentação do PowerPoint (.pptx)
+	Outline (.txt)	Estrutura de tópicos (.txt)
+	Animated GIF (.gif)	GIF animado (.gif)
+	Outline/RTF (.rtf)	Estrutura de tópicos/RTF (.rtf)
+	Print layout:	Layout de impressão:
+	Notes Pages	Páginas de Anotações
+	Handouts (1 slide per page)	Folhetos (1 slide por página)
+	Handouts (2 slides per page)	Folhetos (2 slides por página)
+	Handouts (3 slides per page)	Folhetos (3 slides por página)
+	Handouts (4 slides per page)	Folhetos (4 slides por página)
+	Handouts (6 slides per page)	Folhetos (6 slides por página)
+	Handouts (9 slides per page)	Folhetos (9 slides por página)
+	Full Page Slides	Slides em Página Inteira
+	Include hidden slides	Incluir slides ocultos
+	Transparent background	Plano de fundo transparente
+	Leave the slide background out: only what is on the slide is drawn	Omitir o plano de fundo do slide: só o que está no slide é desenhado
+	With:	Por:
+	Font name	Nome da fonte
+	“{font}” isn't used explicitly.	“{font}” não é usada explicitamente.
+	Replaced “{from}” with “{to}”.	“{from}” substituída por “{to}”.
+	Click a symbol to insert it at the insertion point.	Clique em um símbolo para inseri-lo no ponto de inserção.
+	Currency	Moeda
+	Math	Matemática
+	Greek	Grego
+	Type an equation in linear form (e.g. a^2+b^2=c^2, x=(-b±√(b^2-4ac))/2a).	Digite uma equação na forma linear (p. ex., a^2+b^2=c^2, x=(-b±√(b^2-4ac))/2a).
+	As:	Como:
+	Use Destination Theme	Usar Tema de Destino
+	Keep Source Formatting	Manter Formatação Original
+	Picture (PNG)	Imagem (PNG)
+	Keep Text Only	Manter Somente Texto
+	Dictionary: {name}	Dicionário: {name}
+	No {lang} dictionary is installed, so only common misspellings are found. Put a Hunspell .aff/.dic pair in {folder}.	Nenhum dicionário {lang} está instalado, então só os erros de ortografia comuns são encontrados. Coloque um par Hunspell .aff/.dic em {folder}.
+	a dictionaries folder	uma pasta de dicionários
+	The spelling check is complete. No issues found.	A verificação ortográfica foi concluída. Nenhum problema encontrado.
+	Slide {n}: “{word}”	Slide {n}: “{word}”
+	Go to	Ir para
+	Repeated word	Palavra repetida
+	Change to:	Alterar para:
+	Click to change this one; Shift-click to change all	Clique para alterar este; Shift+clique para alterar todos
+	No accessibility issues found. People with disabilities should not have difficulty reading this document.	Nenhum problema de acessibilidade encontrado. Pessoas com deficiência não devem ter dificuldade para ler este documento.
+	Slide {n}: {issue}{name}	Slide {n}: {issue}{name}
+	Missing slide title	Título do slide ausente
+	Missing alternative text	Texto alternativo ausente
+	Hard-to-read text contrast ({ratio})	Contraste do texto difícil de ler ({ratio})
+	Selected text	Texto selecionado
+	Whole presentation	Apresentação inteira
+	Mark all text in the presentation as:	Marcar todo o texto da apresentação como:
+	Mark selected text as:	Marcar o texto selecionado como:
+	{name}  (dictionary)	{name}  (dicionário)
+	Spelling is checked for languages marked (dictionary).	A ortografia é verificada nos idiomas marcados com (dicionário).
+	Do not check spelling or grammar	Não verificar ortografia ou gramática
+	{name} ({count})	{name} ({count})
+@plural	{n} slide|{n} slides	{n} slide|{n} slides
+	New show name:	Nome da nova apresentação:
+	Slides (e.g. 1,3,5):	Slides (p. ex., 1,3,5):
+	Select a chart first.	Selecione um gráfico primeiro.
+	Edit the data: first row = series names, first column = categories.	Edite os dados: primeira linha = nomes das séries, primeira coluna = categorias.
+	Chart cell	Célula do gráfico
+	+ Row	+ Linha
+	+ Series	+ Série
+	Start time (s):	Hora de início (s):
+	End trim (s):	Corte do fim (s):
+	Fade in (s):	Esmaecimento de entrada (s):
+	Fade out (s):	Esmaecimento de saída (s):
+	Pick a graphic; type one item per line.	Escolha um elemento gráfico; digite um item por linha.
+	Basic List	Lista Básica
+	Basic Process	Processo Básico
+	Basic Cycle	Ciclo Básico
+	SmartArt items	Itens do SmartArt
+	Correct TWo INitial CApitals	Corrigir DUas INiciais MAiúsculas
+	Capitalize first letter of sentences	Colocar em maiúscula a primeira letra de cada frase
+	Capitalize names of days	Colocar em maiúscula os nomes dos dias da semana
+	Correct accidental use of cAPS LOCK key	Corrigir o uso acidental da tecla cAPS LOCK
+	Replace fractions (1/2) with fraction characters (½)	Substituir frações (1/2) por caracteres de fração (½)
+	Ordinals (1st) with superscript	Ordinais (1st) em sobrescrito
+	Automatic bulleted and numbered lists	Listas automáticas com marcadores e numeração
+	Replace text as you type	Substituir texto ao digitar
+	With	Por
+	Dark appearance	Aparência escura
+	Accent color:	Cor de destaque:
+	Use the {name} accent	Usar o destaque {name}
+	Custom accent color	Cor de destaque personalizada
+	Show Discord button in the title bar	Mostrar o botão do Discord na barra de título
+	Show account avatar in the title bar	Mostrar o avatar da conta na barra de título
+	Interface size	Tamanho da interface
+	Measurement units:	Unidades de medida:
+	Show smart guides	Mostrar guias inteligentes
+	Snap objects to grid	Ajustar objetos à grade
+	Replace straight quotes with smart quotes	Substituir aspas retas por aspas tipográficas
+	AutoCorrect as you type	Autocorreção ao digitar
+	AutoCorrect Options…	Opções de Autocorreção…
+	Your name (comments):	Seu nome (comentários):
+	Number:	Número:
+	Spacing (in):	Espaçamento (pol.):
+	Number must be a whole number from 1 to 16	O número deve ser inteiro, de 1 a 16
+	Spacing must be from 0 to 22 inches	O espaçamento deve ficar entre 0 e 22 polegadas
+	Available formats:	Formatos disponíveis:
+	English (United States)	Inglês (Estados Unidos)
+	English (United Kingdom)	Inglês (Reino Unido)
+	French (France)	Francês (França)
+	Swedish	Sueco
+	Month names and AM/PM are listed for English. Other languages list the numeric date and 24-hour time.	Nomes de meses e AM/PM aparecem só para o inglês. Os outros idiomas listam a data numérica e a hora no formato de 24 horas.
+	Update automatically	Atualizar automaticamente
+	Small (640 px wide)	Pequeno (640 px de largura)
+	Medium (960 px wide)	Médio (960 px de largura)
+	Large (1280 px wide)	Grande (1280 px de largura)
+	Extra Large (1920 px wide)	Extra Grande (1920 px de largura)
+	Custom width	Largura personalizada
+	Width (pixels):	Largura (pixels):
+	Seconds per slide:	Segundos por slide:
+	From slide:	Do slide:
+	To slide:	Até o slide:
+	Loop forever	Repetir indefinidamente
+	Width: enter {min} to {max} pixels	Largura: informe de {min} a {max} pixels
+	Seconds per slide: enter {min} to {max}	Segundos por slide: informe de {min} a {max}
+	Slides: choose a range from 1 to {n}	Slides: escolha um intervalo de 1 a {n}
+	Find what:	Localizar:
+	Replace with:	Substituir por:
+	Match case	Diferenciar maiúsculas de minúsculas
+	Find whole words only	Localizar apenas palavras inteiras
+	Replace All	Substituir Tudo
+	Replaced {n} occurrence(s).	{n} ocorrência(s) substituída(s).
+	DeckCraft can't find “{text}”.	O DeckCraft não encontrou “{text}”.
+	notes	anotações
+	Match {n} of {total} on slide {slide}{notes}.	Ocorrência {n} de {total} no slide {slide}{notes}.
+	Single	Simples
+	Double	Duplo
+	Heavy	Grosso
+	Wavy	Ondulado
+	Caps	Maiúsculas
+	Small caps	Versaletes
+	All caps	Todas em maiúsculas
+	Very tight	Muito apertado
+	Very loose	Muito solto
+	Choose a font	Escolha uma fonte
+	Font size must be a number	O tamanho da fonte deve ser um número
+	Character spacing must be a number	O espaçamento entre caracteres deve ser um número
+	Snap	Ajustar
+	Snap objects to other objects	Ajustar objetos a outros objetos
+	Spacing (pt):	Espaçamento (pt):
+	Display grid on screen	Exibir grade na tela
+	Display drawing guides on screen	Exibir guias de desenho na tela
+	Justify low	Justificado baixo
+	Distributed	Distribuído
+	Indentation	Recuo
+	Before text	Antes do texto
+	After text	Depois do texto
+unit	in	pol.
+	First line	Primeira linha
+	Hanging	Deslocamento
+	By	Por
+	Spacing before	Espaçamento antes
+	Spacing after	Espaçamento depois
+	1.5 lines	1,5 linha
+	Multiple	Múltiplos
+	Exactly	Exatamente
+	At	Em
+	Indent before text must be a number of inches	O recuo antes do texto deve ser um número em polegadas
+	Indent after text must be a number of inches	O recuo depois do texto deve ser um número em polegadas
+	Special indent must be a number of inches	O recuo especial deve ser um número em polegadas
+	Spacing before must be a number	O espaçamento antes deve ser um número
+	Spacing after must be a number	O espaçamento depois deve ser um número
+	Line spacing must be a number	O espaçamento entre linhas deve ser um número
+	Text: {text}	Texto: {text}
+	That file is empty	Esse arquivo está vazio
+	That picture is larger than 32 MB	Essa imagem é maior que 32 MB
+	Pictures in album	Imagens no álbum
+	No pictures yet	Nenhuma imagem ainda
+	Add Pictures…	Adicionar Imagens…
+	A photo album holds at most 48 pictures or text boxes	Um álbum de fotografias comporta no máximo 48 imagens ou caixas de texto
+	The picture list is invalid	A lista de imagens é inválida
+	New Text Box	Nova Caixa de Texto
+	Type the text for the new text box	Digite o texto da nova caixa de texto
+	Text is longer than 400 characters	O texto tem mais de 400 caracteres
+	Text box:	Caixa de texto:
+	Rotate Left	Girar para a Esquerda
+	Rotate Right	Girar para a Direita
+	More Brightness	Mais Brilho
+	Less Brightness	Menos Brilho
+	More Contrast	Mais Contraste
+	Less Contrast	Menos Contraste
+	Picture layout	Layout da imagem
+	Fit to slide	Ajustar ao slide
+	1 picture	1 imagem
+	2 pictures	2 imagens
+	4 pictures	4 imagens
+	1 picture with title	1 imagem com título
+	2 pictures with title	2 imagens com título
+	4 pictures with title	4 imagens com título
+	Frame shape	Forma da moldura
+	Rounded	Arredondada
+	Simple, white	Simples, branca
+	Captions under pictures	Legendas sob as imagens
+	ALL pictures black and white	TODAS as imagens em preto e branco
+	Album theme	Tema do álbum
+	Add a picture or a text box first	Adicione antes uma imagem ou uma caixa de texto
+	Select a picture to rotate it or change brightness and contrast	Selecione uma imagem para girá-la ou alterar o brilho e o contraste
+	Text boxes have no picture options	Caixas de texto não têm opções de imagem
+	Rotation {rot}°, brightness {brightness}, contrast {contrast}	Rotação de {rot}°, brilho {brightness}, contraste {contrast}
+	From the top-left corner of the slide	A partir do canto superior esquerdo do slide
+	Height (in):	Altura (pol.):
+	Width (in):	Largura (pol.):
+	Rotation (°):	Rotação (°):
+	Scale height (%):	Escala da altura (%):
+	Scale width (%):	Escala da largura (%):
+	Lock aspect ratio	Bloquear proporção
+	Horizontal (in):	Horizontal (pol.):
+	Vertical (in):	Vertical (pol.):
+	Scale width	Escala da largura
+	Scale height	Escala da altura
+	{label} must be a number	{label}: informe um número
+	Default tab stops (in):	Tabulações padrão (pol.):
+	Tab stops:	Posições de tabulação:
+	Clear the tab at {pos}	Limpar a tabulação em {pos}
+	Tab stop position (in):	Posição da tabulação (pol.):
+	Decimal	Decimal
+	Text/Background - Dark 1	Texto/Plano de Fundo - Escuro 1
+	Text/Background - Light 1	Texto/Plano de Fundo - Claro 1
+	Text/Background - Dark 2	Texto/Plano de Fundo - Escuro 2
+	Text/Background - Light 2	Texto/Plano de Fundo - Claro 2
+	Hyperlink	Hiperlink
+	Followed Hyperlink	Hiperlink Seguido
+	{label} hex	{label} (hex)
+	Enter a scheme name.	Digite um nome para o esquema.
+	{label} needs a colour like #RRGGBB.	{label} precisa de uma cor como #RRGGBB.
+	Scheme name	Nome do esquema
+	Applies to this presentation's theme colours.	Aplica-se às cores do tema desta apresentação.
+	Choose a heading font.	Escolha uma fonte para os títulos.
+	Choose a body font.	Escolha uma fonte para o corpo do texto.
+	Heading:	Títulos:
+	Body:	Corpo:
+	Heading font	Fonte dos títulos
+	Body font	Fonte do corpo
+	Heading sample  {font}	Amostra de título  {font}
+	Body sample  {font}	Amostra de corpo  {font}
+	Heading and body fonts for this presentation.	Fontes de títulos e de corpo desta apresentação.
+	Zoom to	Ampliar para
+	Percent:	Porcentagem:
+	Enter a zoom percent	Informe uma porcentagem de zoom
+	Presentations and slide shows, rebuilt from scratch in pure Rust.	Apresentações e exibições de slides, reconstruídas do zero em Rust puro.
+	An open-source, clean-room project. Not affiliated with Microsoft.	Um projeto de código aberto, criado em sala limpa. Sem afiliação com a Microsoft.
+	Join our community on Discord	Participe da nossa comunidade no Discord
+	Source on GitHub	Código-fonte no GitHub
+	Grab bag	Mistura
+	{n} contributors · {commits} commits	{n} colaboradores · {commits} commits
+	No contributor data was built into this copy.	Nenhum dado de colaboradores foi incluído nesta cópia.
+	No model credits were built into this copy.	Nenhum crédito de modelos foi incluído nesta cópia.
+dialog	Tabs	Tabulações
+hint	Outline	Estrutura de tópicos

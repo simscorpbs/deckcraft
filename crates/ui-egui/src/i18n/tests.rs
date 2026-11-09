@@ -186,7 +186,7 @@ fn ui_language_command_switches_validates_and_cancel_restores() {
     h.run_steps(3);
     h.state_mut().run("ui.language", json!({"value": "pt-br"})).unwrap();
     h.run_steps(2);
-    h.query_by_label("Cancel").expect("Cancel is there").click();
+    h.query_by_label("Cancelar").expect("Cancelar is there").click();
     h.run_steps(3);
     assert_eq!(h.state().ui.language, AUTO);
     set_current(Lang::EN);
