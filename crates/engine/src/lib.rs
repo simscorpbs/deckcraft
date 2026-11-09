@@ -7,6 +7,7 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 #![forbid(unsafe_code)]
 
+pub mod autosave;
 pub mod cmd;
 pub mod compare;
 pub mod connect;
@@ -36,6 +37,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 pub use cmd::{CommandInfo, CommandSpec, command_specs, find_command};
+pub use deckcraft_cloud as cloud;
 pub use deckcraft_geom as geom;
 pub use deckcraft_media as media;
 pub use deckcraft_model as model;
@@ -237,6 +239,19 @@ pub struct DocState {
     /// The list AutoFormat just started from a typed `* ` or `1. `, so Backspace right after
     /// can put the typed text back.
     pub auto_list: Option<cmd::text::AutoList>,
+    /// The AutoSave switch for this presentation: what its file remembers
+    /// ([`Session::set_autosave_of`]), else [`Prefs::autosave_by_default`]. The front end decides
+    /// when AutoSave writes; [`Session::autosave_block`] says whether it can.
+    pub autosave: bool,
+    /// The presentation's file as last read or written here, for AutoSave's conflict check.
+    /// `None` for one with no file of its own (new, opened from bytes, recovered).
+    pub stamp: Option<deckcraft_cloud::DiskStamp>,
+    /// A conflict AutoSave found and nobody has resolved yet: the file `changed` or went
+    /// `missing`. AutoSave does not write while one waits.
+    pub conflict: Option<deckcraft_cloud::DiskState>,
+    /// AutoSave's schedule for this presentation: when it last changed, and the writes that
+    /// keep failing ([`Session::autosave_tick`]).
+    pub autosave_run: autosave::AutoSaveRun,
 }
 
 static NEXT_UID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
@@ -266,6 +281,10 @@ impl DocState {
             compare: None,
             last_duplicate: None,
             auto_list: None,
+            autosave: true,
+            stamp: None,
+            conflict: None,
+            autosave_run: Default::default(),
         }
     }
     pub fn is_dirty(&self) -> bool {
@@ -358,6 +377,9 @@ pub struct Prefs {
     pub undo_limit: usize,
     /// Minutes between AutoRecover saves of unsaved presentations.
     pub recovery_minutes: f64,
+    /// Whether AutoSave is on for files with no choice of their own (Preferences ▸ Turn on
+    /// AutoSave by default). Each file remembers its own switch ([`autosave`]).
+    pub autosave_by_default: bool,
     /// The unit the rulers, the Format pane and the size dialogs show (Preferences); the deck
     /// itself always stores points.
     pub units: deckcraft_geom::Unit,
@@ -384,6 +406,7 @@ impl Default for Prefs {
             author: "Presenter".into(),
             undo_limit: 500,
             recovery_minutes: 1.0,
+            autosave_by_default: true,
             units: deckcraft_geom::Unit::Inches,
         }
     }
@@ -517,6 +540,12 @@ pub struct Session {
     next_loaded: u64,
     /// Compositions the application settled itself (see [`Session::composition_settles`]).
     composition_settles: u64,
+    /// The AutoSave choices remembered for each file (`crate::autosave`).
+    pub(crate) autosave_memory: autosave::AutoSaveMemory,
+    /// The iCloud Drive, Google Drive and OneDrive folders on this computer, once the host has
+    /// looked ([`Session::discover_cloud`]). Headless sessions and
+    /// tests know none, so a script never writes into someone's cloud by accident.
+    pub cloud_roots: Vec<deckcraft_cloud::CloudRoot>,
 }
 
 impl Default for Session {
@@ -551,7 +580,15 @@ impl Session {
             loaded: vec![],
             next_loaded: 0,
             composition_settles: 0,
+            autosave_memory: Default::default(),
+            cloud_roots: vec![],
         }
+    }
+    /// Look for the providers' folders on this computer (the desktop host does this once; on
+    /// Windows it looks at drive letters, so a host may run [`deckcraft_cloud::discover`] on a
+    /// thread and assign `cloud_roots` itself).
+    pub fn discover_cloud(&mut self) {
+        self.cloud_roots = deckcraft_cloud::discover(&deckcraft_cloud::Env::current());
     }
     /// Hand over a presentation read on another thread ([`cmd::file::read_presentation_file`]);
     /// `file.adopt` with the returned token adds it as a document, through the command path like
@@ -601,8 +638,10 @@ impl Session {
         }
         self.forget_vertex_kind_unless(was);
     }
-    pub fn add_document(&mut self, d: DocState) -> usize {
+    pub fn add_document(&mut self, mut d: DocState) -> usize {
         let was = self.active().map(|d| d.uid);
+        // A file takes the switch it was left with; a presentation with none, the default.
+        d.autosave = self.autosave_for_path(d.path.as_deref());
         self.docs.push(d);
         self.active = Some(self.docs.len() - 1);
         self.forget_vertex_kind_unless(was);
@@ -889,5 +928,7 @@ pub(crate) fn push_undo(st: &mut DocState, e: HistoryEntry) {
 mod soak_tests;
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_autosave;
 #[cfg(test)]
 mod tests_keys;

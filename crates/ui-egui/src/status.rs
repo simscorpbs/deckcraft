@@ -44,11 +44,16 @@ pub fn status_bar(app: &mut SlideApp, ui: &mut Ui) {
                 app.dialog = Some(crate::dialogs::Dialog::new("language"));
             }
         }
-        // Transient status message, clipped before the controls on the right.
-        if let Some(msg) = app.fresh_status() {
+        // AutoSave's error stays while writes keep failing, over the transient message; the next
+        // write that succeeds takes it away. Otherwise the transient status message, clipped
+        // before the controls on the right.
+        let failing = app.autosave_failure_text();
+        let message = failing.clone().or_else(|| app.fresh_status());
+        if let Some(msg) = message {
             let mx = (rect.min.x + 290.0).max(lr.max.x + 16.0);
             let clip = Rect::from_min_max(pos2(mx, rect.min.y), pos2(right_x.max(mx), rect.max.y));
-            let mr = p.with_clip_rect(clip).text(pos2(mx, rect.center().y), Align2::LEFT_CENTER, &msg, theme::font(12.0), t.accent);
+            let ink = if failing.is_some() { ui.visuals().error_fg_color } else { t.accent };
+            let mr = p.with_clip_rect(clip).text(pos2(mx, rect.center().y), Align2::LEFT_CENTER, &msg, theme::font(12.0), ink);
             shown_text(ui, mr.intersect(clip), "status_message", &msg);
             ui.ctx().request_repaint_after(std::time::Duration::from_millis(500));
         }

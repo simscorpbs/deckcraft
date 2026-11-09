@@ -71,6 +71,8 @@ fn title(id: &str) -> &'static str {
         "bullets" => "Bullets and Numbering",
         "action" => "Action Settings",
         "quit" => "DeckCraft",
+        "saveConflict" => "Save Conflict",
+        "saveToCloud" => "Save to Cloud",
         "themeColors" => "Create New Theme Colors",
         "themeFonts" => "Create New Theme Fonts",
         _ => "DeckCraft",
@@ -211,6 +213,7 @@ use deckcraft_text::datetime::DATE_KINDS;
 
 mod about;
 mod alt_text;
+mod autosave;
 mod body;
 mod columns;
 mod date_time;

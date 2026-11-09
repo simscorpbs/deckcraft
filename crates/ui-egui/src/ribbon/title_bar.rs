@@ -34,6 +34,38 @@ pub(super) fn title_geometry(integrated: bool) -> (f32, f32, f32) {
     if integrated { (MAC_TITLE_BAR, MAC_CONTENT_LEFT, 22.0) } else { (TITLE_H, 10.0, 26.0) }
 }
 
+/// The AutoSave switch, as PowerPoint's: on writes every change to the file. It is greyed out, with
+/// the reason as its tooltip, when AutoSave can't cover the presentation (never saved, a format that
+/// loses things, a conflict waiting, the browser); clicking it then does what helps. The text is part
+/// of the switch.
+fn autosave_switch(app: &mut SlideApp, ui: &mut Ui, t: &Tokens) {
+    let Some(index) = app.session.active_index() else { return };
+    let block = app.autosave_block(index);
+    let on = app.autosave_covers(index);
+    let color = if block.is_some() { t.text_dim.gamma_multiply(0.6) } else { t.text_dim };
+    let label = crate::tl!("AutoSave");
+    let text = ui.add(egui::Label::new(egui::RichText::new(label).font(theme::font(11.5)).color(color)).selectable(false).sense(Sense::click()));
+    let (r, resp) = ui.allocate_exact_size(vec2(30.0, 16.0), Sense::click());
+    let (fill, stroke, knob_fill) = match (&block, on) {
+        (Some(_), _) => (t.control.gamma_multiply(0.5), t.border.gamma_multiply(0.7), t.text_dim.gamma_multiply(0.45)),
+        (None, true) => (t.accent, t.accent, t.accent_text),
+        (None, false) => (t.control, t.border, t.text_dim),
+    };
+    ui.painter().rect(r, 8.0, fill, egui::Stroke::new(1.0, stroke), egui::StrokeKind::Inside);
+    let knob_x = if on { r.max.x - 8.0 } else { r.min.x + 8.0 };
+    ui.painter().circle_filled(pos2(knob_x, r.center().y), 5.0, knob_fill);
+    let tip = match &block {
+        Some(b) => crate::app::autosave::block_reason(b),
+        None => crate::tl!("AutoSave saves every change to the file. DeckCraft remembers the switch for each file.").to_string(),
+    };
+    resp.widget_info(|| egui::WidgetInfo::selected(egui::Role::CheckBox, true, on, label));
+    let text = text.on_hover_text(tip.as_str()).on_hover_cursor(egui::CursorIcon::PointingHand);
+    let resp = resp.on_hover_text(tip.as_str()).on_hover_cursor(egui::CursorIcon::PointingHand);
+    if text.clicked() || resp.clicked() {
+        app.autosave_switch_clicked();
+    }
+}
+
 /// The window's title row: traffic-light space, quick access, centred title, actions.
 pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
@@ -53,12 +85,16 @@ pub fn title_bar(app: &mut SlideApp, ui: &mut Ui) {
         }
         let mut child = ui.new_child(
             egui::UiBuilder::new()
-                .max_rect(Rect::from_min_max(pos2(rect.min.x + left, rect.min.y), pos2(rect.min.x + 420.0, rect.max.y)))
+                .max_rect(Rect::from_min_max(pos2(rect.min.x + left, rect.min.y), pos2(rect.min.x + 520.0, rect.max.y)))
                 .layout(egui::Layout::left_to_right(egui::Align::Center)),
         );
         child.spacing_mut().item_spacing.x = 2.0;
         let has_doc = app.session.active().is_some();
         let dirty = app.session.active().is_some_and(|d| d.is_dirty());
+        if has_doc {
+            autosave_switch(app, &mut child, &t);
+            child.add_space(8.0);
+        }
         crate::qat::show(app, &mut child);
         let title = app
             .session

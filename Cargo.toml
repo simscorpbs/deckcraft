@@ -23,6 +23,7 @@ deckcraft-pdf = { path = "crates/pdf" }
 deckcraft-pptx = { path = "crates/pptx" }
 deckcraft-format = { path = "crates/format" }
 deckcraft-anim = { path = "crates/anim" }
+deckcraft-cloud = { path = "crates/cloud" }
 deckcraft-engine = { path = "crates/engine" }
 deckcraft-mcp = { path = "crates/mcp" }
 deckcraft-ui-egui = { path = "crates/ui-egui" }

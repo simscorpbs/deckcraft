@@ -10,6 +10,7 @@ use super::{
     eyedropper, json, media, menus, notes, panes, preview, qat, ribbon, selpane, show, sorter, status, textures, theme, thumbs, toast, uifonts,
 };
 
+pub(crate) mod autosave;
 mod clipboard;
 mod commands;
 mod control;
@@ -107,6 +108,7 @@ impl SlideApp {
             next_file_id: 1,
             pending_files: Vec::new(),
             host_start: None,
+            cloud_discovery: None,
             ime_tracker: egui::ime_context::ImeContextTracker::new(),
             ime_pending: None,
             ime_frame_viewport: None,
@@ -238,15 +240,21 @@ impl SlideApp {
         if !self.synthetic.is_empty() || !self.synthetic_next.is_empty() || self.synthetic_pending {
             ctx.request_repaint();
         }
-        // Closing the window with unsaved changes asks first.
+        // Closing the window with unsaved changes asks first, except for what AutoSave writes: a
+        // presentation it covers is saved on the way out and needs no prompt.
         if ctx.input(|i| i.viewport().close_requested()) && !self.quit_confirmed && self.session.documents().iter().any(|d| d.is_dirty()) {
-            ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
-            self.show = None;
-            if self.dialog.as_ref().is_none_or(|d| d.id != "quit") {
-                self.dialog = Some(dialogs::Dialog::new("quit"));
+            let held_by_conflict = self.autosave_before_quit();
+            if held_by_conflict || self.session.documents().iter().any(|d| d.is_dirty()) {
+                ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+                self.show = None;
+                if !held_by_conflict && self.dialog.as_ref().is_none_or(|d| d.id != "quit") {
+                    self.dialog = Some(dialogs::Dialog::new("quit"));
+                }
             }
         }
-        self.autosave_if_due(ctx);
+        self.recovery_if_due(ctx);
+        self.autosave_tick(monotonic_secs());
+        self.autosave_wake(ctx);
         self.tick_media_clock(ctx);
         self.note_settled_composition(ctx);
         // In a full run_ui pass the UI callback after this logic half still owns the pass's final

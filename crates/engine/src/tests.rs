@@ -5518,7 +5518,7 @@ fn background_loads_are_adopted_through_a_command() {
     assert_eq!(replay.doc().unwrap().doc.slides.len(), 2);
     // A token staged for another path is not taken for this one.
     let other =
-        s.stage_loaded(cmd::file::LoadedFile { path: "/elsewhere.pptx".into(), doc: Default::default(), native: true, damaged: Default::default() });
+        s.stage_loaded(cmd::file::LoadedFile { path: "/elsewhere.pptx".into(), doc: Default::default(), native: true, damaged: Default::default(), stamp: None });
     s.execute("file.adopt", &json!({"path": path, "token": other})).unwrap();
     assert_eq!(s.doc().unwrap().doc.slides.len(), 2);
     assert!(s.execute("file.adopt", &json!({})).is_err());

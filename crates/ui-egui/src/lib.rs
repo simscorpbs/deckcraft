@@ -171,6 +171,8 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
     ("app.find", "Find…", Some("Cmd+F"), "{}"),
     ("app.replace", "Replace…", Some("Cmd+H"), "{}"),
     ("app.links", "Community Links", None, "{}"),
+    ("ui.saveConflict", "Resolve Save Conflict", None, "{answer: both|mine|theirs|later} (answers the Save Conflict dialog; later decides afterwards)"),
+    ("ui.saveToCloud", "Save to Cloud", None, "{provider?: icloud|gdrive|onedrive, root?: folder, name?: file name} (answers the Save to Cloud dialog, or opens it when none is open)"),
 ];
 
 pub struct Perf {
@@ -351,6 +353,8 @@ pub struct SlideApp {
     /// The empty presentation host mode starts with ([`SlideApp::start_for_host`]), until the
     /// first file the page sends takes its place.
     host_start: Option<u64>,
+    /// The cloud folders being looked for on a worker thread ([`SlideApp::discover_cloud`]).
+    cloud_discovery: Option<std::sync::mpsc::Receiver<Vec<deckcraft_engine::cloud::CloudRoot>>>,
     /// Owner/generation/cause bookkeeping for the canvas text IME producer.
     ime_tracker: egui::ime_context::ImeContextTracker,
     /// Canvas IME geometry for this pass: the caret while editing, or the selected shape.
@@ -502,6 +506,9 @@ mod datetime_tests;
 
 #[cfg(test)]
 mod inbox_tests;
+
+#[cfg(test)]
+mod autosave_tests;
 
 #[cfg(test)]
 mod host_save_tests;

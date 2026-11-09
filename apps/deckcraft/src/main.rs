@@ -94,6 +94,18 @@ fn load_prefs(app: &mut SlideApp) {
     }
 }
 
+/// AutoSave remembers its switch for each file in `autosave.json` beside the settings, and the
+/// iCloud Drive, Google Drive and OneDrive folders are looked for off the UI thread.
+fn start_autosave(app: &mut SlideApp, ctx: &egui::Context) {
+    if std::env::var_os("DECKCRAFT_NO_PREFS").is_none()
+        && let Some(dir) = config_dir()
+    {
+        app.session.enable_autosave_memory(dir.join("autosave.json"));
+    }
+    let ctx = ctx.clone();
+    app.discover_cloud(std::sync::Arc::new(move || ctx.request_repaint()));
+}
+
 fn save_prefs(app: &SlideApp) {
     if std::env::var_os("DECKCRAFT_NO_PREFS").is_some() {
         return;
@@ -294,6 +306,7 @@ fn main() -> eframe::Result {
                 app.services.displays = Some(Box::new(move || display_count(&window)));
             }
             load_prefs(&mut app);
+            start_autosave(&mut app, &cc.egui_ctx);
             app.enable_update_checks();
             // AutoRecover: reopen what a previous run left unsaved, then keep it current.
             if std::env::var_os("DECKCRAFT_NO_RECOVERY").is_none() {

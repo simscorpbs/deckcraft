@@ -450,8 +450,9 @@ mod tests {
     /// `write_file`), which check the roots. Engine code that reaches for `std::fs` itself would
     /// bypass them, so none may: every file under `src/` (commands, `lib.rs`, `guard.rs`...)
     /// except `io.rs`, this module, `recovery.rs` (the recovery folder is set by the host
-    /// application, never by a command's path, and a headless session has none) and the test
-    /// files.
+    /// application, never by a command's path, and a headless session has none), `autosave.rs`
+    /// (the AutoSave choices in the settings folder: a switch per presentation path, never a
+    /// presentation) and the test files.
     #[test]
     fn commands_do_not_touch_the_file_system_themselves() {
         fn walk(dir: &Path, files: &mut Vec<PathBuf>) {
@@ -474,7 +475,7 @@ mod tests {
             // `io` and this module are the checked gateway; `tests*.rs` are test-only modules.
             // `recovery` and `spell` touch only the app's own folders (AutoRecover files, the
             // system and user spelling dictionaries), never a path a command names.
-            if path.parent() == Some(src.as_path()) && matches!(name, "io.rs" | "file_access.rs" | "recovery.rs" | "spell.rs")
+            if path.parent() == Some(src.as_path()) && matches!(name, "io.rs" | "file_access.rs" | "recovery.rs" | "spell.rs" | "autosave.rs")
                 || name.starts_with("tests")
             {
                 continue;

@@ -1084,6 +1084,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "deckcraft-cloud"
+version = "0.15.0"
+
+[[package]]
 name = "deckcraft-color"
 version = "0.15.0"
 dependencies = [
@@ -1096,6 +1100,7 @@ version = "0.15.0"
 dependencies = [
  "chrono",
  "deckcraft-anim",
+ "deckcraft-cloud",
  "deckcraft-color",
  "deckcraft-fonts",
  "deckcraft-format",

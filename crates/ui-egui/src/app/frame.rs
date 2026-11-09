@@ -26,8 +26,9 @@ impl SlideApp {
         true
     }
 
-    /// AutoRecover on a monotonic deadline, even when nothing is painted.
-    pub(super) fn autosave_if_due(&mut self, ctx: &egui::Context) {
+    /// AutoRecover on a monotonic deadline, even when nothing is painted. (AutoSave, which writes
+    /// the presentation's own file, is `autosave_tick`.)
+    pub(super) fn recovery_if_due(&mut self, ctx: &egui::Context) {
         if self.session.recovery_dir.is_none() {
             return;
         }

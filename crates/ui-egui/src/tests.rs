@@ -368,8 +368,11 @@ fn title_bar_export_opens_the_export_dialog() {
     );
     harness.run_steps(2);
     assert!(harness.state().dialog.is_none());
-    // Quick access: Home, Save, Export, each 24 points wide with 2 between, from x = 10.
-    let pos = egui::pos2(10.0 + 2.0 * 26.0 + 12.0, ribbon::TITLE_H / 2.0);
+    // Quick access: Home, Save, Export, each 24 points wide with 2 between. It starts after the
+    // AutoSave switch (8 points and the spacing past the switch's track).
+    use egui_kittest::kittest::Queryable;
+    let track_end = harness.get_by_role_and_label(egui::accesskit::Role::CheckBox, "AutoSave").rect().right();
+    let pos = egui::pos2(track_end + 12.0 + 2.0 * 26.0 + 12.0, ribbon::TITLE_H / 2.0);
     harness.hover_at(pos);
     harness.run_steps(1);
     harness.event(egui::Event::PointerButton { pos, button: egui::PointerButton::Primary, pressed: true, modifiers: egui::Modifiers::NONE });

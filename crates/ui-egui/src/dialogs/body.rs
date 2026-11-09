@@ -32,6 +32,8 @@ pub(super) fn body(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         "setupShow" => dlg_setup_show(app, ui, d),
         "quit" => dlg_quit(app, ui, d),
         "close" => dlg_close(app, ui, d),
+        "saveConflict" => super::autosave::save_conflict_dialog(app, ui, d),
+        "saveToCloud" => super::autosave::save_to_cloud_dialog(app, ui, d),
         "zoom" => zoom_dialog(app, ui, d),
         "comment" => dlg_comment(app, ui, d),
         "bullets" => dlg_bullets(app, ui, d),
@@ -325,6 +327,11 @@ fn dlg_quit(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
 fn dlg_close(app: &mut SlideApp, ui: &mut Ui, _d: &mut Dialog) -> bool {
     // File › Close and Ctrl+W on a presentation with unsaved changes.
     let Some(name) = app.session.active().map(|d| d.title()) else { return true };
+    // AutoSave wrote the changes while the prompt was open: the close goes on without it.
+    if app.session.active().is_some_and(|d| !d.is_dirty()) {
+        run(app, "file.close", json!({}));
+        return true;
+    }
     ui.label(egui::RichText::new(crate::i18n::fmt(tl!("Do you want to save the changes you made to {what}?"), &[("what", &format!("“{name}”"))])).strong());
     ui.label(tl!("Your changes will be lost if you don't save them."));
     ui.add_space(8.0);
@@ -1463,6 +1470,12 @@ fn dlg_preferences(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         ui.radio_value(units, deckcraft_geom::Unit::Inches, tl!("Inches"));
         ui.radio_value(units, deckcraft_geom::Unit::Centimeters, tl!("Centimeters"));
     });
+    ui.label(egui::RichText::new(tl!("Saving")).font(theme::bold(13.0)));
+    let mut autosave = app.session.prefs.autosave_by_default;
+    if ui.checkbox(&mut autosave, tl!("Turn on AutoSave by default")).changed() {
+        app.session.set_autosave_by_default(autosave);
+    }
+    ui.label(egui::RichText::new(tl!("AutoSave writes your changes to the file a moment after you stop editing.")).color(ui.visuals().weak_text_color()));
     ui.label(egui::RichText::new(tl!("Editing")).font(theme::bold(13.0)));
     ui.checkbox(&mut app.session.prefs.smart_guides, tl!("Show smart guides"));
     ui.checkbox(&mut app.session.prefs.snap_to_grid, tl!("Snap objects to grid"));
