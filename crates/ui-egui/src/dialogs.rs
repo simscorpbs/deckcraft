@@ -217,6 +217,8 @@ mod autosave;
 mod body;
 mod columns;
 mod date_time;
+#[cfg(test)]
+pub(crate) use date_time::date_rows as date_sample_rows;
 mod equation;
 mod export;
 mod find;

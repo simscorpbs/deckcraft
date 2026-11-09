@@ -48,7 +48,7 @@ pub fn status_bar(app: &mut SlideApp, ui: &mut Ui) {
         // write that succeeds takes it away. Otherwise the transient status message, clipped
         // before the controls on the right.
         let failing = app.autosave_failure_text();
-        let message = failing.clone().or_else(|| app.fresh_status());
+        let message = failing.clone().or_else(|| app.fresh_status()).map(|m| crate::i18n::user_error(&m).into_owned());
         if let Some(msg) = message {
             let mx = (rect.min.x + 290.0).max(lr.max.x + 16.0);
             let clip = Rect::from_min_max(pos2(mx, rect.min.y), pos2(right_x.max(mx), rect.max.y));

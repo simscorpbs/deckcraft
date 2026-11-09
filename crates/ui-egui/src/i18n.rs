@@ -52,6 +52,9 @@ use craft_i18n::I18n;
 
 pub use craft_i18n::{fmt, fmt_plain};
 
+mod errors;
+pub use errors::user_error;
+
 include!(concat!(env!("OUT_DIR"), "/craft_i18n.rs"));
 
 /// The embedded catalogs, offering exactly the languages in [`LANGUAGES`]. Built on first use;
@@ -288,3 +291,6 @@ mod tests_dialogos;
 mod tests_backstage;
 #[cfg(test)]
 mod tests_paineis;
+
+#[cfg(test)]
+mod tests_restante;

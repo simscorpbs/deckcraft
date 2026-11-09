@@ -36,7 +36,12 @@ pub(super) fn design(app: &mut SlideApp, ui: &mut Ui) {
     if let Some(th) = app.session.active().and_then(|d| d.doc.masters.first().map(|m| m.theme.clone())) {
         let variants = deckcraft_model::theme::theme_variants(&th);
         let tiles: Vec<deckcraft_model::Theme> = variants.iter().map(|c| deckcraft_model::Theme { colors: c.clone(), ..th.clone() }).collect();
-        let names: Vec<String> = variants.iter().map(|c| c.name.clone()).collect();
+        // "Harbor 2": the theme's name in the interface language, then the variant's number.
+        let names: Vec<String> = variants
+            .iter()
+            .enumerate()
+            .map(|(i, c)| if i == 0 { c.name.clone() } else { format!("{} {}", crate::tl!(&th.name), i + 1) })
+            .collect();
         let sel = variants.iter().position(|c| c.colors == th.colors.colors);
         group(ui, |ui| {
             if let Some(i) = widgets::gallery(
@@ -57,7 +62,7 @@ pub(super) fn design(app: &mut SlideApp, ui: &mut Ui) {
     }
     group(ui, |ui| {
         let r = big_button(ui, Icon::Colors, "Colors", true);
-        r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Colors"));
+        r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, crate::tl!("Colors")));
         egui::Popup::menu(&r).width(240.0).show(|ui| {
             for cs in deckcraft_model::theme::builtin_color_schemes() {
                 ui.horizontal(|ui| {
@@ -84,7 +89,7 @@ pub(super) fn design(app: &mut SlideApp, ui: &mut Ui) {
             }
         });
         let r = big_button(ui, Icon::Fonts, "Fonts", true);
-        r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Fonts"));
+        r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, crate::tl!("Fonts")));
         egui::Popup::menu(&r).width(220.0).show(|ui| {
             for fs in deckcraft_model::theme::builtin_font_schemes() {
                 if ui.button(format!("{}\n   {} / {}", fs.name, fs.major.latin, fs.minor.latin)).clicked() {
@@ -98,7 +103,7 @@ pub(super) fn design(app: &mut SlideApp, ui: &mut Ui) {
             }
         });
         let r = big_button(ui, Icon::ShapeEffects, "Effects", true);
-        r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, "Effects"));
+        r.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, true, crate::tl!("Effects")));
         egui::Popup::menu(&r).width(180.0).show(|ui| {
             for fs in deckcraft_model::theme::builtin_format_schemes() {
                 if ui.button(&fs.name).clicked() {

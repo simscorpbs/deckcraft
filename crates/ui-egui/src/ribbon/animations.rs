@@ -53,7 +53,7 @@ pub(super) fn animations(app: &mut SlideApp, ui: &mut Ui) {
                     paint_anim_tile(p, r, a.1, a.2, has_sel);
                 }
             },
-            |i| quick.get(i).map(|a| a.1.to_string()).unwrap_or_default(),
+            |i| quick.get(i).map(|a| crate::i18n::tc("animation", a.1).to_string()).unwrap_or_default(),
         ) && let Some(a) = quick.get(i)
         {
             run(app, "animation.set", json!({"effect": a.0, "class": a.2.xml()}));
@@ -86,7 +86,7 @@ pub(super) fn animations(app: &mut SlideApp, ui: &mut Ui) {
         let r = big_button(ui, Icon::EffectOptions, "Effect\nOptions", !effect_rows.is_empty());
         egui::Popup::menu(&r).show(|ui| {
             for &(o, on) in &effect_rows {
-                if ui.selectable_label(on, crate::tl!(&animation_option_label(effect, o))).clicked() {
+                if ui.selectable_label(on, crate::i18n::tc("animation", &animation_option_label(effect, o))).clicked() {
                     run(app, "animation.options", json!({"option": o}));
                     ui.close();
                 }
@@ -112,7 +112,7 @@ pub(super) fn animations(app: &mut SlideApp, ui: &mut Ui) {
                     if ui
                         .button(format!(
                             "{} — {}",
-                            crate::tl!(a.1),
+                            crate::i18n::tc("animation", a.1),
                             crate::i18n::tc(
                                 "animation",
                                 match a.2 {
@@ -205,7 +205,7 @@ pub fn paint_anim_tile(p: &egui::Painter, r: Rect, label: &str, class: AnimClass
         _ => Icon::AnimPath,
     };
     icons::paint(p, Rect::from_center_size(pos2(r.center().x, r.min.y + 18.0), vec2(28.0, 28.0)), icon, t.text, !enabled);
-    p.text(pos2(r.center().x, r.max.y - 8.0), Align2::CENTER_CENTER, crate::tl!(label), theme::font(10.0), if enabled { t.text } else { t.text_faint });
+    p.text(pos2(r.center().x, r.max.y - 8.0), Align2::CENTER_CENTER, crate::i18n::tc("animation", label), theme::font(10.0), if enabled { t.text } else { t.text_faint });
 }
 
 /// The stored id is the one marked row. Every other id stays unmarked.
@@ -219,7 +219,7 @@ pub(super) fn animation_effect_rows(effect: &str, class: AnimClass, current: Opt
     marked_options(opts, current)
 }
 
-fn animation_option_label(effect: &str, option: &str) -> String {
+pub(crate) fn animation_option_label(effect: &str, option: &str) -> String {
     let direction = match option {
         "b" => Some("From Bottom"),
         "lb" => Some("From Bottom-Left"),

@@ -11,10 +11,10 @@ fn photo_album_button(app: &mut SlideApp, ui: &mut Ui) {
     let en = enabled(app, "insert.photoAlbum");
     let (main, arrow) = big_button_ex(ui, Icon::Picture, "Photo\nAlbum", en, true, false);
     let _ = main.clone().on_hover_text(tip("insert.photoAlbum", "Photo Album…"));
-    main.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, en, "Photo Album…"));
+    main.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, en, crate::tl!("Photo Album…")));
     if let Some(a) = &arrow {
         let _ = a.clone().on_hover_text(crate::tl!("Photo Album options"));
-        a.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, en, "Photo Album options"));
+        a.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Button, en, crate::tl!("Photo Album options")));
     }
     if main.clicked() {
         run(app, "insert.photoAlbum", json!({}));

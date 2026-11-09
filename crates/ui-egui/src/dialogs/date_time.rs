@@ -5,12 +5,24 @@ const DATE_LANGS: &[(&str, &str)] = &[
     ("en-GB", "English (United Kingdom)"),
     ("fr-FR", "French (France)"),
     ("ja-JP", "Japanese"),
+    ("pt-BR", "Portuguese (Brazil)"),
     ("sv-SE", "Swedish"),
 ];
 
-/// Samples `field_text` can compute for `lang`. Named months and AM/PM exist for English only;
-/// other languages keep the numeric date and the 24-hour times.
-pub(super) fn date_rows(lang: &str) -> Vec<(&'static str, String)> {
+/// The language a date list starts in: the presentation's own (the first text run that names one),
+/// else the interface language, when the list offers it; English otherwise.
+pub(super) fn default_date_lang(app: &SlideApp) -> String {
+    let offered = |tag: &str| DATE_LANGS.iter().find(|(k, _)| k.eq_ignore_ascii_case(tag)).map(|(k, _)| (*k).to_string());
+    let doc = app.session.active().and_then(crate::squiggles::doc_lang);
+    doc.as_deref()
+        .and_then(offered)
+        .or_else(|| offered(crate::i18n::current().code()))
+        .unwrap_or_else(|| "en-US".into())
+}
+
+/// Samples `field_text` can compute for `lang`. Named months exist for English and Portuguese, AM/PM
+/// for English only; other languages keep the numeric date and the 24-hour times.
+pub(crate) fn date_rows(lang: &str) -> Vec<(&'static str, String)> {
     let now = deckcraft_text::datetime::DateTime::now_local();
     let mut rows = Vec::new();
     for kind in DATE_KINDS {
@@ -31,7 +43,7 @@ pub(super) fn date_rows(lang: &str) -> Vec<(&'static str, String)> {
 pub(super) fn date_time_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     ui.set_min_width(440.0);
     ui.label(tl!("Available formats:"));
-    let lang = d.get("language", "en-US");
+    let lang = d.get("language", &default_date_lang(app));
     let rows = date_rows(&lang);
     if !rows.iter().any(|(k, _)| *k == d.get("format", "datetime1"))
         && let Some((k, _)) = rows.first()
@@ -64,14 +76,14 @@ pub(super) fn date_time_dialog(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) 
         });
     });
     ui.label(
-        egui::RichText::new(tl!("Month names and AM/PM are listed for English. Other languages list the numeric date and 24-hour time."))
+        egui::RichText::new(tl!("Month names are listed for English and Portuguese, AM/PM for English. Other languages list the numeric date and 24-hour time."))
             .size(11.0)
             .color(Tokens::get(ui.ctx()).text_dim),
     );
     let update = check(ui, d, "Update automatically", "update", true);
     let (ok, cancel) = buttons(ui, "OK");
     if ok {
-        let lang = d.get("language", "en-US");
+        let lang = d.get("language", &default_date_lang(app));
         let mut format = d.get("format", "datetime1");
         let probe = deckcraft_text::datetime::DateTime::new(2026, 10, 9, 20, 5, 7);
         if deckcraft_text::datetime::field_text(&format, Some(&lang), probe).is_none() {

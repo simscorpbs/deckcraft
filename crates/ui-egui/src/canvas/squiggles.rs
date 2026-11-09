@@ -152,6 +152,11 @@ fn worker(rx: Receiver<Job>, tx: Sender<Done>) {
 }
 
 fn default_lang(st: &DocState) -> String {
+    doc_lang(st).unwrap_or_else(|| "en-US".into())
+}
+
+/// The language of the first text run that names one, or `None` when the document names none.
+pub(crate) fn doc_lang(st: &DocState) -> Option<String> {
     for sl in &st.doc.slides {
         let mut found = None;
         deckcraft_model::walk(&sl.shapes, &mut |sh, _| {
@@ -161,11 +166,11 @@ fn default_lang(st: &DocState) -> String {
                 found = t.paragraphs.iter().flat_map(|p| &p.runs).find_map(|r| r.props.lang.clone());
             }
         });
-        if let Some(l) = found {
-            return l;
+        if found.is_some() {
+            return found;
         }
     }
-    "en-US".into()
+    None
 }
 
 /// A word under a squiggle: `(tag, start, end)`.
@@ -244,12 +249,13 @@ pub fn lang_name(tag: &str) -> String {
     LANGS.iter().find(|(_, t)| t.eq_ignore_ascii_case(tag)).map_or_else(|| tag.to_string(), |(n, _)| n.to_string())
 }
 
-/// A language name the current interface fonts can actually draw: the native name when every
-/// character has a glyph, otherwise the tag. On a machine without a Korean, Chinese or Hebrew
+/// A language name the current interface fonts can actually draw: the name in the interface
+/// language (the native name when the catalog has none) when every character has a glyph, otherwise the tag. On a machine without a Korean, Chinese or Hebrew
 /// face, egui 0.37's strict missing-glyph policy would abort the frame instead of drawing boxes,
 /// so state the fallback explicitly (and never skip the row).
 pub fn display_lang_name(ctx: &egui::Context, tag: &str) -> String {
-    let name = lang_name(tag);
+    // The language's own name is the catalog key: Portuguese shows "Espanhol (Espanha)" for "Español (España)".
+    let name = crate::i18n::t(&lang_name(tag)).to_string();
     if ctx.fonts_mut(|f| f.has_glyphs(&egui::FontId::proportional(13.0), &name)) { name } else { tag.to_string() }
 }
 

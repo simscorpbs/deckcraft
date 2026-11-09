@@ -147,17 +147,23 @@ fn dlg_header_footer(app: &mut SlideApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     let fmt_now = if hf.date_format.is_empty() { "datetime1".to_string() } else { hf.date_format.clone() };
     // Not `d.get`: that stores the default as if the user had picked it.
     let fmt = d.fields.get("dateFormat").cloned().unwrap_or_else(|| fmt_now.clone());
-    let rows = date_rows("en-US");
+    let rows = date_rows(&super::date_time::default_date_lang(app));
     let label = rows.iter().find(|(k, _)| *k == fmt).map(|(_, s)| s.clone()).unwrap_or_else(|| fmt.clone());
     ui.add_enabled_ui(date && automatic, |ui| {
         ui.horizontal(|ui| {
             ui.label(tp("  Format:"));
-            craft_ui::ComboBox::from_id_salt("hf-date-format").selected_text(label).width(200.0).show_ui(ui, |ui| {
+            let shown = label.clone();
+            let opened = craft_ui::ComboBox::from_id_salt("hf-date-format").selected_text(label).width(200.0).show_ui(ui, |ui| {
                 for (kind, sample) in &rows {
                     if ui.selectable_label(fmt == *kind, sample).clicked() {
                         d.fields.insert("dateFormat".into(), (*kind).to_string());
                     }
                 }
+            });
+            opened.response.widget_info(move || {
+                let mut info = egui::WidgetInfo::labeled(egui::Role::ComboBox, true, tl!("Format"));
+                info.current_text_value = Some(shown.clone());
+                info
             });
         });
     });
